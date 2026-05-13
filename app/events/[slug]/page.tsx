@@ -12,6 +12,7 @@ import { TicketCard } from "@/components/neya/ticket-card";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
+import { getEventBookingMetaBySlug } from "@/services/booking-meta";
 import { getEventBySlug } from "@/services/events";
 import { SITE } from "@/lib/constants";
 import { eventJsonLd } from "@/lib/seo/json-ld";
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EventDetailPage({ params }: Props) {
   const { slug } = await params;
-  const event = await getEventBySlug(slug);
+  const [event, meta] = await Promise.all([getEventBySlug(slug), getEventBookingMetaBySlug(slug)]);
   if (!event) notFound();
 
   const jsonLd = eventJsonLd(event);
@@ -82,30 +83,43 @@ export default async function EventDetailPage({ params }: Props) {
                 tier="General"
                 priceEur={event.ticket_from_eur}
                 endsAt="tonight"
+                soldOut={meta ? !meta.ticketId : false}
+                ticketId={meta?.ticketId}
               />
             ) : null}
-            <ReservationModal
-              venueName={event.venue.name}
-              trigger={
-                <button
-                  type="button"
-                  className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-500 py-3 text-sm font-bold text-zinc-950"
-                >
-                  Reserve table
-                </button>
-              }
-            />
-            <GuestlistModal
-              eventTitle={event.title}
-              trigger={
-                <button
-                  type="button"
-                  className="w-full rounded-xl border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white"
-                >
-                  Guestlist
-                </button>
-              }
-            />
+            {meta ? (
+              <ReservationModal
+                venueName={event.venue.name}
+                venueId={meta.venueUuid}
+                eventId={meta.eventUuid}
+                trigger={
+                  <button
+                    type="button"
+                    className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-500 py-3 text-sm font-bold text-zinc-950"
+                  >
+                    Reserve table
+                  </button>
+                }
+              />
+            ) : (
+              <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/50">
+                Table deposits require this event in your Supabase project (see seed SQL).
+              </p>
+            )}
+            {meta?.guestlistId ? (
+              <GuestlistModal
+                eventTitle={event.title}
+                guestlistId={meta.guestlistId}
+                trigger={
+                  <button
+                    type="button"
+                    className="w-full rounded-xl border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white"
+                  >
+                    Guestlist
+                  </button>
+                }
+              />
+            ) : null}
           </div>
         </div>
         <p className="pb-12 text-center">

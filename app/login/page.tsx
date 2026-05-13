@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AccountPanel } from "@/components/auth/account-panel";
@@ -35,6 +36,14 @@ export default async function LoginPage({ searchParams }: Props) {
               </p>
             </div>
             <LoginForm initialError={params.error} />
+            <div className="flex justify-between text-xs text-white/45">
+              <Link href="/register" className="text-sky-300 hover:underline">
+                Create account
+              </Link>
+              <Link href="/forgot-password" className="text-sky-300 hover:underline">
+                Forgot password?
+              </Link>
+            </div>
           </div>
         )}
       </main>

@@ -8,7 +8,8 @@ import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
-import { MOCK_EVENTS } from "@/data/mock-data";
+import { getVenueMetaBySlug } from "@/services/booking-meta";
+import { getFeaturedEvents } from "@/services/events";
 import { getVenueBySlug } from "@/services/venues";
 import { SITE } from "@/lib/constants";
 import { venueJsonLd } from "@/lib/seo/json-ld";
@@ -31,10 +32,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function VenuePage({ params }: Props) {
   const { slug } = await params;
-  const venue = await getVenueBySlug(slug);
+  const [venue, allEvents, venueMeta] = await Promise.all([
+    getVenueBySlug(slug),
+    getFeaturedEvents(),
+    getVenueMetaBySlug(slug),
+  ]);
   if (!venue) notFound();
 
-  const events = MOCK_EVENTS.filter((e) => e.venue.slug === venue.slug);
+  const events = allEvents.filter((e) => e.venue.slug === venue.slug);
   const jsonLd = venueJsonLd(venue);
 
   return (
@@ -59,7 +64,11 @@ export default async function VenuePage({ params }: Props) {
         </div>
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
           <div className="flex flex-wrap gap-4">
-            <ReservationModal venueName={venue.name} />
+            {venueMeta ? (
+              <ReservationModal venueName={venue.name} venueId={venueMeta.venueUuid} />
+            ) : (
+              <p className="text-xs text-white/45">Reserve when this venue exists in Supabase (seed SQL).</p>
+            )}
           </div>
           <div>
             <h2 className="text-lg font-semibold text-white">Upcoming here</h2>
@@ -73,7 +82,7 @@ export default async function VenuePage({ params }: Props) {
                   </li>
                 ))
               ) : (
-                <li className="text-sm text-white/50">No linked events in mock data.</li>
+                <li className="text-sm text-white/50">No events listed yet.</li>
               )}
             </ul>
           </div>

@@ -12,13 +12,15 @@ Nightlife and events discovery for **Prishtina** — clubs, rooftops, live music
 
 ## Supabase (first-time checklist)
 
-1. In the Supabase dashboard, open **SQL Editor** and run the files in `supabase/migrations/` **in filename order** (initial schema, then discovery columns, then auth profile trigger).
-2. Optional: run `supabase/seed_prishtina.sql` to insert sample **approved** venues and events so the homepage reads real rows.
+1. In the Supabase dashboard, open **SQL Editor** and run the files in `supabase/migrations/` **in filename order**, including **`20240515120000_mvp_rls_and_columns.sql`** (booking RLS + columns).
+2. Optional: run `supabase/seed_prishtina.sql`, then **`supabase/seed_guestlists_tickets.sql`** so events have guestlists + ticket rows for checkout.
 3. **Authentication → URL configuration**
    - **Site URL:** your production URL, e.g. `https://neya-xk.vercel.app` (no trailing slash is fine).
-   - **Redirect URLs** (allow list), add both:
+   - **Redirect URLs** (allow list), add:
      - `https://<your-production-domain>/auth/callback`
+     - `https://<your-production-domain>/update-password` (password reset from email)
      - `http://localhost:3000/auth/callback`
+     - `http://localhost:3000/update-password`
 4. **Authentication → Providers:** enable **Email** and **Google** (and optionally others later). For Google OAuth, use the Google Cloud Console and paste the client ID/secret into Supabase.
 
 OAuth and magic links redirect to `app/auth/callback/route.ts`, which exchanges the code for a session cookie.
@@ -46,6 +48,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature |
 | `RESEND_API_KEY` | Transactional email |
+| `NEYA_ADMIN_EMAILS` | Comma-separated emails allowed to use `/admin` (server only) |
 | `NEXT_PUBLIC_POSTHOG_KEY` / `NEXT_PUBLIC_POSTHOG_HOST` | Product analytics |
 
 ## Vercel deployment
@@ -69,6 +72,13 @@ Redeploy after changing env vars.
 - `npm run build` — production build  
 - `npm run start` — serve production build  
 - `npm run lint` — ESLint  
+
+## MVP features in this repo
+
+- **Register** (`/register`), **forgot password** (`/forgot-password`), **set new password** (`/update-password` — link target from Supabase reset email).
+- **Onboarding** (`/onboarding`) saves genre prefs; **Dashboard** (`/dashboard`) lists reservations and ticket orders.
+- **Stripe**: table deposit + ticket purchase via Checkout; **`POST /api/webhooks/stripe`** confirms `checkout.session.completed` (needs `STRIPE_WEBHOOK_SECRET` + `SUPABASE_SERVICE_ROLE_KEY`).
+- **Admin** (`/admin`): approve venues pending review — set **`NEYA_ADMIN_EMAILS`** (comma-separated) on the server to your login email(s).
 
 ## License
 

@@ -12,13 +12,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { applyGuestlist } from "@/actions/bookings";
 
 interface GuestlistModalProps {
   eventTitle: string;
+  guestlistId: string;
   trigger?: React.ReactNode;
 }
 
-export function GuestlistModal({ eventTitle, trigger }: GuestlistModalProps) {
+export function GuestlistModal({ eventTitle, guestlistId, trigger }: GuestlistModalProps) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -29,21 +31,19 @@ export function GuestlistModal({ eventTitle, trigger }: GuestlistModalProps) {
         <DialogHeader>
           <DialogTitle>Guestlist — {eventTitle}</DialogTitle>
           <DialogDescription>
-            Apply for entry. If approved, you receive a QR — VIP lists can be invite-only.
+            Request access with your Instagram or phone. You must be logged in.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-3 py-2">
-          <Input placeholder="Full name" />
-          <Input placeholder="Instagram / phone" />
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" type="button" onClick={() => setOpen(false)}>
-            Close
-          </Button>
-          <Button type="button" onClick={() => setOpen(false)}>
-            Request access
-          </Button>
-        </DialogFooter>
+        <form action={applyGuestlist} className="grid gap-3 py-2">
+          <input type="hidden" name="guestlist_id" value={guestlistId} />
+          <Input name="contact" placeholder="Instagram or phone" required maxLength={280} />
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="ghost" type="button" onClick={() => setOpen(false)}>
+              Close
+            </Button>
+            <Button type="submit">Request access</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

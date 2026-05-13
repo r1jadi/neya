@@ -13,9 +13,42 @@ const links = [
   { href: "/#business", label: "For venues" },
 ];
 
-export function SiteHeaderClient({ userEmail }: { userEmail: string | null }) {
+export function SiteHeaderClient({
+  userEmail,
+  isAdmin,
+}: {
+  userEmail: string | null;
+  isAdmin: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const authed = Boolean(userEmail);
+
+  const authedLinks = (
+    <>
+      <Button variant="ghost" asChild>
+        <Link href="/dashboard">Dashboard</Link>
+      </Button>
+      {isAdmin ? (
+        <Button variant="ghost" asChild>
+          <Link href="/admin">Admin</Link>
+        </Button>
+      ) : null}
+      <Button variant="ghost" asChild>
+        <Link href="/login">Account</Link>
+      </Button>
+    </>
+  );
+
+  const guestLinks = (
+    <>
+      <Button variant="ghost" asChild>
+        <Link href="/login">Log in</Link>
+      </Button>
+      <Button variant="ghost" asChild>
+        <Link href="/register">Register</Link>
+      </Button>
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-black/55 backdrop-blur-xl">
@@ -28,7 +61,7 @@ export function SiteHeaderClient({ userEmail }: { userEmail: string | null }) {
             Prishtina
           </span>
         </Link>
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -39,18 +72,10 @@ export function SiteHeaderClient({ userEmail }: { userEmail: string | null }) {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 md:flex">
-          {authed ? (
-            <Button variant="ghost" asChild>
-              <Link href="/login">Account</Link>
-            </Button>
-          ) : (
-            <Button variant="ghost" asChild>
-              <Link href="/login">Log in</Link>
-            </Button>
-          )}
+        <div className="hidden items-center gap-2 md:flex">{authed ? authedLinks : guestLinks}</div>
+        <div className="hidden md:block">
           <Button asChild>
-            <Link href={authed ? "/events" : "/login"}>{authed ? "Tonight" : "Get NEYA"}</Link>
+            <Link href={authed ? "/events" : "/register"}>{authed ? "Tonight" : "Get NEYA"}</Link>
           </Button>
         </div>
         <button
@@ -81,8 +106,45 @@ export function SiteHeaderClient({ userEmail }: { userEmail: string | null }) {
                   {l.label}
                 </Link>
               ))}
+              {authed ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                    onClick={() => setOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  {isAdmin ? (
+                    <Link
+                      href="/admin"
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                      onClick={() => setOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                    onClick={() => setOpen(false)}
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                    onClick={() => setOpen(false)}
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
               <Link
-                href={authed ? "/events" : "/login"}
+                href={authed ? "/events" : "/register"}
                 className="mt-2 rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-black"
                 onClick={() => setOpen(false)}
               >

@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { QrCode, Timer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { createTicketCheckout } from "@/actions/bookings";
 
 interface TicketCardProps {
   eventTitle: string;
@@ -12,10 +14,13 @@ interface TicketCardProps {
   priceEur: number;
   endsAt?: string;
   soldOut?: boolean;
+  ticketId?: string | null;
   className?: string;
 }
 
-export function TicketCard({ eventTitle, tier, priceEur, endsAt, soldOut, className }: TicketCardProps) {
+export function TicketCard({ eventTitle, tier, priceEur, endsAt, soldOut, ticketId, className }: TicketCardProps) {
+  const canBuy = Boolean(ticketId) && !soldOut;
+
   return (
     <motion.div whileHover={{ y: -2 }} className={cn(className)}>
       <Card className="overflow-hidden border-white/10 bg-gradient-to-br from-zinc-900/90 to-black/80">
@@ -41,6 +46,16 @@ export function TicketCard({ eventTitle, tier, priceEur, endsAt, soldOut, classN
               <Timer className="h-3.5 w-3.5" />
               Early bird ends {endsAt}
             </p>
+          ) : null}
+          {canBuy ? (
+            <form action={createTicketCheckout}>
+              <input type="hidden" name="ticket_id" value={ticketId!} />
+              <Button type="submit" className="w-full">
+                Buy with Stripe
+              </Button>
+            </form>
+          ) : ticketId && soldOut ? (
+            <p className="text-center text-xs text-white/50">Sold out online — check door policy.</p>
           ) : null}
         </CardContent>
       </Card>

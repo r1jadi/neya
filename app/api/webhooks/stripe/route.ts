@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
@@ -31,11 +32,57 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
-  switch (event.type) {
-    case "checkout.session.completed":
-    case "payment_intent.succeeded":
-    default:
-      break;
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    if (session.payment_status !== "paid") {
+      return NextResponse.json({ received: true, skipped: "not_paid" });
+    }
+
+    let admin;
+    try {
+      admin = createAdminClient();
+    } catch {
+      return NextResponse.json({ error: "Server missing SUPABASE_SERVICE_ROLE_KEY" }, { status: 500 });
+    }
+
+    const type = session.metadata?.neya_type;
+
+    if (type === "reservation") {
+      const rid = session.metadata?.reservation_id;
+      if (rid) {
+        const pi = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
+        await admin
+          .from("reservations")
+          .update({
+            status: "confirmed",
+            stripe_checkout_session: session.id,
+            stripe_payment_intent: pi ?? null,
+            deposit_cents: session.amount_total ?? undefined,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", rid);
+      }
+    }
+
+    if (type === "ticket") {
+      const orderId = session.metadata?.ticket_order_id;
+      const ticketId = session.metadata?.ticket_id;
+      if (orderId) {
+        await admin
+          .from("ticket_orders")
+          .update({
+            status: "paid",
+            stripe_checkout_session: session.id,
+          })
+          .eq("id", orderId);
+
+        if (ticketId) {
+          const { data: tix } = await admin.from("tickets").select("quantity_sold").eq("id", ticketId).maybeSingle();
+          const nextSold = (tix?.quantity_sold ?? 0) + 1;
+          await admin.from("tickets").update({ quantity_sold: nextSold }).eq("id", ticketId);
+        }
+      }
+    }
   }
 
   return NextResponse.json({ received: true, type: event.type });
