@@ -1,0 +1,66 @@
+export type MusicGenre =
+  | "house"
+  | "techno"
+  | "afro"
+  | "hip-hop"
+  | "r&b"
+  | "latin"
+  | "live"
+  | "mixed";
+
+export type VenueCategory =
+  | "club"
+  | "lounge"
+  | "bar"
+  | "rooftop"
+  | "cafe"
+  | "live_music"
+  | "festival";
+
+export type LiveVibe = "packed" | "chill" | "energetic" | "vip";
+
+export type PriceLevel = 1 | 2 | 3 | 4;
+
+export interface Venue {
+  id: string;
+  slug: string;
+  name: string;
+  city_slug: string;
+  category: VenueCategory;
+  address?: string;
+  lat?: number;
+  lng?: number;
+  image_url: string;
+  price_level: PriceLevel;
+  atmosphere_score?: number;
+  crowd_count?: number;
+  is_live?: boolean;
+  distance_km?: number;
+}
+
+export interface Event {
+  id: string;
+  slug: string;
+  title: string;
+  venue: Pick<Venue, "id" | "slug" | "name" | "image_url">;
+  starts_at: string;
+  ends_at?: string;
+  genre: MusicGenre;
+  image_url: string;
+  crowd_count: number;
+  atmosphere_rating: number;
+  live_status: boolean;
+  reservation_spots_left?: number;
+  distance_km?: number;
+  price_level: PriceLevel;
+  fomo_line?: string;
+  ticket_from_eur?: number;
+}
+
+export interface StoryItem {
+  id: string;
+  venue_slug: string;
+  venue_name: string;
+  thumbnail_url: string;
+  label: string;
+}
