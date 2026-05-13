@@ -3,7 +3,7 @@ import { SITE } from "@/lib/constants";
 import { MOCK_EVENTS, MOCK_VENUES } from "@/data/mock-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = SITE.url.replace(/\/$/, "");
+  const base = SITE.url;
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${base}/`, changeFrequency: "daily", priority: 1 },
     { url: `${base}/events`, changeFrequency: "daily", priority: 0.9 },

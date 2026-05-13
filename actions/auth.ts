@@ -1,6 +1,12 @@
 "use server";
 
-/** Auth server actions — call `createClient()` from `@/lib/supabase/server` and Supabase Auth APIs */
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
 export async function signOut() {
-  /* const supabase = await createClient(); await supabase.auth.signOut(); */
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  redirect("/");
 }

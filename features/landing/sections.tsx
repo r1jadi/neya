@@ -5,13 +5,19 @@ import { AnimatedMap } from "@/components/neya/animated-map";
 import { GlassCard } from "@/components/neya/glass-card";
 import { TicketCard } from "@/components/neya/ticket-card";
 import { EventCard } from "@/components/neya/event-card";
-import { MOCK_EVENTS, MOCK_STORIES, MOCK_VENUES } from "@/data/mock-data";
+import { MOCK_STORIES } from "@/data/mock-data";
+import type { Event, Venue } from "@/types";
 import { LandingHero } from "./hero";
 import { Quote } from "lucide-react";
 
-export function LandingSections() {
-  const trending = MOCK_EVENTS;
-  const weekend = [...MOCK_EVENTS].reverse();
+interface LandingSectionsProps {
+  events: Event[];
+  venues: Venue[];
+}
+
+export function LandingSections({ events, venues }: LandingSectionsProps) {
+  const trending = events;
+  const weekend = [...events].reverse();
 
   return (
     <>
@@ -33,7 +39,7 @@ export function LandingSections() {
             <p className="mt-1 text-sm text-white/55">Prishtina-first. Rooftops, clubs, hidden rooms.</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {MOCK_VENUES.map((v) => (
+            {venues.map((v) => (
               <VenueCard key={v.id} venue={v} />
             ))}
           </div>

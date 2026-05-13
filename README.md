@@ -8,7 +8,20 @@ Nightlife and events discovery for **Prishtina** — clubs, rooftops, live music
 - Tailwind CSS v4, Framer Motion, TanStack Query, Zustand  
 - Supabase (Auth, DB, Storage, Realtime) — see `supabase/migrations/`  
 - Mapbox (`NEXT_PUBLIC_MAPBOX_TOKEN`)  
-- Stripe, Resend, PostHog — wired via env (stubs where noted in code)
+- Stripe (webhook verifies when `STRIPE_WEBHOOK_SECRET` is set), Resend stub, **PostHog** (client provider)
+
+## Supabase (first-time checklist)
+
+1. In the Supabase dashboard, open **SQL Editor** and run the files in `supabase/migrations/` **in filename order** (initial schema, then discovery columns, then auth profile trigger).
+2. Optional: run `supabase/seed_prishtina.sql` to insert sample **approved** venues and events so the homepage reads real rows.
+3. **Authentication → URL configuration**
+   - **Site URL:** your production URL, e.g. `https://neya-xk.vercel.app` (no trailing slash is fine).
+   - **Redirect URLs** (allow list), add both:
+     - `https://<your-production-domain>/auth/callback`
+     - `http://localhost:3000/auth/callback`
+4. **Authentication → Providers:** enable **Email** and **Google** (and optionally others later). For Google OAuth, use the Google Cloud Console and paste the client ID/secret into Supabase.
+
+OAuth and magic links redirect to `app/auth/callback/route.ts`, which exchanges the code for a session cookie.
 
 ## Local development
 
@@ -41,8 +54,8 @@ Open [http://localhost:3000](http://localhost:3000).
 2. In [Vercel](https://vercel.com/new), **Import** the GitHub repo; framework preset **Next.js**.
 3. Add **Environment variables** (Production + Preview) matching `.env.example`.
 4. **Domain:** Project → Settings → Domains → add `neya.app` (or your domain) and follow DNS instructions.
-5. **Supabase:** Create production project; run SQL from `supabase/migrations/`; enable Auth providers (Email, Google, Apple); configure redirect URLs to `https://<your-domain>/auth/callback` (add route when implementing OAuth callback).
-6. **Stripe:** Dashboard → Developers → Webhooks → endpoint `https://<your-domain>/api/webhooks/stripe` → copy signing secret to `STRIPE_WEBHOOK_SECRET`; implement verification in the route handler.
+5. **Supabase:** SQL migrations + optional seed (see **Supabase (first-time checklist)** above); enable Auth providers; redirect URLs must include `/auth/callback`.
+6. **Stripe:** Dashboard → Developers → Webhooks → endpoint `https://<your-domain>/api/webhooks/stripe`. After you add the signing secret to `STRIPE_WEBHOOK_SECRET`, the app verifies signatures; until then the endpoint returns `501` so Stripe does not treat unverified calls as success.
 7. **Mapbox:** Account → access token → `NEXT_PUBLIC_MAPBOX_TOKEN`.
 8. **Resend:** Verify sending domain; set `RESEND_API_KEY`.
 9. **PostHog:** Create project; set `NEXT_PUBLIC_POSTHOG_KEY` and host.

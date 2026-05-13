@@ -1,3 +1,5 @@
+import { getPublicSiteUrl } from "@/lib/env";
+
 export const DEFAULT_CITY = {
   slug: "prishtina",
   name: "Prishtina",
@@ -7,5 +9,7 @@ export const DEFAULT_CITY = {
 export const SITE = {
   name: "NEYA",
   tagline: "What's happening tonight?",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://neya.app",
-} as const;
+  get url() {
+    return getPublicSiteUrl();
+  },
+};

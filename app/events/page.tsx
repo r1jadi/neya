@@ -3,8 +3,8 @@ import Link from "next/link";
 import { EventCard } from "@/components/neya/event-card";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { MOCK_EVENTS } from "@/data/mock-data";
 import { SITE } from "@/lib/constants";
+import { getFeaturedEvents } from "@/services/events";
 
 export const metadata: Metadata = {
   title: `Events tonight · ${SITE.name}`,
@@ -17,7 +17,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const events = await getFeaturedEvents();
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
@@ -28,10 +30,10 @@ export default function EventsPage() {
             Tonight&apos;s lineup
           </h1>
           <p className="mt-2 max-w-xl text-sm text-white/55">
-            Mock data for Phase 1 — wire to Supabase when your project URL and keys are ready.
+            Pulled from Supabase when your tables have data — otherwise demo content fills the feed.
           </p>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {MOCK_EVENTS.map((e) => (
+            {events.map((e) => (
               <EventCard key={e.id} event={e} />
             ))}
           </div>

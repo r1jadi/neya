@@ -3,7 +3,7 @@ import { NeonButton } from "@/components/neya/neon-button";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 
-export default function NotFound() {
+export default async function NotFound() {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
