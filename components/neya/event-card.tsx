@@ -8,15 +8,17 @@ import type { Event } from "@/types";
 import { AtmosphereMeter } from "@/components/neya/atmosphere-meter";
 import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { LiveBadge } from "@/components/neya/live-badge";
+import { SaveEventButton } from "@/components/neya/save-event-button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, isUuid } from "@/lib/utils";
 
 interface EventCardProps {
   event: Event;
   className?: string;
+  saved?: boolean;
 }
 
-export function EventCard({ event, className }: EventCardProps) {
+export function EventCard({ event, className, saved }: EventCardProps) {
   return (
     <motion.article
       whileHover={{ y: -4 }}
@@ -38,6 +40,11 @@ export function EventCard({ event, className }: EventCardProps) {
           sizes="(max-width:768px) 100vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+        <div className="absolute right-3 top-3 z-20 flex items-center gap-2">
+          {isUuid(event.id) ? (
+            <SaveEventButton eventId={event.id} eventSlug={event.slug} initialSaved={Boolean(saved)} />
+          ) : null}
+        </div>
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           <LiveBadge live={event.live_status} />
           <Badge variant="secondary" className="backdrop-blur-md">

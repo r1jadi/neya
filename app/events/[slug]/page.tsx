@@ -7,26 +7,29 @@ import { AtmosphereMeter } from "@/components/neya/atmosphere-meter";
 import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { GuestlistModal } from "@/components/neya/guestlist-modal";
 import { LiveBadge } from "@/components/neya/live-badge";
+import { LiveAtmospherePanel } from "@/components/neya/live-atmosphere-panel";
 import { ReservationModal } from "@/components/neya/reservation-modal";
+import { SaveEventButton } from "@/components/neya/save-event-button";
 import { TicketCard } from "@/components/neya/ticket-card";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
-import { LiveAtmospherePanel } from "@/components/neya/live-atmosphere-panel";
-import { getEventBookingMetaBySlug } from "@/services/booking-meta";
-import { getEventBySlug } from "@/services/events";
+import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
 import { eventJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
+import { getEventBookingMetaBySlug } from "@/services/booking-meta";
+import { getEventBySlug } from "@/services/events";
 
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ voted?: string; error?: string }>;
+  searchParams: Promise<{ voted?: string; error?: string; guestlist?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const event = await getEventBySlug(slug);
+  const supabase = await createClient();
+  const event = await getEventBySlug(slug, supabase);
   if (!event) return { title: "Event not found" };
   return {
     title: `${event.title} · ${SITE.name}`,
@@ -42,8 +45,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function EventDetailPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
-  const [event, meta] = await Promise.all([getEventBySlug(slug), getEventBookingMetaBySlug(slug)]);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [event, meta] = await Promise.all([getEventBySlug(slug, supabase), getEventBookingMetaBySlug(slug)]);
   if (!event) notFound();
+
+  let saved = false;
+  if (user && isUuid(event.id)) {
+    const { data: s } = await supabase
+      .from("saved_events")
+      .select("event_id")
+      .eq("user_id", user.id)
+      .eq("event_id", event.id)
+      .maybeSingle();
+    saved = Boolean(s);
+  }
 
   const jsonLd = eventJsonLd(event);
 
@@ -61,6 +80,11 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
               <LiveBadge live={event.live_status} />
               <Badge variant="neon">{event.genre}</Badge>
+              {event.is_hidden_premium ? (
+                <Badge variant="secondary" className="border-fuchsia-500/40 text-fuchsia-200">
+                  Premium room
+                </Badge>
+              ) : null}
             </div>
             <h1 className="mx-auto mt-3 max-w-6xl font-[family-name:var(--font-display)] text-3xl font-bold text-white sm:text-5xl">
               {event.title}
@@ -74,6 +98,16 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
         </div>
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-6">
           <div className="space-y-6 sm:col-span-2">
+            {sp.guestlist === "applied" ? (
+              <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
+                Guestlist request sent.
+              </p>
+            ) : null}
+            {sp.guestlist === "duplicate" ? (
+              <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+                You&apos;re already on this list.
+              </p>
+            ) : null}
             {sp.voted ? (
               <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
                 Thanks — your pulse is in the room.
@@ -102,6 +136,9 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             ) : null}
           </div>
           <div className="space-y-4">
+            {user && isUuid(event.id) ? (
+              <SaveEventButton eventId={event.id} eventSlug={event.slug} initialSaved={saved} className="w-full" />
+            ) : null}
             {event.ticket_from_eur != null ? (
               <TicketCard
                 eventTitle={event.title}
@@ -134,6 +171,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             {meta?.guestlistId ? (
               <GuestlistModal
                 eventTitle={event.title}
+                eventSlug={event.slug}
                 guestlistId={meta.guestlistId}
                 trigger={
                   <button

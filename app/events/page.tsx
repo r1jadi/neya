@@ -4,6 +4,7 @@ import { EventCard } from "@/components/neya/event-card";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
+import { createClient } from "@/lib/supabase/server";
 import { getFeaturedEvents } from "@/services/events";
 
 export const metadata: Metadata = {
@@ -21,7 +22,16 @@ type Props = { searchParams: Promise<{ error?: string; guestlist?: string }> };
 
 export default async function EventsPage({ searchParams }: Props) {
   const q = await searchParams;
-  const events = await getFeaturedEvents();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const events = await getFeaturedEvents(supabase);
+  let savedEventIds: string[] = [];
+  if (user) {
+    const { data } = await supabase.from("saved_events").select("event_id").eq("user_id", user.id).limit(400);
+    savedEventIds = data?.map((r) => r.event_id) ?? [];
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
@@ -52,7 +62,7 @@ export default async function EventsPage({ searchParams }: Props) {
           ) : null}
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((e) => (
-              <EventCard key={e.id} event={e} />
+              <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
             ))}
           </div>
           <p className="mt-12 text-center text-sm text-white/45">

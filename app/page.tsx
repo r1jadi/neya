@@ -1,32 +1,36 @@
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { LandingSections } from "@/features/landing/sections";
+import { createClient } from "@/lib/supabase/server";
+import { getRecentActivity } from "@/services/activity";
 import { getFeaturedEvents } from "@/services/events";
 import { getStoriesForCity } from "@/services/stories";
 import { getVenues } from "@/services/venues";
-import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
-  const [events, venues, stories] = await Promise.all([
-    getFeaturedEvents(),
-    getVenues(),
-    getStoriesForCity("prishtina"),
-  ]);
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const [events, venues, stories, activityItems] = await Promise.all([
+    getFeaturedEvents(supabase),
+    getVenues(),
+    getStoriesForCity("prishtina"),
+    getRecentActivity(24),
+  ]);
+
   let musicGenres: string[] = [];
   let venueInterests: string[] = [];
+  let savedEventIds: string[] = [];
   if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("music_genres, interests")
-      .eq("id", user.id)
-      .maybeSingle();
-    musicGenres = profile?.music_genres ?? [];
-    venueInterests = profile?.interests ?? [];
+    const [prof, saved] = await Promise.all([
+      supabase.from("profiles").select("music_genres, interests").eq("id", user.id).maybeSingle(),
+      supabase.from("saved_events").select("event_id").eq("user_id", user.id).limit(400),
+    ]);
+    musicGenres = prof.data?.music_genres ?? [];
+    venueInterests = prof.data?.interests ?? [];
+    savedEventIds = saved.data?.map((r) => r.event_id) ?? [];
   }
 
   const hereNow = events.reduce((a, e) => a + e.crowd_count, 0);
@@ -44,6 +48,8 @@ export default async function Home() {
         musicGenres={musicGenres}
         venueInterests={venueInterests}
         heroStats={{ hereNow, tonightCount, vibe }}
+        activityItems={activityItems}
+        savedEventIds={savedEventIds}
       />
       <SiteFooter />
     </div>

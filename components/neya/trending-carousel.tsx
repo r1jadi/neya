@@ -13,9 +13,10 @@ interface TrendingCarouselProps {
   subtitle?: string;
   events: Event[];
   className?: string;
+  savedEventIds?: string[];
 }
 
-export function TrendingCarousel({ title, subtitle, events, className }: TrendingCarouselProps) {
+export function TrendingCarousel({ title, subtitle, events, className, savedEventIds }: TrendingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   if (!events.length) return null;
@@ -54,7 +55,7 @@ export function TrendingCarousel({ title, subtitle, events, className }: Trendin
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className="w-[min(100%,320px)] shrink-0 snap-start"
           >
-            <EventCard event={event} />
+            <EventCard event={event} saved={savedEventIds?.includes(event.id)} />
           </motion.div>
         ))}
       </div>

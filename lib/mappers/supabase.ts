@@ -78,6 +78,8 @@ export function mapEventRow(row: {
   fomo_line?: string | null;
   reservation_spots_left?: number | null;
   ticket_from_eur?: number | string | null;
+  is_hidden_premium?: boolean | null;
+  is_listed_public?: boolean | null;
   venues:
     | {
         id: string;
@@ -127,5 +129,7 @@ export function mapEventRow(row: {
     price_level: price,
     fomo_line: row.fomo_line ?? undefined,
     ticket_from_eur: row.ticket_from_eur != null ? num(row.ticket_from_eur, 0) : undefined,
+    is_hidden_premium: Boolean(row.is_hidden_premium),
+    is_listed_public: row.is_listed_public !== false,
   };
 }

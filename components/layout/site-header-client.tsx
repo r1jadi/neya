@@ -17,10 +17,12 @@ export function SiteHeaderClient({
   userEmail,
   isAdmin,
   showBusiness,
+  isPremium,
 }: {
   userEmail: string | null;
   isAdmin: boolean;
   showBusiness: boolean;
+  isPremium?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const authed = Boolean(userEmail);
@@ -64,6 +66,11 @@ export function SiteHeaderClient({
           <span className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-white">
             {SITE.name}
           </span>
+          {(isPremium ?? false) ? (
+            <span className="rounded-full border border-fuchsia-500/40 bg-fuchsia-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-fuchsia-200">
+              Plus
+            </span>
+          ) : null}
           <span className="hidden rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white/50 sm:inline">
             Prishtina
           </span>

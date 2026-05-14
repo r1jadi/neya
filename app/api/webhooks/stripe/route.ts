@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logSystemActivity } from "@/lib/activity-log";
 
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
@@ -62,6 +63,14 @@ export async function POST(req: Request) {
             updated_at: new Date().toISOString(),
           })
           .eq("id", rid);
+
+        const { data: resRow } = await admin.from("reservations").select("user_id, event_id").eq("id", rid).maybeSingle();
+        if (resRow?.user_id) {
+          await logSystemActivity(admin, "confirmed_table", "reservation", rid, {
+            user_id: resRow.user_id,
+            event_id: resRow.event_id,
+          });
+        }
       }
     }
 
@@ -82,6 +91,11 @@ export async function POST(req: Request) {
           const { data: tix } = await admin.from("tickets").select("quantity_sold").eq("id", ticketId).maybeSingle();
           const nextSold = (tix?.quantity_sold ?? 0) + 1;
           await admin.from("tickets").update({ quantity_sold: nextSold }).eq("id", ticketId);
+        }
+
+        const { data: ord } = await admin.from("ticket_orders").select("user_id").eq("id", orderId).maybeSingle();
+        if (ord?.user_id) {
+          await logSystemActivity(admin, "bought_ticket", "ticket_order", orderId, { ticket_id: ticketId });
         }
       }
     }

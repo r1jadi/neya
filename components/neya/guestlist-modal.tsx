@@ -16,11 +16,12 @@ import { applyGuestlist } from "@/actions/bookings";
 
 interface GuestlistModalProps {
   eventTitle: string;
+  eventSlug: string;
   guestlistId: string;
   trigger?: React.ReactNode;
 }
 
-export function GuestlistModal({ eventTitle, guestlistId, trigger }: GuestlistModalProps) {
+export function GuestlistModal({ eventTitle, eventSlug, guestlistId, trigger }: GuestlistModalProps) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -36,6 +37,7 @@ export function GuestlistModal({ eventTitle, guestlistId, trigger }: GuestlistMo
         </DialogHeader>
         <form action={applyGuestlist} className="grid gap-3 py-2">
           <input type="hidden" name="guestlist_id" value={guestlistId} />
+          <input type="hidden" name="redirect" value={`/events/${eventSlug}`} />
           <Input name="contact" placeholder="Instagram or phone" required maxLength={280} />
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="ghost" type="button" onClick={() => setOpen(false)}>

@@ -68,6 +68,8 @@ export const MOCK_EVENTS: Event[] = [
     price_level: 3,
     fomo_line: "120 people viewed this in the last hour",
     ticket_from_eur: 12,
+    is_hidden_premium: false,
+    is_listed_public: true,
   },
   {
     id: "e2",
@@ -91,6 +93,8 @@ export const MOCK_EVENTS: Event[] = [
     price_level: 3,
     fomo_line: "Trending in Prishtina",
     ticket_from_eur: 15,
+    is_hidden_premium: false,
+    is_listed_public: true,
   },
   {
     id: "e3",
@@ -113,6 +117,8 @@ export const MOCK_EVENTS: Event[] = [
     price_level: 2,
     fomo_line: "Line estimated: 18 min",
     ticket_from_eur: 8,
+    is_hidden_premium: false,
+    is_listed_public: true,
   },
 ];
 

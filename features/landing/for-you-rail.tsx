@@ -6,9 +6,10 @@ interface ForYouRailProps {
   events: Event[];
   musicGenres: string[];
   venueInterests: string[];
+  savedEventIds?: string[];
 }
 
-export function ForYouRail({ events, musicGenres, venueInterests }: ForYouRailProps) {
+export function ForYouRail({ events, musicGenres, venueInterests, savedEventIds }: ForYouRailProps) {
   const byMusic = matchGenres(events, musicGenres);
   const byVenue =
     venueInterests.length > 0
@@ -21,6 +22,7 @@ export function ForYouRail({ events, musicGenres, venueInterests }: ForYouRailPr
       title="Picked for you"
       subtitle="Taste match from your genres & venue picks — full AI engine in Phase 4."
       events={picks}
+      savedEventIds={savedEventIds}
     />
   );
 }

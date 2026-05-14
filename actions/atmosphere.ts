@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
+import { logUserActivity } from "@/lib/activity-log";
 
 function clamp(n: number, lo: number, hi: number) {
   return Math.min(hi, Math.max(lo, n));
@@ -49,6 +50,9 @@ export async function submitAtmosphereReview(formData: FormData) {
 
   if (error) redirect(slug ? `/events/${slug}?error=vote` : "/events?error=vote");
 
+  await logUserActivity(supabase, user.id, "pulse_vote", "event", eventId, { overall_vibe: vibe });
+
   if (slug) revalidatePath(`/events/${slug}`);
+  revalidatePath("/");
   redirect(slug ? `/events/${slug}?voted=1` : "/events?voted=1");
 }

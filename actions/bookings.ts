@@ -1,9 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/server";
 import { getPublicSiteUrl } from "@/lib/env";
+import { logUserActivity } from "@/lib/activity-log";
 
 const DEPOSIT_CENTS = 2000;
 
@@ -87,7 +89,11 @@ export async function applyGuestlist(formData: FormData) {
 
   const guestlistId = String(formData.get("guestlist_id") ?? "");
   const contact = String(formData.get("contact") ?? "").slice(0, 280);
+  const redirectTo = String(formData.get("redirect") ?? "/events").trim();
+  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/events";
   if (!guestlistId || !contact) redirect("/events?error=guestlist-fields");
+
+  const { data: glRow } = await supabase.from("guestlists").select("event_id").eq("id", guestlistId).maybeSingle();
 
   const { error } = await supabase.from("guestlist_entries").insert({
     guestlist_id: guestlistId,
@@ -96,9 +102,16 @@ export async function applyGuestlist(formData: FormData) {
     contact,
   });
 
-  if (error?.code === "23505") redirect("/events?guestlist=duplicate");
+  if (error?.code === "23505") redirect(`${safeRedirect}?guestlist=duplicate`);
   if (error) redirect("/events?error=guestlist");
-  redirect("/events?guestlist=applied");
+
+  if (glRow?.event_id) {
+    await logUserActivity(supabase, user.id, "joined_guestlist", "event", glRow.event_id, { guestlist_id: guestlistId });
+  }
+
+  revalidatePath("/");
+  revalidatePath(safeRedirect);
+  redirect(`${safeRedirect}?guestlist=applied`);
 }
 
 export async function createTicketCheckout(formData: FormData) {

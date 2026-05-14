@@ -1,3 +1,4 @@
+import { ActivityStrip } from "@/components/neya/activity-strip";
 import { StoryViewer } from "@/components/neya/story-viewer";
 import { TrendingCarousel } from "@/components/neya/trending-carousel";
 import { VenueCard } from "@/components/neya/venue-card";
@@ -21,6 +22,7 @@ import {
   thisWeekend,
   uniqueBySlug,
 } from "@/lib/event-filters";
+import type { ActivityFeedItem } from "@/services/activity";
 import type { Event, StoryItem, Venue } from "@/types";
 import { Quote } from "lucide-react";
 
@@ -31,6 +33,8 @@ interface LandingSectionsProps {
   musicGenres: string[];
   venueInterests: string[];
   heroStats: { hereNow: number; tonightCount: number; vibe: number };
+  activityItems: ActivityFeedItem[];
+  savedEventIds: string[];
 }
 
 const FOMO_DEFAULTS = [
@@ -47,6 +51,8 @@ export function LandingSections({
   musicGenres,
   venueInterests,
   heroStats,
+  activityItems,
+  savedEventIds,
 }: LandingSectionsProps) {
   const trending = sortByCrowd(events).slice(0, 14);
   const popular = sortByCrowd(events).slice(0, 12);
@@ -81,13 +87,20 @@ export function LandingSections({
     <>
       <LandingHero stats={heroStats} />
 
+      <ActivityStrip items={activityItems} />
+
       <section className="mx-auto max-w-6xl space-y-3 px-4 pb-6 sm:px-6">
         <FomoTicker lines={fomoLines} />
       </section>
 
       {musicGenres.length || venueInterests.length ? (
         <section className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-          <ForYouRail events={events} musicGenres={musicGenres} venueInterests={venueInterests} />
+          <ForYouRail
+            events={events}
+            musicGenres={musicGenres}
+            venueInterests={venueInterests}
+            savedEventIds={savedEventIds}
+          />
         </section>
       ) : null}
 
@@ -97,27 +110,82 @@ export function LandingSections({
       </section>
 
       <div className="mx-auto max-w-6xl space-y-16 px-4 pb-20 sm:px-6">
-        <TrendingCarousel title="Trending tonight" subtitle="Most viewed in the last 60 minutes" events={trending} />
+        <TrendingCarousel
+          title="Trending tonight"
+          subtitle="Most viewed in the last 60 minutes"
+          events={trending}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Most popular events" subtitle="Crowd heat + saves across the city" events={popular} />
+        <TrendingCarousel
+          title="Most popular events"
+          subtitle="Crowd heat + saves across the city"
+          events={popular}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Nearby places" subtitle="Distance-aware picks (opt-in geolocation later)" events={nearby} />
+        <TrendingCarousel
+          title="Nearby places"
+          subtitle="Distance-aware picks (opt-in geolocation later)"
+          events={nearby}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Live right now" subtitle="Rooms reporting live energy" events={live} />
+        <TrendingCarousel
+          title="Live right now"
+          subtitle="Rooms reporting live energy"
+          events={live}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Rooftop events" subtitle="Skyline sessions" events={rooftops} />
+        <TrendingCarousel
+          title="Rooftop events"
+          subtitle="Skyline sessions"
+          events={rooftops}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="DJ sets" subtitle="House · techno · afro" events={djs} />
+        <TrendingCarousel
+          title="DJ sets"
+          subtitle="House · techno · afro"
+          events={djs}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Student parties" subtitle="Campus energy & open format" events={students} />
+        <TrendingCarousel
+          title="Student parties"
+          subtitle="Campus energy & open format"
+          events={students}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Hidden gems" subtitle="Underrated vibe, still elite" events={gems} />
+        <TrendingCarousel
+          title="Hidden gems"
+          subtitle="Underrated vibe, still elite"
+          events={gems}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Last tables left" subtitle="Reservation pressure" events={tables} />
+        <TrendingCarousel
+          title="Last tables left"
+          subtitle="Reservation pressure"
+          events={tables}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="This weekend" subtitle="Next few nights, one scroll" events={weekend} />
+        <TrendingCarousel
+          title="This weekend"
+          subtitle="Next few nights, one scroll"
+          events={weekend}
+          savedEventIds={savedEventIds}
+        />
 
-        <TrendingCarousel title="Rising atmosphere" subtitle="Highest live scores on the wire" events={rising} />
+        <TrendingCarousel
+          title="Rising atmosphere"
+          subtitle="Highest live scores on the wire"
+          events={rising}
+          savedEventIds={savedEventIds}
+        />
 
         <section id="venues" className="space-y-6">
           <div>
@@ -151,7 +219,7 @@ export function LandingSections({
           </h2>
           <div className="grid gap-6 lg:grid-cols-3">
             {events.slice(0, 9).map((e) => (
-              <EventCard key={e.id} event={e} />
+              <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
             ))}
           </div>
         </section>

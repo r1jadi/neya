@@ -12,6 +12,7 @@ import { getPublicCheckinCount, getVenueMetaBySlug } from "@/services/booking-me
 import { getFeaturedEvents } from "@/services/events";
 import { getVenueBySlug } from "@/services/venues";
 import { SITE } from "@/lib/constants";
+import { createClient } from "@/lib/supabase/server";
 import { venueJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
 import { CheckInWidget } from "@/components/neya/check-in-widget";
@@ -34,9 +35,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function VenuePage({ params }: Props) {
   const { slug } = await params;
+  const supabase = await createClient();
   const [venue, allEvents, venueMeta] = await Promise.all([
     getVenueBySlug(slug),
-    getFeaturedEvents(),
+    getFeaturedEvents(supabase),
     getVenueMetaBySlug(slug),
   ]);
   if (!venue) notFound();

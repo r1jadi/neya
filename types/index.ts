@@ -55,6 +55,8 @@ export interface Event {
   price_level: PriceLevel;
   fomo_line?: string;
   ticket_from_eur?: number;
+  is_hidden_premium?: boolean;
+  is_listed_public?: boolean;
 }
 
 export interface StoryItem {

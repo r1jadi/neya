@@ -41,12 +41,43 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const { data: saved } = await supabase
+    .from("saved_events")
+    .select("event_id, created_at, events(slug, title)")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
         <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Your NEYA</h1>
-        <p className="mt-1 text-sm text-white/55">Reservations and tickets tied to your account.</p>
+        <p className="mt-1 text-sm text-white/55">Reservations, tickets, and saved nights.</p>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Saved events</h2>
+          <ul className="mt-3 space-y-2">
+            {saved?.length ? (
+              saved.map((s) => {
+                const ev = s.events as { slug?: string; title?: string } | null;
+                return (
+                  <li key={s.event_id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm">
+                    {ev?.slug ? (
+                      <Link href={`/events/${ev.slug}`} className="font-medium text-white hover:underline">
+                        {ev?.title ?? "Event"}
+                      </Link>
+                    ) : (
+                      <span className="text-white/50">Event unavailable</span>
+                    )}
+                  </li>
+                );
+              })
+            ) : (
+              <li className="text-sm text-white/45">Save events from the feed or event page.</li>
+            )}
+          </ul>
+        </section>
 
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Guestlists</h2>

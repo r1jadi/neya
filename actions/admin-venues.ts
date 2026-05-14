@@ -28,5 +28,5 @@ export async function approveVenue(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/events");
   revalidatePath("/admin");
-  redirect("/admin?approved=1");
+  redirect("/admin?tab=venues&approved=1");
 }

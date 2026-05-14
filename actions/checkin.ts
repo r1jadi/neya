@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
+import { logUserActivity } from "@/lib/activity-log";
 
 const VIS = new Set(["public", "private", "friends"]);
 
@@ -32,6 +33,9 @@ export async function checkInAtVenue(formData: FormData) {
 
   if (error) redirect(venueSlug ? `/venues/${venueSlug}?checkin=err` : "/events?error=checkin");
 
+  await logUserActivity(supabase, user.id, "checked_in", "venue", venueId, { visibility });
+
   if (venueSlug) revalidatePath(`/venues/${venueSlug}`);
+  revalidatePath("/");
   redirect(venueSlug ? `/venues/${venueSlug}?checkin=1` : "/?checkin=1");
 }
