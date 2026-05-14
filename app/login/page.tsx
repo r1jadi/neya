@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Sign in to NEYA — email, magic link, and Google via Supabase Auth.",
 };
 
-type Props = { searchParams: Promise<{ error?: string }> };
+type Props = { searchParams: Promise<{ error?: string; next?: string }> };
 
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
@@ -35,7 +35,7 @@ export default async function LoginPage({ searchParams }: Props) {
                 Password, magic link, or Google — powered by Supabase Auth.
               </p>
             </div>
-            <LoginForm initialError={params.error} />
+            <LoginForm initialError={params.error} redirectTo={params.next} />
             <div className="flex justify-between text-xs text-white/45">
               <Link href="/register" className="text-sky-300 hover:underline">
                 Create account

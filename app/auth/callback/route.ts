@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
+type CookieJar = { name: string; value: string; options?: Record<string, unknown> };
+
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -13,8 +15,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/login?error=config", url.origin));
   }
 
-  const redirectTarget = new URL(safeNext, url.origin);
-  const response = NextResponse.redirect(redirectTarget);
+  const jar: CookieJar[] = [];
 
   const supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
@@ -23,20 +24,43 @@ export async function GET(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+          jar.push({ name, value, options });
         });
       },
     },
   });
 
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) {
-      return NextResponse.redirect(new URL("/login?error=auth", url.origin));
-    }
-  } else {
-    return NextResponse.redirect(new URL("/login?error=auth", url.origin));
+  const redirectWithJar = (pathname: string) => {
+    const res = NextResponse.redirect(new URL(pathname, url.origin));
+    jar.forEach(({ name, value, options }) => {
+      res.cookies.set(name, value, options as never);
+    });
+    return res;
+  };
+
+  if (!code) {
+    return redirectWithJar("/login?error=auth");
   }
 
-  return response;
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error) {
+    return redirectWithJar("/login?error=auth");
+  }
+
+  let path = safeNext;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_complete")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (!profile?.onboarding_complete) {
+      path = "/onboarding";
+    }
+  }
+
+  return redirectWithJar(path);
 }

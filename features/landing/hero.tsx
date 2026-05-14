@@ -6,7 +6,21 @@ import { ArrowRight, Radio } from "lucide-react";
 import { NeonButton } from "@/components/neya/neon-button";
 import { SITE } from "@/lib/constants";
 
-export function LandingHero() {
+export interface HeroStats {
+  hereNow: number;
+  tonightCount: number;
+  vibe: number;
+}
+
+interface LandingHeroProps {
+  stats?: HeroStats;
+}
+
+export function LandingHero({ stats }: LandingHeroProps) {
+  const hereNow = stats?.hereNow ?? 128;
+  const tonight = stats?.tonightCount ?? 24;
+  const vibe = stats?.vibe ?? 9.2;
+
   return (
     <section className="relative isolate overflow-hidden pt-10 pb-20 sm:pt-16 sm:pb-28">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -63,15 +77,15 @@ export function LandingHero() {
           <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-8 text-center sm:max-w-md sm:text-left">
             <div>
               <dt className="text-[11px] uppercase tracking-widest text-white/40">Here now</dt>
-              <dd className="mt-1 text-2xl font-bold tabular-nums text-white">128</dd>
+              <dd className="mt-1 text-2xl font-bold tabular-nums text-white">{hereNow.toLocaleString()}</dd>
             </div>
             <div>
               <dt className="text-[11px] uppercase tracking-widest text-white/40">Tonight</dt>
-              <dd className="mt-1 text-2xl font-bold tabular-nums text-white">24</dd>
+              <dd className="mt-1 text-2xl font-bold tabular-nums text-white">{tonight}</dd>
             </div>
             <div>
               <dt className="text-[11px] uppercase tracking-widest text-white/40">Vibe</dt>
-              <dd className="mt-1 text-2xl font-bold tabular-nums text-sky-300">9.2</dd>
+              <dd className="mt-1 text-2xl font-bold tabular-nums text-sky-300">{vibe.toFixed(1)}</dd>
             </div>
           </dl>
         </div>

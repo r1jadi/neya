@@ -6,12 +6,13 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-function callbackUrl() {
+function callbackUrl(redirectPath?: string) {
   if (typeof window === "undefined") return "";
-  return `${window.location.origin}/auth/callback`;
+  const q = redirectPath && redirectPath.startsWith("/") ? `?next=${encodeURIComponent(redirectPath)}` : "";
+  return `${window.location.origin}/auth/callback${q}`;
 }
 
-export function LoginForm({ initialError }: { initialError?: string }) {
+export function LoginForm({ initialError, redirectTo }: { initialError?: string; redirectTo?: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<string | null>(null);
@@ -36,7 +37,8 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       setError(err.message);
       return;
     }
-    window.location.href = "/events";
+    const dest = redirectTo && redirectTo.startsWith("/") ? redirectTo : "/events";
+    window.location.href = dest;
   }
 
   async function signInWithGoogle() {
@@ -46,7 +48,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     const { data, error: err } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: callbackUrl(),
+        redirectTo: callbackUrl(redirectTo),
         queryParams: { access_type: "offline", prompt: "consent" },
       },
     });
@@ -63,6 +65,27 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     }
   }
 
+  async function signInWithApple() {
+    setLoading("apple");
+    setError(null);
+    const supabase = createClient();
+    const { data, error: err } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: { redirectTo: callbackUrl(redirectTo) },
+    });
+    if (err) {
+      setLoading(null);
+      setError(err.message);
+      return;
+    }
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      setLoading(null);
+      setError("No redirect URL returned. Enable Apple under Supabase → Authentication → Providers.");
+    }
+  }
+
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault();
     setLoading("magic");
@@ -71,7 +94,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: callbackUrl() },
+      options: { emailRedirectTo: callbackUrl(redirectTo) },
     });
     setLoading(null);
     if (err) {
@@ -129,9 +152,18 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       >
         {loading === "google" ? "Redirecting…" : "Continue with Google"}
       </Button>
+      <Button
+        type="button"
+        variant="secondary"
+        className="w-full"
+        disabled={loading !== null}
+        onClick={() => void signInWithApple()}
+      >
+        {loading === "apple" ? "Redirecting…" : "Continue with Apple"}
+      </Button>
       <p className="pt-2 text-center text-xs text-white/45">
-        Enable Google under Supabase → Authentication → Providers. Redirect URL:{" "}
-        <code className="break-all rounded bg-white/10 px-1">{callbackUrl() || "…/auth/callback"}</code>
+        Enable Google / Apple under Supabase → Authentication → Providers. Redirect URL:{" "}
+        <code className="break-all rounded bg-white/10 px-1">{callbackUrl(redirectTo) || "…/auth/callback"}</code>
       </p>
       <p className="text-center text-xs text-white/45">
         <Link href="/" className="text-sky-300 hover:underline">

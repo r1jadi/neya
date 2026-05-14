@@ -25,17 +25,18 @@ export async function getFeaturedEvents(): Promise<Event[]> {
         fomo_line,
         reservation_spots_left,
         ticket_from_eur,
-        venues (
+        venues!inner (
           id,
           slug,
           name,
           image_url,
-          price_level
+          price_level,
+          category
         )
       `,
       )
       .order("starts_at", { ascending: true })
-      .limit(40);
+      .limit(60);
 
     if (error) {
       console.error("[neya] getFeaturedEvents", error.message);
@@ -75,12 +76,13 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
         fomo_line,
         reservation_spots_left,
         ticket_from_eur,
-        venues (
+        venues!inner (
           id,
           slug,
           name,
           image_url,
-          price_level
+          price_level,
+          category
         )
       `,
       )

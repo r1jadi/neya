@@ -40,6 +40,9 @@ export function EventCard({ event, className }: EventCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           <LiveBadge live={event.live_status} />
+          <Badge variant="secondary" className="backdrop-blur-md">
+            {event.venue.category.replace(/_/g, " ")}
+          </Badge>
           <Badge variant="neon" className="backdrop-blur-md">
             <Sparkles className="mr-1 h-3 w-3" />
             {event.genre}

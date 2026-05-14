@@ -18,6 +18,7 @@ interface TrendingCarouselProps {
 export function TrendingCarousel({ title, subtitle, events, className }: TrendingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  if (!events.length) return null;
   const scrollBy = (dir: -1 | 1) => {
     scrollRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
   };

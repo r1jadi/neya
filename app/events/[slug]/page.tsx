@@ -12,12 +12,17 @@ import { TicketCard } from "@/components/neya/ticket-card";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
+import { LiveAtmospherePanel } from "@/components/neya/live-atmosphere-panel";
 import { getEventBookingMetaBySlug } from "@/services/booking-meta";
 import { getEventBySlug } from "@/services/events";
 import { SITE } from "@/lib/constants";
 import { eventJsonLd } from "@/lib/seo/json-ld";
+import { isUuid } from "@/lib/utils";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ voted?: string; error?: string }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -34,8 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function EventDetailPage({ params }: Props) {
+export default async function EventDetailPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const sp = await searchParams;
   const [event, meta] = await Promise.all([getEventBySlug(slug), getEventBookingMetaBySlug(slug)]);
   if (!event) notFound();
 
@@ -68,8 +74,27 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-6">
           <div className="space-y-6 sm:col-span-2">
+            {sp.voted ? (
+              <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
+                Thanks — your pulse is in the room.
+              </p>
+            ) : null}
+            {sp.error === "vote" ? (
+              <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+                Could not save your vote. Make sure you are logged in and try again.
+              </p>
+            ) : null}
             <CrowdIndicator count={event.crowd_count} />
-            <AtmosphereMeter score={event.atmosphere_rating} />
+            {isUuid(event.id) ? (
+              <LiveAtmospherePanel
+                eventId={event.id}
+                venueId={event.venue.id}
+                eventSlug={event.slug}
+                initialScore={event.atmosphere_rating}
+              />
+            ) : (
+              <AtmosphereMeter score={event.atmosphere_rating} />
+            )}
             {event.fomo_line ? (
               <p className="rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-4 text-sm font-medium text-fuchsia-100">
                 {event.fomo_line}
@@ -83,8 +108,8 @@ export default async function EventDetailPage({ params }: Props) {
                 tier="General"
                 priceEur={event.ticket_from_eur}
                 endsAt="tonight"
-                soldOut={meta ? !meta.ticketId : false}
-                ticketId={meta?.ticketId}
+                soldOut={Boolean(meta?.ticketSoldOut)}
+                ticketId={meta?.ticketId ?? undefined}
               />
             ) : null}
             {meta ? (

@@ -16,9 +16,11 @@ const links = [
 export function SiteHeaderClient({
   userEmail,
   isAdmin,
+  showBusiness,
 }: {
   userEmail: string | null;
   isAdmin: boolean;
+  showBusiness: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const authed = Boolean(userEmail);
@@ -28,6 +30,11 @@ export function SiteHeaderClient({
       <Button variant="ghost" asChild>
         <Link href="/dashboard">Dashboard</Link>
       </Button>
+      {showBusiness ? (
+        <Button variant="ghost" asChild>
+          <Link href="/business">Venue hub</Link>
+        </Button>
+      ) : null}
       {isAdmin ? (
         <Button variant="ghost" asChild>
           <Link href="/admin">Admin</Link>
@@ -115,6 +122,15 @@ export function SiteHeaderClient({
                   >
                     Dashboard
                   </Link>
+                  {showBusiness ? (
+                    <Link
+                      href="/business"
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                      onClick={() => setOpen(false)}
+                    >
+                      Venue hub
+                    </Link>
+                  ) : null}
                   {isAdmin ? (
                     <Link
                       href="/admin"

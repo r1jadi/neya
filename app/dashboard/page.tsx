@@ -27,9 +27,16 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const { data: guestlist } = await supabase
+    .from("guestlist_entries")
+    .select("id, status, created_at, guestlists(name, events(title, slug))")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
   const { data: orders } = await supabase
     .from("ticket_orders")
-    .select("id, status, created_at, ticket_id")
+    .select("id, status, created_at, qr_payload, tickets(tier_name, events(title, slug))")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -40,6 +47,34 @@ export default async function DashboardPage() {
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
         <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Your NEYA</h1>
         <p className="mt-1 text-sm text-white/55">Reservations and tickets tied to your account.</p>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Guestlists</h2>
+          <ul className="mt-3 space-y-2">
+            {guestlist?.length ? (
+              guestlist.map((g) => {
+                const gl = g.guestlists as { name?: string; events?: { title?: string; slug?: string } | null } | null;
+                const ev = gl?.events;
+                return (
+                  <li
+                    key={g.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
+                  >
+                    <span className="font-medium text-white">{ev?.title ?? "Event"}</span> · {gl?.name ?? "List"} ·{" "}
+                    <span className="text-sky-200/90">{g.status}</span>
+                    {ev?.slug ? (
+                      <Link href={`/events/${ev.slug}`} className="ml-2 text-xs text-sky-300 hover:underline">
+                        View
+                      </Link>
+                    ) : null}
+                  </li>
+                );
+              })
+            ) : (
+              <li className="text-sm text-white/45">No guestlist requests yet.</li>
+            )}
+          </ul>
+        </section>
 
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Table holds</h2>
@@ -68,15 +103,27 @@ export default async function DashboardPage() {
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Tickets</h2>
           <ul className="mt-3 space-y-2">
             {orders?.length ? (
-              orders.map((o) => (
-                <li
-                  key={o.id}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
-                >
-                  Order <span className="font-mono text-xs text-white/50">{o.id.slice(0, 8)}…</span> ·{" "}
-                  <span className="text-sky-200/90">{o.status}</span>
-                </li>
-              ))
+              orders.map((o) => {
+                const t = o.tickets as { tier_name?: string; events?: { title?: string; slug?: string } | null } | null;
+                const ev = t?.events;
+                return (
+                  <li
+                    key={o.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
+                  >
+                    <span className="font-medium text-white">{ev?.title ?? "Event"}</span> · {t?.tier_name ?? "Ticket"}{" "}
+                    · <span className="text-sky-200/90">{o.status}</span>
+                    {o.status === "paid" && o.qr_payload ? (
+                      <span className="mt-2 block font-mono text-xs text-white/50">QR: {o.qr_payload}</span>
+                    ) : null}
+                    {ev?.slug ? (
+                      <Link href={`/events/${ev.slug}`} className="ml-2 text-xs text-sky-300 hover:underline">
+                        Event page
+                      </Link>
+                    ) : null}
+                  </li>
+                );
+              })
             ) : (
               <li className="text-sm text-white/45">No ticket orders yet.</li>
             )}

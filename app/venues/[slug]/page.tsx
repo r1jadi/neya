@@ -8,11 +8,13 @@ import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
-import { getVenueMetaBySlug } from "@/services/booking-meta";
+import { getPublicCheckinCount, getVenueMetaBySlug } from "@/services/booking-meta";
 import { getFeaturedEvents } from "@/services/events";
 import { getVenueBySlug } from "@/services/venues";
 import { SITE } from "@/lib/constants";
 import { venueJsonLd } from "@/lib/seo/json-ld";
+import { isUuid } from "@/lib/utils";
+import { CheckInWidget } from "@/components/neya/check-in-widget";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -42,6 +44,11 @@ export default async function VenuePage({ params }: Props) {
   const events = allEvents.filter((e) => e.venue.slug === venue.slug);
   const jsonLd = venueJsonLd(venue);
 
+  let publicCheckins = 0;
+  if (venueMeta && isUuid(venueMeta.venueUuid)) {
+    publicCheckins = await getPublicCheckinCount(venueMeta.venueUuid);
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <Script id="venue-jsonld" type="application/ld+json" strategy="afterInteractive">
@@ -63,12 +70,21 @@ export default async function VenuePage({ params }: Props) {
           </div>
         </div>
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
-          <div className="flex flex-wrap gap-4">
-            {venueMeta ? (
-              <ReservationModal venueName={venue.name} venueId={venueMeta.venueUuid} />
-            ) : (
-              <p className="text-xs text-white/45">Reserve when this venue exists in Supabase (seed SQL).</p>
-            )}
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+            {venueMeta && isUuid(venueMeta.venueUuid) ? (
+              <CheckInWidget
+                venueId={venueMeta.venueUuid}
+                venueSlug={venue.slug}
+                publicCount={publicCheckins}
+              />
+            ) : null}
+            <div className="flex flex-wrap gap-4">
+              {venueMeta ? (
+                <ReservationModal venueName={venue.name} venueId={venueMeta.venueUuid} />
+              ) : (
+                <p className="text-xs text-white/45">Reserve when this venue exists in Supabase (seed SQL).</p>
+              )}
+            </div>
           </div>
           <div>
             <h2 className="text-lg font-semibold text-white">Upcoming here</h2>

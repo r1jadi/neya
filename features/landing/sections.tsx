@@ -5,31 +5,119 @@ import { AnimatedMap } from "@/components/neya/animated-map";
 import { GlassCard } from "@/components/neya/glass-card";
 import { TicketCard } from "@/components/neya/ticket-card";
 import { EventCard } from "@/components/neya/event-card";
-import { MOCK_STORIES } from "@/data/mock-data";
-import type { Event, Venue } from "@/types";
+import { FomoTicker } from "@/components/neya/fomo-ticker";
+import { ForYouRail } from "@/features/landing/for-you-rail";
 import { LandingHero } from "./hero";
+import {
+  djSets,
+  hiddenGems,
+  lastTablesLeft,
+  liveNow,
+  nearbyFirst,
+  rooftopEvents,
+  sortByAtmosphere,
+  sortByCrowd,
+  studentParties,
+  thisWeekend,
+  uniqueBySlug,
+} from "@/lib/event-filters";
+import type { Event, StoryItem, Venue } from "@/types";
 import { Quote } from "lucide-react";
 
 interface LandingSectionsProps {
   events: Event[];
   venues: Venue[];
+  stories: StoryItem[];
+  musicGenres: string[];
+  venueInterests: string[];
+  heroStats: { hereNow: number; tonightCount: number; vibe: number };
 }
 
-export function LandingSections({ events, venues }: LandingSectionsProps) {
-  const trending = events;
-  const weekend = [...events].reverse();
+const FOMO_DEFAULTS = [
+  "This venue gained 120 visitors in the last hour",
+  "People are moving here right now",
+  "Most saved tonight",
+  "Line building — do not arrive late",
+];
+
+export function LandingSections({
+  events,
+  venues,
+  stories,
+  musicGenres,
+  venueInterests,
+  heroStats,
+}: LandingSectionsProps) {
+  const trending = sortByCrowd(events).slice(0, 14);
+  const popular = sortByCrowd(events).slice(0, 12);
+  const nearby = nearbyFirst(events).slice(0, 12);
+  const live = liveNow(events);
+  const rooftops = rooftopEvents(events);
+  const djs = djSets(events);
+  const students = studentParties(events);
+  const gems = hiddenGems(events);
+  const tables = lastTablesLeft(events);
+  const weekend = thisWeekend(events);
+  const rising = sortByAtmosphere(events).slice(0, 10);
+
+  const mapMarkers = venues
+    .filter((v) => v.lat != null && v.lng != null && !Number.isNaN(v.lat) && !Number.isNaN(v.lng))
+    .map((v) => ({
+      lng: v.lng as number,
+      lat: v.lat as number,
+      slug: v.slug,
+      title: v.name,
+      is_live: v.is_live,
+    }));
+
+  const fomoLines = [
+    ...(uniqueBySlug(events)
+      .map((e) => e.fomo_line)
+      .filter((x): x is string => Boolean(x)) as string[]),
+    ...FOMO_DEFAULTS,
+  ];
 
   return (
     <>
-      <LandingHero />
+      <LandingHero stats={heroStats} />
+
+      <section className="mx-auto max-w-6xl space-y-3 px-4 pb-6 sm:px-6">
+        <FomoTicker lines={fomoLines} />
+      </section>
+
+      {musicGenres.length || venueInterests.length ? (
+        <section className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+          <ForYouRail events={events} musicGenres={musicGenres} venueInterests={venueInterests} />
+        </section>
+      ) : null}
 
       <section className="mx-auto max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
         <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">Stories</h2>
-        <StoryViewer stories={MOCK_STORIES} />
+        <StoryViewer stories={stories} />
       </section>
 
       <div className="mx-auto max-w-6xl space-y-16 px-4 pb-20 sm:px-6">
         <TrendingCarousel title="Trending tonight" subtitle="Most viewed in the last 60 minutes" events={trending} />
+
+        <TrendingCarousel title="Most popular events" subtitle="Crowd heat + saves across the city" events={popular} />
+
+        <TrendingCarousel title="Nearby places" subtitle="Distance-aware picks (opt-in geolocation later)" events={nearby} />
+
+        <TrendingCarousel title="Live right now" subtitle="Rooms reporting live energy" events={live} />
+
+        <TrendingCarousel title="Rooftop events" subtitle="Skyline sessions" events={rooftops} />
+
+        <TrendingCarousel title="DJ sets" subtitle="House · techno · afro" events={djs} />
+
+        <TrendingCarousel title="Student parties" subtitle="Campus energy & open format" events={students} />
+
+        <TrendingCarousel title="Hidden gems" subtitle="Underrated vibe, still elite" events={gems} />
+
+        <TrendingCarousel title="Last tables left" subtitle="Reservation pressure" events={tables} />
+
+        <TrendingCarousel title="This weekend" subtitle="Next few nights, one scroll" events={weekend} />
+
+        <TrendingCarousel title="Rising atmosphere" subtitle="Highest live scores on the wire" events={rising} />
 
         <section id="venues" className="space-y-6">
           <div>
@@ -51,10 +139,10 @@ export function LandingSections({ events, venues }: LandingSectionsProps) {
               <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">
                 Live map
               </h2>
-              <p className="text-sm text-white/55">Heat, pins, clusters — see where the night moves.</p>
+              <p className="text-sm text-white/55">Dark cartography, live pins, venue deep links.</p>
             </div>
           </div>
-          <AnimatedMap className="shadow-2xl" />
+          <AnimatedMap className="shadow-2xl" markers={mapMarkers} />
         </section>
 
         <section className="space-y-6">
@@ -62,7 +150,7 @@ export function LandingSections({ events, venues }: LandingSectionsProps) {
             Upcoming events
           </h2>
           <div className="grid gap-6 lg:grid-cols-3">
-            {weekend.map((e) => (
+            {events.slice(0, 9).map((e) => (
               <EventCard key={e.id} event={e} />
             ))}
           </div>
@@ -70,9 +158,21 @@ export function LandingSections({ events, venues }: LandingSectionsProps) {
 
         <section className="grid gap-6 lg:grid-cols-2">
           {[
-            { step: "01", title: "Pick your pulse", body: "Genres, venues, and live atmosphere — not generic listings." },
-            { step: "02", title: "Hold your spot", body: "Tables, guestlists, tickets. Deposits and QR flows via Stripe." },
-            { step: "03", title: "Show up legendary", body: "Real-time vibe, line estimates, and friend energy (opt-in)." },
+            {
+              step: "01",
+              title: "Pick your pulse",
+              body: "Genres, venues, and live atmosphere — not generic listings.",
+            },
+            {
+              step: "02",
+              title: "Hold your spot",
+              body: "Tables, guestlists, tickets. Deposits and QR flows via Stripe.",
+            },
+            {
+              step: "03",
+              title: "Show up legendary",
+              body: "Real-time vibe, line estimates, and friend energy (opt-in).",
+            },
           ].map((s) => (
             <GlassCard key={s.step} glow="purple">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300/90">{s.step}</p>

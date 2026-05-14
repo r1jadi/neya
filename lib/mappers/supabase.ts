@@ -85,6 +85,7 @@ export function mapEventRow(row: {
         name: string;
         image_url?: string | null;
         price_level?: number | null;
+        category?: string | null;
       }
     | Array<{
         id: string;
@@ -92,6 +93,7 @@ export function mapEventRow(row: {
         name: string;
         image_url?: string | null;
         price_level?: number | null;
+        category?: string | null;
       }>
     | null;
 }): Event | null {
@@ -112,6 +114,7 @@ export function mapEventRow(row: {
       slug: v.slug,
       name: v.name,
       image_url: v.image_url ?? img,
+      category: normalizeCategory(v.category ?? undefined),
     },
     starts_at: row.starts_at,
     ends_at: row.ends_at ?? undefined,

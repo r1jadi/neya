@@ -43,13 +43,18 @@ export async function completeOnboarding(formData: FormData) {
   if (!user) redirect("/login?next=/onboarding");
 
   const genres = formData.getAll("genre").map((g) => String(g)).filter(Boolean).slice(0, 12);
+  const interests = formData.getAll("category").map((g) => String(g)).filter(Boolean).slice(0, 20);
   const city = String(formData.get("city_slug") ?? "prishtina").slice(0, 40);
+  const ageRaw = String(formData.get("age") ?? "").trim();
+  const age = ageRaw ? Math.min(99, Math.max(16, parseInt(ageRaw, 10) || 0)) : null;
 
   const { error } = await supabase
     .from("profiles")
     .update({
       music_genres: genres,
+      interests: interests.length ? interests : [],
       city_slug: city,
+      age: age && age >= 16 ? age : null,
       onboarding_complete: true,
       updated_at: new Date().toISOString(),
     })

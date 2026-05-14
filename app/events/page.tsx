@@ -17,7 +17,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function EventsPage() {
+type Props = { searchParams: Promise<{ error?: string; guestlist?: string }> };
+
+export default async function EventsPage({ searchParams }: Props) {
+  const q = await searchParams;
   const events = await getFeaturedEvents();
 
   return (
@@ -32,6 +35,21 @@ export default async function EventsPage() {
           <p className="mt-2 max-w-xl text-sm text-white/55">
             Pulled from Supabase when your tables have data — otherwise demo content fills the feed.
           </p>
+          {q.error === "stripe" ? (
+            <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+              Stripe is not configured or checkout failed. Check server env keys.
+            </p>
+          ) : null}
+          {q.guestlist === "applied" ? (
+            <p className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
+              Guestlist request sent.
+            </p>
+          ) : null}
+          {q.guestlist === "duplicate" ? (
+            <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+              You are already on this guestlist.
+            </p>
+          ) : null}
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((e) => (
               <EventCard key={e.id} event={e} />

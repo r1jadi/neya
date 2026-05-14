@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe/server";
@@ -73,6 +74,7 @@ export async function POST(req: Request) {
           .update({
             status: "paid",
             stripe_checkout_session: session.id,
+            qr_payload: `neya:${orderId}:${randomUUID()}`,
           })
           .eq("id", orderId);
 

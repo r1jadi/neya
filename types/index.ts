@@ -42,7 +42,7 @@ export interface Event {
   id: string;
   slug: string;
   title: string;
-  venue: Pick<Venue, "id" | "slug" | "name" | "image_url">;
+  venue: Pick<Venue, "id" | "slug" | "name" | "image_url" | "category">;
   starts_at: string;
   ends_at?: string;
   genre: MusicGenre;
