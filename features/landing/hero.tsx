@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Radio } from "lucide-react";
 import { NeonButton } from "@/components/neya/neon-button";
+import { formatEventWhen } from "@/lib/event-dates";
 import { PLACEHOLDER_IMAGE } from "@/lib/images";
 import { SITE } from "@/lib/constants";
 import type { Event } from "@/types";
@@ -109,11 +110,9 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
                   <p className="text-2xl font-bold text-white">
                     {spotlight.venue.name} · {spotlight.title}
                   </p>
-                  {spotlight.fomo_line ? (
-                    <p className="text-sm text-white/60">{spotlight.fomo_line}</p>
-                  ) : (
-                    <p className="text-sm text-white/60">See you tonight</p>
-                  )}
+                  <p className="text-sm text-white/60">
+                    {spotlight.fomo_line || formatEventWhen(spotlight.starts_at)}
+                  </p>
                 </div>
               </>
             ) : (

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getRecentActivity } from "@/services/activity";
 import { getFeaturedEvents } from "@/services/events";
 import { getStoriesForCity } from "@/services/stories";
+import { happeningNowEvents, tonightEvents, upcomingEvents } from "@/lib/event-filters";
 import { getVenues } from "@/services/venues";
 
 export default async function Home() {
@@ -33,13 +34,22 @@ export default async function Home() {
     savedEventIds = saved.data?.map((r) => r.event_id) ?? [];
   }
 
-  const hereNow = events.reduce((a, e) => a + e.crowd_count, 0);
-  const tonightCount = events.length;
+  const upcoming = upcomingEvents(events);
+  const tonight = tonightEvents(events);
+  const liveNow = happeningNowEvents(events);
+
+  const hereNow = liveNow.reduce((a, e) => a + e.crowd_count, 0);
+  const tonightCount = tonight.length;
+  const vibeSource = tonight.length > 0 ? tonight : upcoming;
   const vibe =
-    events.length > 0
-      ? Math.round((events.reduce((a, e) => a + e.atmosphere_rating, 0) / events.length) * 10) / 10
+    vibeSource.length > 0
+      ? Math.round((vibeSource.reduce((a, e) => a + e.atmosphere_rating, 0) / vibeSource.length) * 10) / 10
       : 0;
-  const spotlight = events.find((e) => e.is_featured) ?? events[0] ?? null;
+  const spotlight =
+    upcoming.find((e) => e.is_featured) ??
+    tonight.find((e) => e.is_featured) ??
+    upcoming[0] ??
+    null;
 
   return (
     <div className="flex min-h-screen w-full min-w-0 flex-col">

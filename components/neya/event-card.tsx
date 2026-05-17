@@ -10,6 +10,7 @@ import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { SaveEventButton } from "@/components/neya/save-event-button";
 import { Badge } from "@/components/ui/badge";
+import { formatEventWhen, isHappeningNow } from "@/lib/event-dates";
 import { cn, isUuid } from "@/lib/utils";
 
 interface EventCardProps {
@@ -19,6 +20,9 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, className, saved }: EventCardProps) {
+  const happening = isHappeningNow(event.starts_at, event.ends_at);
+  const whenLabel = formatEventWhen(event.starts_at);
+
   return (
     <motion.article
       whileHover={{ y: -4 }}
@@ -46,7 +50,7 @@ export function EventCard({ event, className, saved }: EventCardProps) {
           ) : null}
         </div>
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          <LiveBadge live={event.live_status} />
+          <LiveBadge live={happening && event.live_status} />
           <Badge variant="secondary" className="backdrop-blur-md">
             {event.venue.category.replace(/_/g, " ")}
           </Badge>
@@ -60,11 +64,16 @@ export function EventCard({ event, className, saved }: EventCardProps) {
         <div>
           <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}</p>
           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+          <p className="mt-1 text-xs text-sky-300/90">{whenLabel}</p>
         </div>
         {event.fomo_line ? (
           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
         ) : null}
-        <CrowdIndicator count={event.crowd_count} />
+        <CrowdIndicator
+          count={event.crowd_count}
+          live={happening}
+          scheduledLabel={whenLabel}
+        />
         <AtmosphereMeter score={event.atmosphere_rating} />
         <div className="flex flex-wrap items-center gap-3 text-xs text-white/55">
           {event.distance_km != null ? (

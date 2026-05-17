@@ -1,14 +1,32 @@
+import { isHappeningNow, isPast, isTonight, isUpcoming } from "@/lib/event-dates";
 import type { Event, MusicGenre, VenueCategory } from "@/types";
 
 const DJ_GENRES: MusicGenre[] = ["house", "techno", "afro"];
 
+/** Events starting later today (Prishtina TZ). */
+export function tonightEvents(events: Event[], now = new Date()) {
+  return events.filter((e) => isTonight(e.starts_at, now) && !isPast(e.starts_at, e.ends_at, now));
+}
+
+/** Events with start time in the future. */
+export function upcomingEvents(events: Event[], now = new Date()) {
+  return events
+    .filter((e) => isUpcoming(e.starts_at, now) || isHappeningNow(e.starts_at, e.ends_at, now))
+    .sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime());
+}
+
+/** Currently in progress (by clock, not DB live flag). */
+export function happeningNowEvents(events: Event[], now = new Date()) {
+  return events.filter((e) => isHappeningNow(e.starts_at, e.ends_at, now));
+}
+
 /** Next few nights — pragmatic “this weekend” window for the feed */
-export function thisWeekend(events: Event[]) {
-  const now = Date.now();
-  const horizon = now + 5 * 86400000;
-  return events.filter((e) => {
+export function thisWeekend(events: Event[], now = new Date()) {
+  const t0 = now.getTime();
+  const horizon = t0 + 5 * 86400000;
+  return upcomingEvents(events, now).filter((e) => {
     const t = new Date(e.starts_at).getTime();
-    return t >= now && t <= horizon;
+    return t >= t0 && t <= horizon;
   });
 }
 
@@ -20,8 +38,8 @@ export function sortByAtmosphere(events: Event[]) {
   return [...events].sort((a, b) => b.atmosphere_rating - a.atmosphere_rating);
 }
 
-export function liveNow(events: Event[]) {
-  return events.filter((e) => e.live_status);
+export function liveNow(events: Event[], now = new Date()) {
+  return events.filter((e) => isHappeningNow(e.starts_at, e.ends_at, now) && e.live_status);
 }
 
 export function rooftopEvents(events: Event[]) {

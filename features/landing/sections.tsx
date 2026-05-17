@@ -19,6 +19,8 @@ import {
   sortByCrowd,
   studentParties,
   thisWeekend,
+  tonightEvents,
+  upcomingEvents,
   uniqueBySlug,
 } from "@/lib/event-filters";
 import type { ActivityFeedItem } from "@/services/activity";
@@ -49,17 +51,20 @@ export function LandingSections({
   savedEventIds,
   spotlight,
 }: LandingSectionsProps) {
-  const trending = sortByCrowd(events).slice(0, 14);
-  const popular = sortByCrowd(events).slice(0, 12);
-  const nearby = nearbyFirst(events).slice(0, 12);
+  const upcoming = upcomingEvents(events);
+  const tonight = tonightEvents(events);
+  const trendingTonight = sortByCrowd(tonight).slice(0, 14);
+  const trendingUpcoming = sortByCrowd(upcoming).slice(0, 14);
+  const popular = sortByCrowd(upcoming).slice(0, 12);
+  const nearby = nearbyFirst(upcoming).slice(0, 12);
   const live = liveNow(events);
-  const rooftops = rooftopEvents(events);
-  const djs = djSets(events);
-  const students = studentParties(events);
-  const gems = hiddenGems(events);
-  const tables = lastTablesLeft(events);
+  const rooftops = rooftopEvents(upcoming);
+  const djs = djSets(upcoming);
+  const students = studentParties(upcoming);
+  const gems = hiddenGems(upcoming);
+  const tables = lastTablesLeft(upcoming);
   const weekend = thisWeekend(events);
-  const rising = sortByAtmosphere(events).slice(0, 10);
+  const rising = sortByAtmosphere(upcoming).slice(0, 10);
 
   const mapMarkers = venues
     .filter((v) => v.lat != null && v.lng != null && !Number.isNaN(v.lat) && !Number.isNaN(v.lng))
@@ -117,10 +122,19 @@ export function LandingSections({
           />
         ) : (
           <>
+        {tonight.length > 0 ? (
+          <TrendingCarousel
+            title="Trending tonight"
+            subtitle="Happening in Prishtina tonight"
+            events={trendingTonight}
+            savedEventIds={savedEventIds}
+          />
+        ) : null}
+
         <TrendingCarousel
-          title="Trending tonight"
-          subtitle="Most viewed in the last 60 minutes"
-          events={trending}
+          title={tonight.length > 0 ? "Coming up" : "Upcoming events"}
+          subtitle="Sorted by date — next nights on the calendar"
+          events={trendingUpcoming}
           savedEventIds={savedEventIds}
         />
 
@@ -244,7 +258,7 @@ export function LandingSections({
               Upcoming events
             </h2>
             <div className="grid gap-6 lg:grid-cols-3">
-              {events.slice(0, 9).map((e) => (
+              {upcoming.slice(0, 9).map((e) => (
                 <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
               ))}
             </div>

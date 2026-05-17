@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
 import { CalendarDays } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { upcomingEvents } from "@/lib/event-filters";
 import { getFeaturedEvents } from "@/services/events";
 
 export const metadata: Metadata = {
@@ -28,7 +29,8 @@ export default async function EventsPage({ searchParams }: Props) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const events = await getFeaturedEvents(supabase);
+  const allEvents = await getFeaturedEvents(supabase);
+  const events = upcomingEvents(allEvents);
   let savedEventIds: string[] = [];
   if (user) {
     const { data } = await supabase.from("saved_events").select("event_id").eq("user_id", user.id).limit(400);
@@ -42,10 +44,10 @@ export default async function EventsPage({ searchParams }: Props) {
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">Prishtina</p>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-bold text-white sm:text-4xl">
-            Tonight&apos;s lineup
+            Upcoming events
           </h1>
           <p className="mt-2 max-w-xl text-sm text-white/55">
-            Tonight&apos;s listings in Prishtina — updated as venues publish new nights.
+            What&apos;s on in Prishtina — sorted by date as venues publish new nights.
           </p>
           {q.error === "stripe" ? (
             <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
