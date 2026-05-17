@@ -84,17 +84,17 @@ export function LandingSections({
   ];
 
   return (
-    <>
+    <div className="flex w-full min-w-0 flex-1 flex-col">
       <LandingHero stats={heroStats} />
 
       <ActivityStrip items={activityItems} />
 
-      <section className="mx-auto max-w-6xl space-y-3 px-4 pb-6 sm:px-6">
+      <section className="mx-auto w-full min-w-0 max-w-6xl space-y-3 px-4 pb-6 sm:px-6">
         <FomoTicker lines={fomoLines} />
       </section>
 
       {musicGenres.length || venueInterests.length ? (
-        <section className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+        <section className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-10 sm:px-6">
           <ForYouRail
             events={events}
             musicGenres={musicGenres}
@@ -104,12 +104,12 @@ export function LandingSections({
         </section>
       ) : null}
 
-      <section className="mx-auto max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
+      <section className="mx-auto w-full min-w-0 max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
         <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">Stories</h2>
         <StoryViewer stories={stories} />
       </section>
 
-      <div className="mx-auto max-w-6xl space-y-16 px-4 pb-20 sm:px-6">
+      <div className="mx-auto w-full min-w-0 max-w-6xl space-y-16 px-4 pb-20 sm:px-6">
         <TrendingCarousel
           title="Trending tonight"
           subtitle="Most viewed in the last 60 minutes"
@@ -307,6 +307,6 @@ export function LandingSections({
           </div>
         </section>
       </div>
-    </>
+    </div>
   );
 }

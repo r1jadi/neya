@@ -20,7 +20,7 @@ function line(item: ActivityFeedItem): string {
 export function ActivityStrip({ items }: { items: ActivityFeedItem[] }) {
   if (!items.length) return null;
   return (
-    <section className="mx-auto max-w-6xl space-y-3 px-4 pb-10 sm:px-6">
+    <section className="mx-auto w-full min-w-0 max-w-6xl space-y-3 px-4 pb-10 sm:px-6">
       <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white">Live feed</h2>
       <ul className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
         {items.map((item) => (

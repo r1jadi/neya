@@ -22,15 +22,15 @@ export function LandingHero({ stats }: LandingHeroProps) {
   const vibe = stats?.vibe ?? 9.2;
 
   return (
-    <section className="relative isolate overflow-hidden pt-10 pb-20 sm:pt-16 sm:pb-28">
+    <section className="relative isolate w-full min-w-0 overflow-hidden pt-10 pb-20 sm:pt-16 sm:pb-28">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -left-32 top-0 h-[420px] w-[420px] rounded-full bg-fuchsia-600/25 blur-[120px]" />
         <div className="absolute right-0 top-24 h-[380px] w-[380px] rounded-full bg-sky-500/20 blur-[110px]" />
         <div className="absolute bottom-0 left-1/3 h-[300px] w-[300px] rounded-full bg-violet-600/20 blur-[100px]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.06),transparent_55%)]" />
       </div>
-      <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:flex-row lg:items-center">
-        <div className="max-w-2xl flex-1">
+      <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-12 px-4 sm:px-6 xl:flex-row xl:items-center">
+        <div className="w-full min-w-0 max-w-2xl flex-1">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -74,7 +74,7 @@ export function LandingHero({ stats }: LandingHeroProps) {
               <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
-          <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-8 text-center sm:max-w-md sm:text-left">
+          <dl className="mt-10 grid w-full grid-cols-3 gap-4 border-t border-white/10 pt-8 text-center sm:text-left">
             <div>
               <dt className="text-[11px] uppercase tracking-widest text-white/40">Here now</dt>
               <dd className="mt-1 text-2xl font-bold tabular-nums text-white">{hereNow.toLocaleString()}</dd>
@@ -93,9 +93,9 @@ export function LandingHero({ stats }: LandingHeroProps) {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.15, duration: 0.6 }}
-          className="relative flex-1"
+          className="relative flex w-full min-w-0 flex-1 justify-center xl:justify-end"
         >
-          <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black shadow-[0_40px_120px_rgba(0,0,0,0.65)] lg:ml-auto">
+          <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black shadow-[0_40px_120px_rgba(0,0,0,0.65)]">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1574391884726-a410171917de?auto=format&fit=crop&w=900&q=80')] bg-cover bg-center opacity-90" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 space-y-2 p-6">

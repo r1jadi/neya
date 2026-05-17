@@ -19,14 +19,27 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: clip;
 }
 
 body {
+  width: 100%;
   min-height: 100%;
+  min-width: 0;
+  overflow-x: clip;
   background: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(124, 58, 237, 0.18), transparent 50%),
     var(--background);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/* Prevent flex children with horizontal scroll from expanding past the viewport */
+#__next,
+[data-nextjs-scroll-focus-boundary] {
+  width: 100%;
+  min-width: 0;
 }
 
 ::selection {

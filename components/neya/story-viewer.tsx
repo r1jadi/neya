@@ -13,8 +13,8 @@ interface StoryViewerProps {
 
 export function StoryViewer({ stories, className }: StoryViewerProps) {
   return (
-    <div className={cn("w-full", className)}>
-      <div className="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <motion.div className={cn("w-full min-w-0 max-w-full", className)}>
+      <motion.div className="flex min-w-0 max-w-full gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {stories.map((s, i) => (
           <motion.div
             key={s.id}
@@ -42,7 +42,7 @@ export function StoryViewer({ stories, className }: StoryViewerProps) {
             </Link>
           </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

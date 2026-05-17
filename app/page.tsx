@@ -39,7 +39,7 @@ export default async function Home() {
     events.length > 0 ? Math.round((events.reduce((a, e) => a + e.atmosphere_rating, 0) / events.length) * 10) / 10 : 9.2;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen w-full min-w-0 flex-col">
       <SiteHeader />
       <LandingSections
         events={events}

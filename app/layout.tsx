@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -20,6 +20,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -58,13 +65,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark h-full" suppressHydrationWarning>
+    <html lang="en" className="dark h-full w-full" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} min-h-full bg-[var(--background)] font-sans text-[var(--foreground)] antialiased`}
+        className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} min-h-full w-full min-w-0 bg-[var(--background)] font-sans text-[var(--foreground)] antialiased`}
       >
         <AppProviders>
           <JsonLd />
-          {children}
+          <div className="flex min-h-full w-full min-w-0 flex-col">{children}</div>
         </AppProviders>
       </body>
     </html>

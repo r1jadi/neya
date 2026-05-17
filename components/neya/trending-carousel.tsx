@@ -25,7 +25,7 @@ export function TrendingCarousel({ title, subtitle, events, className, savedEven
   };
 
   return (
-    <section className={cn("space-y-4", className)}>
+    <section className={cn("min-w-0 max-w-full space-y-4", className)}>
       <div className="flex items-end justify-between gap-4 px-1">
         <div>
           <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-white md:text-3xl">
@@ -44,7 +44,7 @@ export function TrendingCarousel({ title, subtitle, events, className, savedEven
       </div>
       <div
         ref={scrollRef}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex min-w-0 max-w-full snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {events.map((event, i) => (
           <motion.div

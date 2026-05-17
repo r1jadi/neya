@@ -3,8 +3,8 @@ import { SITE } from "@/lib/constants";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/[0.06] bg-black/80 py-14">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+    <footer className="w-full border-t border-white/[0.06] bg-black/80 py-14">
+      <div className="mx-auto grid w-full min-w-0 max-w-6xl gap-10 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
         <div>
           <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">{SITE.name}</p>
           <p className="mt-2 text-sm text-white/55">{SITE.tagline}</p>
@@ -61,7 +61,7 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <p className="mx-auto mt-12 max-w-6xl px-4 text-center text-xs text-white/35 sm:px-6">
+      <p className="mx-auto mt-12 w-full min-w-0 max-w-6xl px-4 text-center text-xs text-white/35 sm:px-6">
         © {new Date().getFullYear()} {SITE.name}. Built for Prishtina — scaling across the Balkans.
       </p>
     </footer>

@@ -60,8 +60,8 @@ export function SiteHeaderClient({
   );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-black/55 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-black/55 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 w-full min-w-0 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-white">
             {SITE.name}
