@@ -165,7 +165,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
               />
             ) : (
               <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/50">
-                Table deposits require this event in your Supabase project (see seed SQL).
+                Table reservations for this night are not open yet. Check back soon or contact the venue.
               </p>
             )}
             {meta?.guestlistId ? (

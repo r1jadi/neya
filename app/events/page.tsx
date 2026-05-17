@@ -43,7 +43,7 @@ export default async function EventsPage({ searchParams }: Props) {
             Tonight&apos;s lineup
           </h1>
           <p className="mt-2 max-w-xl text-sm text-white/55">
-            Pulled from Supabase when your tables have data — otherwise demo content fills the feed.
+            Tonight&apos;s listings in Prishtina — updated as venues publish new nights.
           </p>
           {q.error === "stripe" ? (
             <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">

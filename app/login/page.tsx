@@ -9,7 +9,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Log in · ${SITE.name}`,
-  description: "Sign in to NEYA — email, magic link, and Google via Supabase Auth.",
+  description: "Sign in to NEYA — save events, book tables, and get on guestlists in Prishtina.",
 };
 
 type Props = { searchParams: Promise<{ error?: string; next?: string }> };
@@ -32,7 +32,7 @@ export default async function LoginPage({ searchParams }: Props) {
             <div>
               <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Welcome back</h1>
               <p className="mt-2 text-sm text-white/55">
-                Password, magic link, or Google — powered by Supabase Auth.
+                Sign in with your password, a one-tap email link, Google, or Apple.
               </p>
             </div>
             <LoginForm initialError={params.error} redirectTo={params.next} />

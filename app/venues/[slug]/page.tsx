@@ -84,7 +84,7 @@ export default async function VenuePage({ params }: Props) {
               {venueMeta ? (
                 <ReservationModal venueName={venue.name} venueId={venueMeta.venueUuid} />
               ) : (
-                <p className="text-xs text-white/45">Reserve when this venue exists in Supabase (seed SQL).</p>
+                <p className="text-xs text-white/45">Table reservations open when the venue is live on NEYA.</p>
               )}
             </div>
           </div>

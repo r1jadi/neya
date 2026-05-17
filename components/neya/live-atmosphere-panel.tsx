@@ -42,8 +42,7 @@ export function LiveAtmospherePanel({ eventId, venueId, eventSlug, initialScore 
     <div className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
       <AtmosphereMeter score={score} />
       <p className="text-xs text-white/50">
-        Drop a live pulse — score updates for everyone when Supabase Realtime is enabled on{" "}
-        <code className="rounded bg-white/10 px-1">events</code>.
+        Drop a live pulse — your vote updates the vibe score for everyone on this event.
       </p>
       <form action={submitAtmosphereReview} className="grid gap-3">
         <input type="hidden" name="event_id" value={eventId} />

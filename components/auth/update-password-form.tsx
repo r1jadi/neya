@@ -22,7 +22,7 @@ export function UpdatePasswordForm() {
     setError(null);
     setMessage(null);
     if (!supabase) {
-      setError("Missing Supabase configuration.");
+      setError("Sign-in is temporarily unavailable. Please try again later.");
       return;
     }
     const fd = new FormData(e.currentTarget);
@@ -45,7 +45,7 @@ export function UpdatePasswordForm() {
   }
 
   if (!supabase) {
-    return <p className="text-sm text-red-200">Supabase env missing.</p>;
+    return <p className="text-sm text-red-200">Sign-in is temporarily unavailable. Please try again later.</p>;
   }
 
   return (

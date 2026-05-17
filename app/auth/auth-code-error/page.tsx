@@ -12,9 +12,7 @@ export default async function AuthCodeErrorPage() {
           Sign-in link expired
         </h1>
         <p className="mt-3 text-sm text-white/55">
-          Request a new magic link or try Google again. If this keeps happening, confirm your Supabase
-          redirect URLs include this site&apos;s origin +{" "}
-          <code className="rounded bg-white/10 px-1">/auth/callback</code>.
+          Request a new magic link or sign in with your password. Links expire after a short time for security.
         </p>
         <Button asChild className="mt-8">
           <Link href="/login">Back to login</Link>

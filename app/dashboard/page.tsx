@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { createClient } from "@/lib/supabase/server";
@@ -52,8 +53,13 @@ export default async function DashboardPage() {
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
-        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Your NEYA</h1>
-        <p className="mt-1 text-sm text-white/55">Reservations, tickets, and saved nights.</p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Your NEYA</h1>
+            <p className="mt-1 text-sm text-white/55">Reservations, tickets, and saved nights.</p>
+          </div>
+          <SignOutButton variant="secondary" />
+        </div>
 
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Saved events</h2>

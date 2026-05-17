@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { signOut } from "@/actions/auth";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Button } from "@/components/ui/button";
 
 export function AccountPanel({ email }: { email: string }) {
@@ -19,11 +19,7 @@ export function AccountPanel({ email }: { email: string }) {
         <Button asChild variant="secondary">
           <Link href="/onboarding">Prefs</Link>
         </Button>
-        <form action={signOut} className="col-span-2 sm:col-span-1">
-          <Button type="submit" variant="secondary" className="w-full">
-            Sign out
-          </Button>
-        </form>
+        <SignOutButton variant="secondary" wrapperClassName="col-span-2 sm:col-span-1" />
       </div>
     </div>
   );

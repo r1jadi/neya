@@ -95,8 +95,7 @@ export function AnimatedMap({ className, center = [21.1655, 42.6629], markers = 
         <div className="flex aspect-[16/9] flex-col items-center justify-center gap-2 bg-gradient-to-br from-violet-950/80 to-black p-6 text-center">
           <p className="text-sm font-medium text-white">Map preview</p>
           <p className="max-w-sm text-xs text-white/55">
-            Add <code className="rounded bg-white/10 px-1 py-0.5">NEXT_PUBLIC_MAPBOX_TOKEN</code> to enable the
-            live Mapbox canvas.
+            The live city map is coming soon. Browse venues and events below in the meantime.
           </p>
         </div>
       ) : (

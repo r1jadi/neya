@@ -61,7 +61,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       window.location.href = data.url;
     } else {
       setLoading(null);
-      setError("No redirect URL returned. Enable the provider in Supabase Auth settings.");
+      setError("Google sign-in is unavailable right now. Try email or password instead.");
     }
   }
 
@@ -82,7 +82,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       window.location.href = data.url;
     } else {
       setLoading(null);
-      setError("No redirect URL returned. Enable Apple under Supabase → Authentication → Providers.");
+      setError("Apple sign-in is unavailable right now. Try email or password instead.");
     }
   }
 
@@ -161,10 +161,6 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       >
         {loading === "apple" ? "Redirecting…" : "Continue with Apple"}
       </Button>
-      <p className="pt-2 text-center text-xs text-white/45">
-        Enable Google / Apple under Supabase → Authentication → Providers. Redirect URL:{" "}
-        <code className="break-all rounded bg-white/10 px-1">{callbackUrl(redirectTo) || "…/auth/callback"}</code>
-      </p>
       <p className="text-center text-xs text-white/45">
         <Link href="/" className="text-sky-300 hover:underline">
           ← Home

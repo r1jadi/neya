@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
 
@@ -42,9 +43,7 @@ export function SiteHeaderClient({
           <Link href="/admin">Admin</Link>
         </Button>
       ) : null}
-      <Button variant="ghost" asChild>
-        <Link href="/login">Account</Link>
-      </Button>
+      <SignOutButton />
     </>
   );
 
@@ -147,6 +146,7 @@ export function SiteHeaderClient({
                       Admin
                     </Link>
                   ) : null}
+                  <SignOutButton navStyle />
                 </>
               ) : (
                 <>
