@@ -1,4 +1,4 @@
-import { isHappeningNow, isPast, isTonight, isUpcoming } from "@/lib/event-dates";
+import { isHappeningNow, isOnThisWeekend, isPast, isTonight, isUpcoming } from "@/lib/event-dates";
 import type { Event, MusicGenre, VenueCategory } from "@/types";
 
 const DJ_GENRES: MusicGenre[] = ["house", "techno", "afro"];
@@ -20,14 +20,11 @@ export function happeningNowEvents(events: Event[], now = new Date()) {
   return events.filter((e) => isHappeningNow(e.starts_at, e.ends_at, now));
 }
 
-/** Next few nights — pragmatic “this weekend” window for the feed */
+/** Friday–Sunday in Prishtina (current weekend if already Fri–Sun, else the next). */
 export function thisWeekend(events: Event[], now = new Date()) {
-  const t0 = now.getTime();
-  const horizon = t0 + 5 * 86400000;
-  return upcomingEvents(events, now).filter((e) => {
-    const t = new Date(e.starts_at).getTime();
-    return t >= t0 && t <= horizon;
-  });
+  return upcomingEvents(events, now).filter(
+    (e) => isOnThisWeekend(e.starts_at, now) && !isPast(e.starts_at, e.ends_at, now),
+  );
 }
 
 export function sortByCrowd(events: Event[]) {

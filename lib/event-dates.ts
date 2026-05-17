@@ -51,6 +51,56 @@ function ymdInTz(iso: string | Date, tz = CITY_TZ): string {
   return d.toLocaleDateString("en-CA", { timeZone: tz });
 }
 
+function ymdFromParts(p: { y: number; m: number; d: number }) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${p.y}-${pad(p.m)}-${pad(p.d)}`;
+}
+
+/** 0 = Sunday … 6 = Saturday (Prishtina wall clock). */
+export function dayOfWeekInTz(iso: string | Date, tz = CITY_TZ): number {
+  const d = typeof iso === "string" ? new Date(iso) : iso;
+  const name = d.toLocaleDateString("en-US", { timeZone: tz, weekday: "long" });
+  const map: Record<string, number> = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
+  };
+  return map[name] ?? 0;
+}
+
+function addCalendarDaysInTz(y: number, m: number, d: number, delta: number, tz = CITY_TZ) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const anchor = datetimeLocalToUtcIso(`${y}-${pad(m)}-${pad(d)}T12:00`, tz);
+  const ms = new Date(anchor ?? 0).getTime() + delta * 86400000;
+  return wallClockParts(ms, tz);
+}
+
+/** Friday–Sunday window for “this weekend” (current weekend if Fri–Sun, else the next one). */
+export function getThisWeekendRange(now = new Date(), tz = CITY_TZ) {
+  const w = wallClockParts(now.getTime(), tz);
+  const dow = dayOfWeekInTz(now, tz);
+
+  let fridayOffset: number;
+  if (dow === 0) fridayOffset = -2;
+  else if (dow === 6) fridayOffset = -1;
+  else if (dow === 5) fridayOffset = 0;
+  else fridayOffset = 5 - dow;
+
+  const fri = addCalendarDaysInTz(w.y, w.m, w.d, fridayOffset, tz);
+  const sun = addCalendarDaysInTz(fri.y, fri.m, fri.d, 2, tz);
+  return { startYmd: ymdFromParts(fri), endYmd: ymdFromParts(sun) };
+}
+
+export function isOnThisWeekend(startsAt: string, now = new Date(), tz = CITY_TZ): boolean {
+  const { startYmd, endYmd } = getThisWeekendRange(now, tz);
+  const eventYmd = ymdInTz(startsAt, tz);
+  return eventYmd >= startYmd && eventYmd <= endYmd;
+}
+
 export function isTonight(startsAt: string, now = new Date()): boolean {
   return ymdInTz(startsAt) === ymdInTz(now);
 }

@@ -196,7 +196,7 @@ export function LandingSections({
 
         <TrendingCarousel
           title="This weekend"
-          subtitle="Next few nights, one scroll"
+          subtitle="Friday – Sunday in Prishtina"
           events={weekend}
           savedEventIds={savedEventIds}
         />
