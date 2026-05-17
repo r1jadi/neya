@@ -26,6 +26,7 @@ import type {
   AdminTicketRow,
   AdminVenueRow,
 } from "@/services/admin";
+import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
 import { cn } from "@/lib/utils";
 
 type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium";
@@ -227,7 +228,7 @@ export function AdminDashboard({
                   <tr key={ev.id} className="border-b border-white/5">
                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
-                    <td className="px-4 py-3 text-xs text-white/50">{new Date(ev.starts_at).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
                     <td className="px-4 py-3 text-xs text-white/50">
                       {ev.is_listed_public ? "Public" : "Hidden"}
                       {ev.is_featured ? " · Featured" : ""}
@@ -423,8 +424,8 @@ function EventForm({
   onClose: () => void;
 }) {
   const lineup = event?.dj_lineup?.join(", ") ?? "";
-  const startsLocal = event?.starts_at ? event.starts_at.slice(0, 16) : "";
-  const endsLocal = event?.ends_at ? event.ends_at.slice(0, 16) : "";
+  const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
+  const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
 
   return (
     <form action={saveEvent} className="space-y-4 rounded-xl border border-sky-500/30 bg-sky-950/10 p-6">

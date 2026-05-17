@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
+import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 
 export async function requestVenueListing(formData: FormData) {
@@ -54,7 +55,8 @@ export async function createVenueEvent(formData: FormData) {
 
   const venueId = String(formData.get("venue_id") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim().slice(0, 160);
-  const startsAt = String(formData.get("starts_at") ?? "").trim();
+  const startsAtLocal = String(formData.get("starts_at") ?? "").trim();
+  const startsAt = datetimeLocalToUtcIso(startsAtLocal);
   const genre = String(formData.get("genre") ?? "mixed").slice(0, 32);
   if (!venueId || !title || !startsAt) redirect("/business?error=fields");
 

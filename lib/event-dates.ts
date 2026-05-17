@@ -1,6 +1,51 @@
 /** Prishtina / Kosovo — CET/CEST */
 export const CITY_TZ = "Europe/Belgrade";
 
+const DATETIME_LOCAL_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/;
+
+function wallClockParts(utcMs: number, tz = CITY_TZ) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date(utcMs));
+  const v = (type: Intl.DateTimeFormatPartTypes) =>
+    parseInt(parts.find((p) => p.type === type)?.value ?? "0", 10);
+  return { y: v("year"), m: v("month"), d: v("day"), h: v("hour"), min: v("minute") };
+}
+
+/** Admin `datetime-local` → UTC ISO for Supabase (`timestamptz`). */
+export function datetimeLocalToUtcIso(local: string, tz = CITY_TZ): string | null {
+  const m = DATETIME_LOCAL_RE.exec(local.trim());
+  if (!m) return null;
+  const y = +m[1];
+  const mo = +m[2] - 1;
+  const d = +m[3];
+  const h = +m[4];
+  const min = +m[5];
+  const desired = Date.UTC(y, mo, d, h, min, 0);
+
+  let ts = desired;
+  for (let i = 0; i < 4; i++) {
+    const w = wallClockParts(ts, tz);
+    const actual = Date.UTC(w.y, w.m - 1, w.d, w.h, w.min, 0);
+    ts += desired - actual;
+  }
+  return new Date(ts).toISOString();
+}
+
+/** UTC ISO from DB → value for `datetime-local` in admin forms. */
+export function utcIsoToDatetimeLocal(iso: string, tz = CITY_TZ): string {
+  const w = wallClockParts(new Date(iso).getTime(), tz);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${w.y}-${pad(w.m)}-${pad(w.d)}T${pad(w.h)}:${pad(w.min)}`;
+}
+
 function ymdInTz(iso: string | Date, tz = CITY_TZ): string {
   const d = typeof iso === "string" ? new Date(iso) : iso;
   return d.toLocaleDateString("en-CA", { timeZone: tz });

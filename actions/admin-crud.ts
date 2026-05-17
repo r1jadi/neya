@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminUser } from "@/lib/auth/require-admin";
+import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 
 function parseJsonArray(raw: string | null): string[] {
@@ -131,8 +132,13 @@ export async function saveEvent(formData: FormData) {
   const id = String(formData.get("id") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim().slice(0, 160);
   const venueId = String(formData.get("venue_id") ?? "").trim();
-  const startsAt = String(formData.get("starts_at") ?? "").trim();
+  const startsAtLocal = String(formData.get("starts_at") ?? "").trim();
+  const startsAt = datetimeLocalToUtcIso(startsAtLocal);
   if (!title || !venueId || !startsAt) adminRedirect("tab=events&error=fields");
+
+  const endsLocal = String(formData.get("ends_at") ?? "").trim();
+  const endsAt = endsLocal ? datetimeLocalToUtcIso(endsLocal) : null;
+  if (endsLocal && !endsAt) adminRedirect("tab=events&error=fields");
 
   const admin = createAdminClient();
   const payload = {
@@ -140,7 +146,7 @@ export async function saveEvent(formData: FormData) {
     venue_id: venueId,
     description: String(formData.get("description") ?? "").trim().slice(0, 4000) || null,
     starts_at: startsAt,
-    ends_at: String(formData.get("ends_at") ?? "").trim() || null,
+    ends_at: endsAt,
     genre: String(formData.get("genre") ?? "mixed").slice(0, 32),
     image_url: String(formData.get("image_url") ?? "").trim().slice(0, 2000) || null,
     dj_lineup: parseJsonArray(String(formData.get("dj_lineup") ?? "")),
