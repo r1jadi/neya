@@ -65,27 +65,6 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
     }
   }
 
-  async function signInWithApple() {
-    setLoading("apple");
-    setError(null);
-    const supabase = createClient();
-    const { data, error: err } = await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: { redirectTo: callbackUrl(redirectTo) },
-    });
-    if (err) {
-      setLoading(null);
-      setError(err.message);
-      return;
-    }
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      setLoading(null);
-      setError("Apple sign-in is unavailable right now. Try email or password instead.");
-    }
-  }
-
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault();
     setLoading("magic");
@@ -151,15 +130,6 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
         onClick={() => void signInWithGoogle()}
       >
         {loading === "google" ? "Redirecting…" : "Continue with Google"}
-      </Button>
-      <Button
-        type="button"
-        variant="secondary"
-        className="w-full"
-        disabled={loading !== null}
-        onClick={() => void signInWithApple()}
-      >
-        {loading === "apple" ? "Redirecting…" : "Continue with Apple"}
       </Button>
       <p className="text-center text-xs text-white/45">
         <Link href="/" className="text-sky-300 hover:underline">

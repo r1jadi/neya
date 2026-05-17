@@ -32,7 +32,7 @@ export default async function LoginPage({ searchParams }: Props) {
             <div>
               <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Welcome back</h1>
               <p className="mt-2 text-sm text-white/55">
-                Sign in with your password, a one-tap email link, Google, or Apple.
+                Sign in with your password, a one-tap email link, or Google.
               </p>
             </div>
             <LoginForm initialError={params.error} redirectTo={params.next} />
