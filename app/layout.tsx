@@ -4,6 +4,7 @@ import "./globals.css";
 import { JsonLd } from "@/components/seo/json-ld";
 import { AppProviders } from "@/providers/app-providers";
 import { SITE } from "@/lib/constants";
+import { Analytics } from "@vercel/analytics/next"
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -73,6 +74,9 @@ export default function RootLayout({
           <JsonLd />
           <div className="flex min-h-full w-full min-w-0 flex-col">{children}</div>
         </AppProviders>
+
+        {/* VERCEL ANALYTICS */}
+      <Analytics />
       </body>
     </html>
   );
