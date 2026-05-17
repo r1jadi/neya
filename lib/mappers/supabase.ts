@@ -1,3 +1,4 @@
+import { resolveImageUrl } from "@/lib/images";
 import type { Event, MusicGenre, Venue, VenueCategory } from "@/types";
 
 const GENRES: MusicGenre[] = ["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"];
@@ -45,6 +46,8 @@ export function mapVenueRow(row: {
   atmosphere_score?: number | string | null;
   crowd_count?: number | null;
   is_live?: boolean | null;
+  is_featured?: boolean | null;
+  is_trending?: boolean | null;
 }): Venue {
   const price = Math.min(4, Math.max(1, Math.round(num(row.price_level, 2)))) as Venue["price_level"];
   return {
@@ -56,11 +59,13 @@ export function mapVenueRow(row: {
     address: row.address ?? undefined,
     lat: row.lat ?? undefined,
     lng: row.lng ?? undefined,
-    image_url: row.image_url ?? "https://images.unsplash.com/photo-1574391884726-a410171917de?auto=format&fit=crop&w=1200&q=80",
+    image_url: resolveImageUrl(row.image_url),
     price_level: price,
     atmosphere_score: row.atmosphere_score != null ? num(row.atmosphere_score, 8) : undefined,
     crowd_count: row.crowd_count ?? undefined,
     is_live: row.is_live ?? undefined,
+    is_featured: row.is_featured ?? undefined,
+    is_trending: row.is_trending ?? undefined,
   };
 }
 
@@ -80,6 +85,7 @@ export function mapEventRow(row: {
   ticket_from_eur?: number | string | null;
   is_hidden_premium?: boolean | null;
   is_listed_public?: boolean | null;
+  is_featured?: boolean | null;
   venues:
     | {
         id: string;
@@ -88,6 +94,7 @@ export function mapEventRow(row: {
         image_url?: string | null;
         price_level?: number | null;
         category?: string | null;
+        approved?: boolean | null;
       }
     | Array<{
         id: string;
@@ -96,17 +103,15 @@ export function mapEventRow(row: {
         image_url?: string | null;
         price_level?: number | null;
         category?: string | null;
+        approved?: boolean | null;
       }>
     | null;
 }): Event | null {
   const raw = row.venues;
   const v = Array.isArray(raw) ? raw[0] : raw;
-  if (!v) return null;
+  if (!v || v.approved === false) return null;
   const price = Math.min(4, Math.max(1, Math.round(num(v.price_level, 2)))) as Event["price_level"];
-  const img =
-    row.image_url ||
-    v.image_url ||
-    "https://images.unsplash.com/photo-1574391884726-a410171917de?auto=format&fit=crop&w=1200&q=80";
+  const img = resolveImageUrl(row.image_url || v.image_url);
   return {
     id: row.id,
     slug: row.slug,
@@ -115,7 +120,7 @@ export function mapEventRow(row: {
       id: v.id,
       slug: v.slug,
       name: v.name,
-      image_url: v.image_url ?? img,
+      image_url: resolveImageUrl(v.image_url),
       category: normalizeCategory(v.category ?? undefined),
     },
     starts_at: row.starts_at,
@@ -123,7 +128,7 @@ export function mapEventRow(row: {
     genre: normalizeGenre(row.genre),
     image_url: img,
     crowd_count: Math.round(num(row.crowd_count, 0)),
-    atmosphere_rating: num(row.atmosphere_rating, 8.5),
+    atmosphere_rating: num(row.atmosphere_rating, 0),
     live_status: Boolean(row.live_status),
     reservation_spots_left: row.reservation_spots_left ?? undefined,
     price_level: price,
@@ -131,5 +136,6 @@ export function mapEventRow(row: {
     ticket_from_eur: row.ticket_from_eur != null ? num(row.ticket_from_eur, 0) : undefined,
     is_hidden_premium: Boolean(row.is_hidden_premium),
     is_listed_public: row.is_listed_public !== false,
+    is_featured: Boolean(row.is_featured),
   };
 }

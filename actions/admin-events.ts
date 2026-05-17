@@ -2,22 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isAdminEmail } from "@/lib/auth/admin";
-
-async function requireAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user?.email) redirect("/login?next=/admin");
-  if (!isAdminEmail(user.email)) redirect("/admin?error=forbidden");
-  return user;
-}
+import { requireAdminUser } from "@/lib/auth/require-admin";
 
 export async function toggleEventFeatured(formData: FormData) {
-  await requireAdmin();
+  await requireAdminUser();
   const eventId = String(formData.get("event_id") ?? "");
   const on = String(formData.get("on") ?? "") === "1";
   if (!eventId) redirect("/admin?error=missing");
@@ -32,7 +21,7 @@ export async function toggleEventFeatured(formData: FormData) {
 }
 
 export async function toggleEventPremiumHidden(formData: FormData) {
-  await requireAdmin();
+  await requireAdminUser();
   const eventId = String(formData.get("event_id") ?? "");
   const on = String(formData.get("on") ?? "") === "1";
   if (!eventId) redirect("/admin?error=missing");
@@ -47,7 +36,7 @@ export async function toggleEventPremiumHidden(formData: FormData) {
 }
 
 export async function toggleEventListed(formData: FormData) {
-  await requireAdmin();
+  await requireAdminUser();
   const eventId = String(formData.get("event_id") ?? "");
   const on = String(formData.get("on") ?? "") === "1";
   if (!eventId) redirect("/admin?error=missing");
@@ -62,7 +51,7 @@ export async function toggleEventListed(formData: FormData) {
 }
 
 export async function grantPremiumByUserId(formData: FormData) {
-  await requireAdmin();
+  await requireAdminUser();
   const userId = String(formData.get("user_id") ?? "").trim();
   if (!userId) redirect("/admin?tab=premium&error=id");
 

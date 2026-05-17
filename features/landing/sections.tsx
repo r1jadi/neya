@@ -4,7 +4,6 @@ import { TrendingCarousel } from "@/components/neya/trending-carousel";
 import { VenueCard } from "@/components/neya/venue-card";
 import { AnimatedMap } from "@/components/neya/animated-map";
 import { GlassCard } from "@/components/neya/glass-card";
-import { TicketCard } from "@/components/neya/ticket-card";
 import { EventCard } from "@/components/neya/event-card";
 import { FomoTicker } from "@/components/neya/fomo-ticker";
 import { ForYouRail } from "@/features/landing/for-you-rail";
@@ -24,7 +23,8 @@ import {
 } from "@/lib/event-filters";
 import type { ActivityFeedItem } from "@/services/activity";
 import type { Event, StoryItem, Venue } from "@/types";
-import { Quote } from "lucide-react";
+import { EmptyState } from "@/components/neya/empty-state";
+import { CalendarDays, MapPin, Quote } from "lucide-react";
 
 interface LandingSectionsProps {
   events: Event[];
@@ -35,14 +35,8 @@ interface LandingSectionsProps {
   heroStats: { hereNow: number; tonightCount: number; vibe: number };
   activityItems: ActivityFeedItem[];
   savedEventIds: string[];
+  spotlight?: Event | null;
 }
-
-const FOMO_DEFAULTS = [
-  "This venue gained 120 visitors in the last hour",
-  "People are moving here right now",
-  "Most saved tonight",
-  "Line building — do not arrive late",
-];
 
 export function LandingSections({
   events,
@@ -53,6 +47,7 @@ export function LandingSections({
   heroStats,
   activityItems,
   savedEventIds,
+  spotlight,
 }: LandingSectionsProps) {
   const trending = sortByCrowd(events).slice(0, 14);
   const popular = sortByCrowd(events).slice(0, 12);
@@ -76,22 +71,24 @@ export function LandingSections({
       is_live: v.is_live,
     }));
 
-  const fomoLines = [
-    ...(uniqueBySlug(events)
-      .map((e) => e.fomo_line)
-      .filter((x): x is string => Boolean(x)) as string[]),
-    ...FOMO_DEFAULTS,
-  ];
+  const fomoLines = uniqueBySlug(events)
+    .map((e) => e.fomo_line)
+    .filter((x): x is string => Boolean(x));
+
+  const hasEvents = events.length > 0;
+  const hasVenues = venues.length > 0;
 
   return (
     <div className="flex w-full min-w-0 flex-1 flex-col">
-      <LandingHero stats={heroStats} />
+      <LandingHero stats={heroStats} spotlight={spotlight} />
 
       <ActivityStrip items={activityItems} />
 
-      <section className="mx-auto w-full min-w-0 max-w-6xl space-y-3 px-4 pb-6 sm:px-6">
-        <FomoTicker lines={fomoLines} />
-      </section>
+      {fomoLines.length ? (
+        <section className="mx-auto w-full min-w-0 max-w-6xl space-y-3 px-4 pb-6 sm:px-6">
+          <FomoTicker lines={fomoLines} />
+        </section>
+      ) : null}
 
       {musicGenres.length || venueInterests.length ? (
         <section className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-10 sm:px-6">
@@ -104,12 +101,22 @@ export function LandingSections({
         </section>
       ) : null}
 
-      <section className="mx-auto w-full min-w-0 max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
-        <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">Stories</h2>
-        <StoryViewer stories={stories} />
-      </section>
+      {stories.length ? (
+        <section className="mx-auto w-full min-w-0 max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">Stories</h2>
+          <StoryViewer stories={stories} />
+        </section>
+      ) : null}
 
       <div className="mx-auto w-full min-w-0 max-w-6xl space-y-16 px-4 pb-20 sm:px-6">
+        {!hasEvents ? (
+          <EmptyState
+            title="Events coming soon"
+            description="No public events are listed yet. Check back after venues publish their nights."
+            icon={<CalendarDays className="h-10 w-10" />}
+          />
+        ) : (
+          <>
         <TrendingCarousel
           title="Trending tonight"
           subtitle="Most viewed in the last 60 minutes"
@@ -186,6 +193,8 @@ export function LandingSections({
           events={rising}
           savedEventIds={savedEventIds}
         />
+          </>
+        )}
 
         <section id="venues" className="space-y-6">
           <div>
@@ -194,11 +203,19 @@ export function LandingSections({
             </h2>
             <p className="mt-1 text-sm text-white/55">Prishtina-first. Rooftops, clubs, hidden rooms.</p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {venues.map((v) => (
-              <VenueCard key={v.id} venue={v} />
-            ))}
-          </div>
+          {hasVenues ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {venues.map((v) => (
+                <VenueCard key={v.id} venue={v} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="No venues added yet"
+              description="Approved venues will appear here once added in the admin CMS."
+              icon={<MapPin className="h-10 w-10" />}
+            />
+          )}
         </section>
 
         <section id="map" className="space-y-4">
@@ -210,19 +227,29 @@ export function LandingSections({
               <p className="text-sm text-white/55">Dark cartography, live pins, venue deep links.</p>
             </div>
           </div>
-          <AnimatedMap className="shadow-2xl" markers={mapMarkers} />
+          {mapMarkers.length ? (
+            <AnimatedMap className="shadow-2xl" markers={mapMarkers} />
+          ) : (
+            <EmptyState
+              title="Map waiting for venues"
+              description="Add coordinates when creating a venue to show live pins on the map."
+              icon={<MapPin className="h-10 w-10" />}
+            />
+          )}
         </section>
 
-        <section className="space-y-6">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">
-            Upcoming events
-          </h2>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {events.slice(0, 9).map((e) => (
-              <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
-            ))}
-          </div>
-        </section>
+        {hasEvents ? (
+          <section className="space-y-6">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">
+              Upcoming events
+            </h2>
+            <div className="grid gap-6 lg:grid-cols-3">
+              {events.slice(0, 9).map((e) => (
+                <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="grid gap-6 lg:grid-cols-2">
           {[
@@ -302,9 +329,6 @@ export function LandingSections({
           <p className="mt-3 max-w-lg text-sm text-white/55">
             Mobile-first PWA experience tonight. Native apps when the city demands it.
           </p>
-          <div className="mt-8 w-full max-w-sm">
-            <TicketCard eventTitle="NEYA Launch Week" tier="Early access" priceEur={0} endsAt="soon" />
-          </div>
         </section>
       </div>
     </div>

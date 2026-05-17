@@ -1,10 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Radio } from "lucide-react";
 import { NeonButton } from "@/components/neya/neon-button";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 import { SITE } from "@/lib/constants";
+import type { Event } from "@/types";
 
 export interface HeroStats {
   hereNow: number;
@@ -14,12 +17,14 @@ export interface HeroStats {
 
 interface LandingHeroProps {
   stats?: HeroStats;
+  spotlight?: Event | null;
 }
 
-export function LandingHero({ stats }: LandingHeroProps) {
-  const hereNow = stats?.hereNow ?? 128;
-  const tonight = stats?.tonightCount ?? 24;
-  const vibe = stats?.vibe ?? 9.2;
+export function LandingHero({ stats, spotlight }: LandingHeroProps) {
+  const hereNow = stats?.hereNow ?? 0;
+  const tonight = stats?.tonightCount ?? 0;
+  const vibe = stats?.vibe ?? 0;
+  const hasSpotlight = Boolean(spotlight);
 
   return (
     <section className="relative isolate w-full min-w-0 overflow-hidden pt-10 pb-20 sm:pt-16 sm:pb-28">
@@ -38,7 +43,7 @@ export function LandingHero({ stats }: LandingHeroProps) {
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70"
           >
             <Radio className="h-3.5 w-3.5 text-emerald-400" />
-            Live in Prishtina · Beta access
+            Live in Prishtina
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -54,8 +59,7 @@ export function LandingHero({ stats }: LandingHeroProps) {
             transition={{ delay: 0.12, duration: 0.55 }}
             className="mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg"
           >
-            Clubs, rooftops, live sets, student nights — one pulse for the city. FOMO is a feature: live
-            crowds, atmosphere scores, and tables that disappear.
+            Clubs, rooftops, live sets, student nights — one pulse for the city. Real venues, real events, no demo filler.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -85,7 +89,7 @@ export function LandingHero({ stats }: LandingHeroProps) {
             </div>
             <div>
               <dt className="text-[11px] uppercase tracking-widest text-white/40">Vibe</dt>
-              <dd className="mt-1 text-2xl font-bold tabular-nums text-sky-300">{vibe.toFixed(1)}</dd>
+              <dd className="mt-1 text-2xl font-bold tabular-nums text-sky-300">{tonight > 0 ? vibe.toFixed(1) : "—"}</dd>
             </div>
           </dl>
         </div>
@@ -96,13 +100,29 @@ export function LandingHero({ stats }: LandingHeroProps) {
           className="relative flex w-full min-w-0 flex-1 justify-center xl:justify-end"
         >
           <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black shadow-[0_40px_120px_rgba(0,0,0,0.65)]">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1574391884726-a410171917de?auto=format&fit=crop&w=900&q=80')] bg-cover bg-center opacity-90" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 space-y-2 p-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-fuchsia-300">Trending now</p>
-              <p className="text-2xl font-bold text-white">SOMA · After Midnight</p>
-              <p className="text-sm text-white/60">Only 2 VIP tables left · Line heating up</p>
-            </div>
+            {hasSpotlight && spotlight ? (
+              <>
+                <Image src={spotlight.image_url} alt="" fill className="object-cover opacity-90" sizes="400px" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 space-y-2 p-6">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-fuchsia-300">Featured</p>
+                  <p className="text-2xl font-bold text-white">
+                    {spotlight.venue.name} · {spotlight.title}
+                  </p>
+                  {spotlight.fomo_line ? (
+                    <p className="text-sm text-white/60">{spotlight.fomo_line}</p>
+                  ) : (
+                    <p className="text-sm text-white/60">See you tonight</p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+                <Image src={PLACEHOLDER_IMAGE} alt="" width={120} height={120} className="opacity-40" />
+                <p className="mt-6 text-lg font-semibold text-white/80">Events coming soon</p>
+                <p className="mt-2 text-sm text-white/50">The city pulse updates as venues go live.</p>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

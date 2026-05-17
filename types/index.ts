@@ -35,6 +35,8 @@ export interface Venue {
   atmosphere_score?: number;
   crowd_count?: number;
   is_live?: boolean;
+  is_featured?: boolean;
+  is_trending?: boolean;
   distance_km?: number;
 }
 
@@ -57,6 +59,7 @@ export interface Event {
   ticket_from_eur?: number;
   is_hidden_premium?: boolean;
   is_listed_public?: boolean;
+  is_featured?: boolean;
 }
 
 export interface StoryItem {

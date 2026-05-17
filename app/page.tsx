@@ -36,7 +36,10 @@ export default async function Home() {
   const hereNow = events.reduce((a, e) => a + e.crowd_count, 0);
   const tonightCount = events.length;
   const vibe =
-    events.length > 0 ? Math.round((events.reduce((a, e) => a + e.atmosphere_rating, 0) / events.length) * 10) / 10 : 9.2;
+    events.length > 0
+      ? Math.round((events.reduce((a, e) => a + e.atmosphere_rating, 0) / events.length) * 10) / 10
+      : 0;
+  const spotlight = events.find((e) => e.is_featured) ?? events[0] ?? null;
 
   return (
     <div className="flex min-h-screen w-full min-w-0 flex-col">
@@ -50,6 +53,7 @@ export default async function Home() {
         heroStats={{ hereNow, tonightCount, vibe }}
         activityItems={activityItems}
         savedEventIds={savedEventIds}
+        spotlight={spotlight}
       />
       <SiteFooter />
     </div>

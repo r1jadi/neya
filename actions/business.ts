@@ -1,19 +1,10 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
-
-function slugify(name: string) {
-  const base = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 36);
-  return `${base || "venue"}-${randomUUID().slice(0, 8)}`;
-}
+import { slugify } from "@/lib/slug";
 
 export async function requestVenueListing(formData: FormData) {
   const rl = await rateLimit("venue-request", 5, 3600);
@@ -42,8 +33,7 @@ export async function requestVenueListing(formData: FormData) {
     address: address || null,
     owner_id: user.id,
     approved: false,
-    image_url:
-      "https://images.unsplash.com/photo-1574391884726-a410171917de?auto=format&fit=crop&w=1200&q=80",
+    image_url: null,
   });
 
   if (error) redirect("/business?error=db");

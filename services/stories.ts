@@ -1,11 +1,11 @@
-import { MOCK_STORIES } from "@/data/mock-data";
+import { resolveImageUrl } from "@/lib/images";
 import { getPublicSupabase } from "@/lib/supabase/public-server";
 import type { StoryItem } from "@/types";
 
 export async function getStoriesForCity(citySlug = "prishtina"): Promise<StoryItem[]> {
   try {
     const sb = getPublicSupabase();
-    if (!sb) return MOCK_STORIES;
+    if (!sb) return [];
 
     const iso = new Date().toISOString();
     const { data, error } = await sb
@@ -18,18 +18,20 @@ export async function getStoriesForCity(citySlug = "prishtina"): Promise<StoryIt
           slug,
           name,
           image_url,
-          city_slug
+          city_slug,
+          approved
         )
       `,
       )
       .eq("venues.city_slug", citySlug)
+      .eq("venues.approved", true)
       .or(`expires_at.is.null,expires_at.gt.${iso}`)
       .order("created_at", { ascending: false })
       .limit(24);
 
     if (error) {
       console.error("[neya] getStoriesForCity", error.message);
-      return MOCK_STORIES;
+      return [];
     }
 
     const mapped: StoryItem[] =
@@ -44,7 +46,7 @@ export async function getStoriesForCity(citySlug = "prishtina"): Promise<StoryIt
             id: row.id,
             venue_slug: "unknown",
             venue_name: "Venue",
-            thumbnail_url: row.media_url || MOCK_STORIES[0].thumbnail_url,
+            thumbnail_url: resolveImageUrl(row.media_url),
             label: "Live",
           };
         }
@@ -52,14 +54,14 @@ export async function getStoriesForCity(citySlug = "prishtina"): Promise<StoryIt
           id: row.id,
           venue_slug: v.slug,
           venue_name: v.name,
-          thumbnail_url: row.media_url || v.image_url || MOCK_STORIES[0].thumbnail_url,
+          thumbnail_url: resolveImageUrl(row.media_url || v.image_url),
           label: "Live",
         };
       }) ?? [];
 
-    return mapped.length ? mapped : MOCK_STORIES;
+    return mapped;
   } catch (e) {
     console.error("[neya] getStoriesForCity", e);
-    return MOCK_STORIES;
+    return [];
   }
 }

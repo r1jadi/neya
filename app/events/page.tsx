@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EmptyState } from "@/components/neya/empty-state";
 import { EventCard } from "@/components/neya/event-card";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
+import { CalendarDays } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getFeaturedEvents } from "@/services/events";
 
@@ -60,11 +62,20 @@ export default async function EventsPage({ searchParams }: Props) {
               You are already on this guestlist.
             </p>
           ) : null}
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((e) => (
-              <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
-            ))}
-          </div>
+          {events.length ? (
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {events.map((e) => (
+                <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              className="mt-10"
+              title="Events coming soon"
+              description="No events are published yet. Venues will list their nights here when they go live."
+              icon={<CalendarDays className="h-10 w-10" />}
+            />
+          )}
           <p className="mt-12 text-center text-sm text-white/45">
             <Link href="/" className="text-sky-300 hover:underline">
               ← Back home
