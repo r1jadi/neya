@@ -16,6 +16,9 @@ export type AdminVenueRow = {
   opening_hours: Record<string, unknown> | null;
   social_links: Record<string, string>;
   reservations_enabled: boolean;
+  reservation_price_eur: number;
+  requires_online_payment: boolean;
+  allows_pay_at_venue: boolean;
   vip_enabled: boolean;
   approved: boolean;
   rejected: boolean;
@@ -41,6 +44,9 @@ export type AdminEventRow = {
   is_listed_public: boolean;
   is_hidden_premium: boolean;
   ticket_from_eur: number | null;
+  reservation_price_eur: number | null;
+  requires_online_payment: boolean | null;
+  allows_pay_at_venue: boolean | null;
   venues: { name: string; slug: string } | { name: string; slug: string }[] | null;
 };
 
@@ -66,6 +72,10 @@ export type AdminReservationRow = {
   id: string;
   status: string;
   party_size: number;
+  deposit_cents: number | null;
+  payment_method: string | null;
+  payment_status: string;
+  booking_kind: string;
   notes: string | null;
   created_at: string;
   events: { title: string } | { title: string }[] | null;
@@ -79,13 +89,13 @@ export async function getAdminDashboardData() {
     admin
       .from("venues")
       .select(
-        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, opening_hours, social_links, reservations_enabled, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
+        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, opening_hours, social_links, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
       )
       .order("created_at", { ascending: false }),
     admin
       .from("events")
       .select(
-        "id, slug, title, description, venue_id, starts_at, ends_at, genre, image_url, dj_lineup, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, venues(name, slug)",
+        "id, slug, title, description, venue_id, starts_at, ends_at, genre, image_url, dj_lineup, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
       )
       .order("starts_at", { ascending: false })
       .limit(200),
@@ -93,7 +103,7 @@ export async function getAdminDashboardData() {
     admin.from("guestlists").select("id, event_id, name, capacity, is_vip").order("created_at", { ascending: false }),
     admin
       .from("reservations")
-      .select("id, status, party_size, notes, created_at, events(title), venues(name)")
+      .select("id, status, party_size, deposit_cents, payment_method, payment_status, booking_kind, notes, created_at, events(title), venues(name)")
       .order("created_at", { ascending: false })
       .limit(100),
     admin.from("analytics").select("id", { count: "exact", head: true }),

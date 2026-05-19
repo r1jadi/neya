@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-const RES_STATUSES = new Set(["pending", "confirmed", "rejected", "cancelled"]);
+const RES_STATUSES = new Set(["pending", "pending_payment", "confirmed", "rejected", "cancelled"]);
 const GL_STATUSES = new Set(["pending", "approved", "rejected", "waitlist"]);
 
 export async function updateReservationStatus(formData: FormData) {

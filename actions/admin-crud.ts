@@ -21,6 +21,13 @@ function parseJsonArray(raw: string | null): string[] {
   return [];
 }
 
+function parseTriState(raw: FormDataEntryValue | null): boolean | null {
+  const v = String(raw ?? "").trim();
+  if (v === "true" || v === "on") return true;
+  if (v === "false" || v === "off") return false;
+  return null;
+}
+
 function parseSocialLinks(raw: string | null): Record<string, string> {
   if (!raw?.trim()) return {};
   try {
@@ -55,6 +62,9 @@ export async function saveVenue(formData: FormData) {
     music_genres: parseJsonArray(String(formData.get("music_genres") ?? "")),
     social_links: parseSocialLinks(String(formData.get("social_links") ?? "")),
     reservations_enabled: formData.get("reservations_enabled") === "on",
+    reservation_price_eur: Math.max(0, Number(formData.get("reservation_price_eur") ?? 0) || 0),
+    requires_online_payment: formData.get("requires_online_payment") === "on",
+    allows_pay_at_venue: formData.get("allows_pay_at_venue") === "on",
     vip_enabled: formData.get("vip_enabled") === "on",
     approved: formData.get("approved") === "on",
     rejected: formData.get("rejected") === "on",
@@ -152,6 +162,11 @@ export async function saveEvent(formData: FormData) {
     dj_lineup: parseJsonArray(String(formData.get("dj_lineup") ?? "")),
     capacity: formData.get("capacity") ? Number(formData.get("capacity")) : null,
     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_eur")) : null,
+    reservation_price_eur: formData.get("reservation_price_eur")
+      ? Math.max(0, Number(formData.get("reservation_price_eur")) || 0)
+      : null,
+    requires_online_payment: parseTriState(formData.get("requires_online_payment")),
+    allows_pay_at_venue: parseTriState(formData.get("allows_pay_at_venue")),
     is_featured: formData.get("is_featured") === "on",
     is_listed_public: formData.get("is_listed_public") !== "off",
     is_hidden_premium: formData.get("is_hidden_premium") === "on",
@@ -273,15 +288,22 @@ export async function updateReservationStatus(formData: FormData) {
   await requireAdminUser();
   const id = String(formData.get("id") ?? "");
   const status = String(formData.get("status") ?? "").trim();
-  if (!id || !["pending", "confirmed", "rejected", "cancelled"].includes(status)) {
+  if (!id || !["pending", "pending_payment", "confirmed", "rejected", "cancelled"].includes(status)) {
     adminRedirect("tab=reservations&error=fields");
   }
 
   const admin = createAdminClient();
-  const { error } = await admin
-    .from("reservations")
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq("id", id);
+  const patch: Record<string, unknown> = { status, updated_at: new Date().toISOString() };
+  if (status === "confirmed") {
+    const { data: row } = await admin.from("reservations").select("payment_status").eq("id", id).maybeSingle();
+    if (row?.payment_status === "due_at_venue") {
+      patch.payment_status = "due_at_venue";
+    } else if (row?.payment_status === "pending") {
+      patch.payment_status = "paid";
+    }
+  }
+
+  const { error } = await admin.from("reservations").update(patch).eq("id", id);
   if (error) adminRedirect("tab=reservations&error=update");
 
   adminRedirect("tab=reservations&ok=1");

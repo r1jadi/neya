@@ -12,6 +12,7 @@ import { cn, isUuid } from "@/lib/utils";
 export type EventDetailsFlash = {
   guestlist?: string;
   voted?: string;
+  reservation?: string;
   error?: string;
 };
 
@@ -37,11 +38,15 @@ export function EventDetailsCtas({
   const hasExternalTicket = Boolean(event.ticket_url);
   const showTicket = hasTicketPrice || hasStripeTicket || hasExternalTicket;
 
-  const reserveButton = meta ? (
+  const canReserve = meta?.reservation.reservationsEnabled ?? false;
+
+  const reserveButton = meta && canReserve ? (
     <ReservationModal
       venueName={event.venue.name}
       venueId={meta.venueUuid}
       eventId={meta.eventUuid}
+      eventSlug={event.slug}
+      config={meta.reservation}
       trigger={
         <button
           type="button"
@@ -51,6 +56,10 @@ export function EventDetailsCtas({
         </button>
       }
     />
+  ) : meta ? (
+    <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50">
+      Table reservations are closed for this venue.
+    </p>
   ) : (
     <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50">
       Table reservations for this night are not open yet.
@@ -133,11 +142,13 @@ export function EventDetailsCtas({
               }
             />
           ) : null}
-          {meta ? (
+          {meta && canReserve ? (
             <ReservationModal
               venueName={event.venue.name}
               venueId={meta.venueUuid}
               eventId={meta.eventUuid}
+              eventSlug={event.slug}
+              config={meta.reservation}
               trigger={
                 <button
                   type="button"

@@ -57,6 +57,8 @@ export async function POST(req: Request) {
           .from("reservations")
           .update({
             status: "confirmed",
+            payment_method: "online",
+            payment_status: "paid",
             stripe_checkout_session: session.id,
             stripe_payment_intent: pi ?? null,
             deposit_cents: session.amount_total ?? undefined,

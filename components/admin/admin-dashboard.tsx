@@ -27,6 +27,11 @@ import type {
   AdminVenueRow,
 } from "@/services/admin";
 import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
+import {
+  paymentMethodLabel,
+  paymentStatusLabel,
+  reservationStatusLabel,
+} from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
 
 type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium";
@@ -316,7 +321,15 @@ export function AdminDashboard({
                   {evTitle ?? "Event"} @ {venName ?? "Venue"}
                 </p>
                 <p className="text-xs text-white/45">
-                  Party {r.party_size} · {r.status} · {new Date(r.created_at).toLocaleString()}
+                  Party {r.party_size} · {reservationStatusLabel(r.status)} ·{" "}
+                  {new Date(r.created_at).toLocaleString()}
+                </p>
+                <p className="mt-1 text-xs text-white/40">
+                  {paymentMethodLabel(r.payment_method)} · {paymentStatusLabel(r.payment_status)}
+                  {r.deposit_cents != null && r.deposit_cents > 0
+                    ? ` · €${(r.deposit_cents / 100).toFixed(2)}`
+                    : " · Free"}
+                  {r.booking_kind !== "table" ? ` · ${r.booking_kind}` : ""}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(["confirmed", "rejected", "cancelled"] as const).map((status) => (
@@ -346,6 +359,34 @@ export function AdminDashboard({
         </div>
       ) : null}
     </div>
+  );
+}
+
+function TriStateSelect({
+  name,
+  label,
+  value,
+  className,
+}: {
+  name: string;
+  label: string;
+  value: boolean | null | undefined;
+  className?: string;
+}) {
+  const selected = value === true ? "true" : value === false ? "false" : "";
+  return (
+    <label className={cn("block text-sm text-white/80", className)}>
+      <span className="mb-1 block text-xs text-white/45">{label}</span>
+      <select
+        name={name}
+        defaultValue={selected}
+        className="h-11 w-full rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white"
+      >
+        <option value="">Inherit from venue</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </label>
   );
 }
 
@@ -408,6 +449,25 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
         <label className="flex items-center gap-2">
           <input type="checkbox" name="vip_enabled" defaultChecked={venue?.vip_enabled} /> VIP
         </label>
+      </div>
+      <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Reservation pricing</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <Input
+            name="reservation_price_eur"
+            type="number"
+            step="0.01"
+            min={0}
+            placeholder="Price (EUR, 0 = free)"
+            defaultValue={venue?.reservation_price_eur ?? 0}
+          />
+          <label className="flex items-center gap-2 text-sm text-white/80">
+            <input type="checkbox" name="requires_online_payment" defaultChecked={venue?.requires_online_payment} /> Require online payment
+          </label>
+          <label className="flex items-center gap-2 text-sm text-white/80 sm:col-span-2">
+            <input type="checkbox" name="allows_pay_at_venue" defaultChecked={venue?.allows_pay_at_venue ?? true} /> Allow pay at venue
+          </label>
+        </div>
       </div>
       <Button type="submit">Save venue</Button>
     </form>
@@ -475,6 +535,31 @@ function EventForm({
           rows={2}
           className="sm:col-span-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
         />
+      </div>
+      <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Reservation overrides</p>
+        <p className="mt-1 text-xs text-white/40">Leave inherit to use venue defaults.</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <Input
+            name="reservation_price_eur"
+            type="number"
+            step="0.01"
+            min={0}
+            placeholder="Price EUR (empty = venue)"
+            defaultValue={event?.reservation_price_eur ?? ""}
+          />
+          <TriStateSelect
+            name="requires_online_payment"
+            label="Require online payment"
+            value={event?.requires_online_payment}
+          />
+          <TriStateSelect
+            name="allows_pay_at_venue"
+            label="Allow pay at venue"
+            value={event?.allows_pay_at_venue}
+            className="sm:col-span-2"
+          />
+        </div>
       </div>
       <div className="flex flex-wrap gap-4 text-sm text-white/80">
         <label className="flex items-center gap-2">

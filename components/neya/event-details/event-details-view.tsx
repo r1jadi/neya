@@ -57,6 +57,16 @@ function FlashMessages({ flash }: { flash?: EventDetailsFlash }) {
           Could not save your vote. Make sure you are logged in and try again.
         </p>
       ) : null}
+      {flash.reservation === "confirmed" ? (
+        <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
+          Table reservation confirmed.
+        </p>
+      ) : null}
+      {flash.reservation === "pending" ? (
+        <p className="rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-sm text-sky-100">
+          Reservation submitted — pay at the venue. The host will confirm your table.
+        </p>
+      ) : null}
     </>
   );
 }

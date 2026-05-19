@@ -16,7 +16,7 @@ import { getEventBySlug } from "@/services/events";
 
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ voted?: string; error?: string; guestlist?: string }>;
+  searchParams: Promise<{ voted?: string; error?: string; guestlist?: string; reservation?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -78,6 +78,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             flash={{
               guestlist: sp.guestlist,
               voted: sp.voted,
+              reservation: sp.reservation,
               error: sp.error,
             }}
           />

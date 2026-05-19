@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { paymentMethodLabel, paymentStatusLabel, reservationStatusLabel } from "@/lib/reservations/labels";
 
 export const metadata: Metadata = {
   title: `Your NEYA · ${SITE.name}`,
@@ -23,7 +24,7 @@ export default async function DashboardPage() {
 
   const { data: reservations } = await supabase
     .from("reservations")
-    .select("id, status, party_size, created_at, deposit_cents, venues(name, slug)")
+    .select("id, status, party_size, created_at, deposit_cents, payment_method, payment_status, venues(name, slug)")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -126,8 +127,14 @@ export default async function DashboardPage() {
                     {(r.venues as { name?: string } | null)?.name ?? "Venue"}
                   </span>{" "}
                   · {r.party_size} guests ·{" "}
-                  <span className="text-sky-200/90">{r.status}</span>
-                  {r.deposit_cents != null ? <span className="text-white/45"> · €{(r.deposit_cents / 100).toFixed(0)}</span> : null}
+                  <span className="text-sky-200/90">{reservationStatusLabel(r.status)}</span>
+                  <span className="text-white/45">
+                    {" "}
+                    · {paymentMethodLabel(r.payment_method)} · {paymentStatusLabel(r.payment_status)}
+                    {r.deposit_cents != null && r.deposit_cents > 0
+                      ? ` · €${(r.deposit_cents / 100).toFixed(2)}`
+                      : " · Free"}
+                  </span>
                 </li>
               ))
             ) : (

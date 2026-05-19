@@ -4,6 +4,11 @@ import { redirect } from "next/navigation";
 import { updateReservationStatus } from "@/actions/business-manage";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
+import {
+  paymentMethodLabel,
+  paymentStatusLabel,
+  reservationStatusLabel,
+} from "@/lib/reservations/labels";
 import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -26,7 +31,9 @@ export default async function BusinessReservationsPage({ searchParams }: Props) 
     ids.length > 0
       ? await supabase
           .from("reservations")
-          .select("id, status, party_size, created_at, deposit_cents, notes, events(title, slug), venues(name)")
+          .select(
+            "id, status, party_size, created_at, deposit_cents, payment_method, payment_status, booking_kind, notes, events(title, slug), venues(name)",
+          )
           .in("venue_id", ids)
           .order("created_at", { ascending: false })
           .limit(50)
@@ -47,12 +54,24 @@ export default async function BusinessReservationsPage({ searchParams }: Props) 
           rows.map((r) => {
             const ev = r.events as { title?: string; slug?: string } | null;
             const vn = r.venues as { name?: string } | null;
+            const needsAction = r.status === "pending" || r.status === "pending_payment";
+            const amount =
+              r.deposit_cents != null && r.deposit_cents > 0
+                ? `€${(r.deposit_cents / 100).toFixed(2)}`
+                : "Free";
+
             return (
               <li key={r.id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/85">
                 <p className="font-medium text-white">{ev?.title ?? "Event"}</p>
-                <p className="text-xs text-white/45">{vn?.name ?? "Venue"} · {r.party_size} guests · {r.status}</p>
+                <p className="text-xs text-white/45">
+                  {vn?.name ?? "Venue"} · {r.party_size} guests · {reservationStatusLabel(r.status)}
+                </p>
+                <p className="mt-1 text-xs text-white/40">
+                  {paymentMethodLabel(r.payment_method)} · {paymentStatusLabel(r.payment_status)} · {amount}
+                  {r.booking_kind !== "table" ? ` · ${r.booking_kind}` : ""}
+                </p>
                 {r.notes ? <p className="mt-2 text-xs text-white/50">{r.notes}</p> : null}
-                {r.status === "pending" ? (
+                {needsAction ? (
                   <div className="mt-3 flex flex-wrap gap-2">
                     <form action={updateReservationStatus}>
                       <input type="hidden" name="reservation_id" value={r.id} />

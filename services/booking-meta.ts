@@ -1,4 +1,8 @@
 import { getPublicSupabase } from "@/lib/supabase/public-server";
+import {
+  resolveReservationConfig,
+  type ResolvedReservationConfig,
+} from "@/lib/reservations/config";
 
 export type EventBookingMeta = {
   eventUuid: string;
@@ -9,14 +13,34 @@ export type EventBookingMeta = {
   ticketSoldOut: boolean;
   /** At least one ticket row exists for this event */
   hasTicketRows: boolean;
+  reservation: ResolvedReservationConfig;
 };
+
+const VENUE_RESERVATION_SELECT =
+  "reservation_price_eur, requires_online_payment, allows_pay_at_venue, reservations_enabled";
 
 export async function getEventBookingMetaBySlug(slug: string): Promise<EventBookingMeta | null> {
   const sb = getPublicSupabase();
   if (!sb) return null;
 
-  const { data: ev, error: evErr } = await sb.from("events").select("id, venue_id").eq("slug", slug).maybeSingle();
+  const { data: ev, error: evErr } = await sb
+    .from("events")
+    .select(
+      `id, venue_id, reservation_price_eur, requires_online_payment, allows_pay_at_venue, venues(${VENUE_RESERVATION_SELECT})`,
+    )
+    .eq("slug", slug)
+    .maybeSingle();
   if (evErr || !ev) return null;
+
+  const venueRaw = ev.venues as ReservationVenueRow | ReservationVenueRow[] | null;
+  const venue = Array.isArray(venueRaw) ? venueRaw[0] : venueRaw;
+  if (!venue) return null;
+
+  const reservation = resolveReservationConfig(venue, {
+    reservation_price_eur: ev.reservation_price_eur,
+    requires_online_payment: ev.requires_online_payment,
+    allows_pay_at_venue: ev.allows_pay_at_venue,
+  });
 
   const { data: gl } = await sb.from("guestlists").select("id").eq("event_id", ev.id).limit(1).maybeSingle();
 
@@ -52,15 +76,35 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
     ticketId,
     ticketSoldOut,
     hasTicketRows,
+    reservation,
   };
 }
 
-export async function getVenueMetaBySlug(slug: string): Promise<{ venueUuid: string } | null> {
+type ReservationVenueRow = {
+  reservation_price_eur: number | null;
+  requires_online_payment: boolean | null;
+  allows_pay_at_venue: boolean | null;
+  reservations_enabled: boolean | null;
+};
+
+export type VenueBookingMeta = {
+  venueUuid: string;
+  reservation: ResolvedReservationConfig;
+};
+
+export async function getVenueMetaBySlug(slug: string): Promise<VenueBookingMeta | null> {
   const sb = getPublicSupabase();
   if (!sb) return null;
-  const { data, error } = await sb.from("venues").select("id").eq("slug", slug).maybeSingle();
+  const { data, error } = await sb
+    .from("venues")
+    .select(`id, ${VENUE_RESERVATION_SELECT}`)
+    .eq("slug", slug)
+    .maybeSingle();
   if (error || !data) return null;
-  return { venueUuid: data.id };
+  return {
+    venueUuid: data.id,
+    reservation: resolveReservationConfig(data),
+  };
 }
 
 export async function getPublicCheckinCount(venueId: string): Promise<number> {

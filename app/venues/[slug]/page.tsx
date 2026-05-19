@@ -82,8 +82,14 @@ export default async function VenuePage({ params }: Props) {
               />
             ) : null}
             <div className="flex flex-wrap gap-4">
-              {venueMeta ? (
-                <ReservationModal venueName={venue.name} venueId={venueMeta.venueUuid} />
+              {venueMeta && venueMeta.reservation.reservationsEnabled ? (
+                <ReservationModal
+                  venueName={venue.name}
+                  venueId={venueMeta.venueUuid}
+                  config={venueMeta.reservation}
+                />
+              ) : venueMeta ? (
+                <p className="text-xs text-white/45">Table reservations are closed for this venue.</p>
               ) : (
                 <p className="text-xs text-white/45">Table reservations open when the venue is live on NEYA.</p>
               )}
