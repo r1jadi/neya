@@ -40,15 +40,24 @@ export interface Venue {
   distance_km?: number;
 }
 
+export type EventVenue = Pick<
+  Venue,
+  "id" | "slug" | "name" | "image_url" | "category" | "address" | "city_slug" | "lat" | "lng" | "is_trending"
+>;
+
 export interface Event {
   id: string;
   slug: string;
   title: string;
-  venue: Pick<Venue, "id" | "slug" | "name" | "image_url" | "category">;
+  venue: EventVenue;
   starts_at: string;
   ends_at?: string;
   genre: MusicGenre;
   image_url: string;
+  description?: string | null;
+  dj_lineup?: string[];
+  capacity?: number | null;
+  ticket_url?: string | null;
   crowd_count: number;
   atmosphere_rating: number;
   live_status: boolean;

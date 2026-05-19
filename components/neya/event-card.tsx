@@ -51,6 +51,16 @@ export function EventCard({ event, className, saved }: EventCardProps) {
         </div>
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           <LiveBadge live={happening && event.live_status} />
+          {event.is_featured ? (
+            <Badge variant="neon" className="backdrop-blur-md">
+              Featured
+            </Badge>
+          ) : null}
+          {event.venue.is_trending ? (
+            <Badge variant="secondary" className="border-amber-400/30 text-amber-200 backdrop-blur-md">
+              Trending
+            </Badge>
+          ) : null}
           <Badge variant="secondary" className="backdrop-blur-md">
             {event.venue.category.replace(/_/g, " ")}
           </Badge>

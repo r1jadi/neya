@@ -73,10 +73,14 @@ export function mapEventRow(row: {
   id: string;
   slug: string;
   title: string;
+  description?: string | null;
   starts_at: string;
   ends_at?: string | null;
   genre?: string | null;
   image_url?: string | null;
+  dj_lineup?: string[] | null;
+  capacity?: number | null;
+  ticket_url?: string | null;
   crowd_count?: number | null;
   atmosphere_rating?: number | string | null;
   live_status?: boolean | null;
@@ -94,6 +98,11 @@ export function mapEventRow(row: {
         image_url?: string | null;
         price_level?: number | null;
         category?: string | null;
+        address?: string | null;
+        city_slug?: string | null;
+        lat?: number | null;
+        lng?: number | null;
+        is_trending?: boolean | null;
         approved?: boolean | null;
       }
     | Array<{
@@ -103,6 +112,11 @@ export function mapEventRow(row: {
         image_url?: string | null;
         price_level?: number | null;
         category?: string | null;
+        address?: string | null;
+        city_slug?: string | null;
+        lat?: number | null;
+        lng?: number | null;
+        is_trending?: boolean | null;
         approved?: boolean | null;
       }>
     | null;
@@ -112,21 +126,33 @@ export function mapEventRow(row: {
   if (!v || v.approved === false) return null;
   const price = Math.min(4, Math.max(1, Math.round(num(v.price_level, 2)))) as Event["price_level"];
   const img = resolveImageUrl(row.image_url || v.image_url);
+  const djLineup = Array.isArray(row.dj_lineup)
+    ? row.dj_lineup.map((d) => d.trim()).filter(Boolean)
+    : undefined;
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    description: row.description?.trim() || null,
     venue: {
       id: v.id,
       slug: v.slug,
       name: v.name,
       image_url: resolveImageUrl(v.image_url),
       category: normalizeCategory(v.category ?? undefined),
+      address: v.address?.trim() || undefined,
+      city_slug: v.city_slug ?? "prishtina",
+      lat: v.lat ?? undefined,
+      lng: v.lng ?? undefined,
+      is_trending: Boolean(v.is_trending),
     },
     starts_at: row.starts_at,
     ends_at: row.ends_at ?? undefined,
     genre: normalizeGenre(row.genre),
     image_url: img,
+    dj_lineup: djLineup?.length ? djLineup : undefined,
+    capacity: row.capacity ?? undefined,
+    ticket_url: row.ticket_url?.trim() || null,
     crowd_count: Math.round(num(row.crowd_count, 0)),
     atmosphere_rating: num(row.atmosphere_rating, 0),
     live_status: Boolean(row.live_status),

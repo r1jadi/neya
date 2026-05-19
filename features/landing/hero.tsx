@@ -102,8 +102,12 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
         >
           <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black shadow-[0_40px_120px_rgba(0,0,0,0.65)]">
             {hasSpotlight && spotlight ? (
-              <>
-                <Image src={spotlight.image_url} alt="" fill className="object-cover opacity-90" sizes="400px" />
+              <Link
+                href={`/events/${spotlight.slug}`}
+                className="group/spotlight absolute inset-0 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400/60"
+                prefetch
+              >
+                <Image src={spotlight.image_url} alt="" fill className="object-cover opacity-90 transition duration-500 group-hover/spotlight:scale-[1.03]" sizes="400px" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 space-y-2 p-6">
                   <p className="text-xs font-semibold uppercase tracking-widest text-fuchsia-300">Featured</p>
@@ -113,8 +117,12 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
                   <p className="text-sm text-white/60">
                     {spotlight.fomo_line || formatEventWhen(spotlight.starts_at)}
                   </p>
+                  <p className="inline-flex items-center gap-1 text-xs font-semibold text-sky-300 opacity-0 transition group-hover/spotlight:opacity-100">
+                    View event
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </p>
                 </div>
-              </>
+              </Link>
             ) : (
               <div className="flex h-full flex-col items-center justify-center p-8 text-center">
                 <Image src={PLACEHOLDER_IMAGE} alt="" width={120} height={120} className="opacity-40" />

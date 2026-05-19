@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
+import { EventCard } from "@/components/neya/event-card";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -90,19 +91,15 @@ export default async function VenuePage({ params }: Props) {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-white">Upcoming here</h2>
-            <ul className="mt-4 space-y-2">
-              {events.length ? (
-                events.map((e) => (
-                  <li key={e.id}>
-                    <Link href={`/events/${e.slug}`} className="text-sky-300 hover:underline">
-                      {e.title}
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li className="text-sm text-white/50">No events listed yet.</li>
-              )}
-            </ul>
+            {events.length ? (
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {events.map((e) => (
+                  <EventCard key={e.id} event={e} />
+                ))}
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-white/50">No events listed yet.</p>
+            )}
           </div>
         </div>
       </main>

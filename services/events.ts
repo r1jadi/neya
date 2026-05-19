@@ -7,10 +7,14 @@ const eventSelect = `
         id,
         slug,
         title,
+        description,
         starts_at,
         ends_at,
         genre,
         image_url,
+        dj_lineup,
+        capacity,
+        ticket_url,
         crowd_count,
         atmosphere_rating,
         live_status,
@@ -27,6 +31,11 @@ const eventSelect = `
           image_url,
           price_level,
           category,
+          address,
+          city_slug,
+          lat,
+          lng,
+          is_trending,
           approved
         )
       `;

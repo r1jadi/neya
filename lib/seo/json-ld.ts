@@ -21,6 +21,7 @@ export function eventJsonLd(event: Event) {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
+    description: event.description ?? undefined,
     startDate: event.starts_at,
     endDate: event.ends_at,
     image: event.image_url,
@@ -28,13 +29,18 @@ export function eventJsonLd(event: Event) {
     location: {
       "@type": "Place",
       name: event.venue.name,
+      address: event.venue.address,
     },
+    performer: event.dj_lineup?.length
+      ? event.dj_lineup.map((name) => ({ "@type": "Person", name }))
+      : undefined,
     offers: event.ticket_from_eur
       ? {
           "@type": "Offer",
           price: event.ticket_from_eur,
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
+          url: event.ticket_url ?? undefined,
         }
       : undefined,
   };
