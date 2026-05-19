@@ -221,40 +221,6 @@ export async function createReservation(formData: FormData) {
   redirect(session.url);
 }
 
-export async function applyGuestlist(formData: FormData) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect(loginNext("/events"));
-
-  const guestlistId = String(formData.get("guestlist_id") ?? "");
-  const contact = String(formData.get("contact") ?? "").slice(0, 280);
-  const redirectTo = String(formData.get("redirect") ?? "/events").trim();
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/events";
-  if (!guestlistId || !contact) redirect("/events?error=guestlist-fields");
-
-  const { data: glRow } = await supabase.from("guestlists").select("event_id").eq("id", guestlistId).maybeSingle();
-
-  const { error } = await supabase.from("guestlist_entries").insert({
-    guestlist_id: guestlistId,
-    user_id: user.id,
-    status: "pending",
-    contact,
-  });
-
-  if (error?.code === "23505") redirect(`${safeRedirect}?guestlist=duplicate`);
-  if (error) redirect("/events?error=guestlist");
-
-  if (glRow?.event_id) {
-    await logUserActivity(supabase, user.id, "joined_guestlist", "event", glRow.event_id, { guestlist_id: guestlistId });
-  }
-
-  revalidatePath("/");
-  revalidatePath(safeRedirect);
-  redirect(`${safeRedirect}?guestlist=applied`);
-}
-
 export async function createTicketCheckout(formData: FormData) {
   const supabase = await createClient();
   const {

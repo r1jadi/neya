@@ -6,6 +6,7 @@ import { AtmosphereMeter } from "@/components/neya/atmosphere-meter";
 import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { LiveAtmospherePanel } from "@/components/neya/live-atmosphere-panel";
 import { EventBadges } from "@/components/neya/event-details/event-badges";
+import { GuestlistStatusBanner } from "@/components/neya/guestlist-status-banner";
 import {
   EventDetailsCtas,
   type EventDetailsFlash,
@@ -37,14 +38,9 @@ function FlashMessages({ flash }: { flash?: EventDetailsFlash }) {
   if (!flash) return null;
   return (
     <>
-      {flash.guestlist === "applied" ? (
+      {flash.guestlist === "submitted" ? (
         <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
-          Guestlist request sent.
-        </p>
-      ) : null}
-      {flash.guestlist === "duplicate" ? (
-        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
-          You&apos;re already on this list.
+          Guestlist request submitted — you&apos;ll be notified once approved.
         </p>
       ) : null}
       {flash.voted ? (
@@ -215,6 +211,9 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
           <aside className="hidden lg:block">
             <div className="sticky top-24 space-y-3 rounded-2xl border border-white/[0.08] bg-zinc-950/80 p-4 backdrop-blur-xl">
               <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Get in</p>
+              {meta?.guestlist && meta.guestlistAvailability ? (
+                <GuestlistStatusBanner guestlist={meta.guestlist} availability={meta.guestlistAvailability} />
+              ) : null}
               <EventDetailsCtas
                 event={event}
                 meta={meta}

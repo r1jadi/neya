@@ -259,6 +259,8 @@ export async function saveGuestlist(formData: FormData) {
     name,
     capacity: formData.get("capacity") ? Number(formData.get("capacity")) : null,
     is_vip: formData.get("is_vip") === "on",
+    is_open: formData.get("is_open") === "on",
+    requires_manual_approval: formData.get("requires_manual_approval") === "on",
   };
 
   if (id) {

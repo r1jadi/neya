@@ -66,25 +66,19 @@ export function EventDetailsCtas({
     </p>
   );
 
-  const guestlistButton = meta?.guestlistId ? (
-    <GuestlistModal
-      eventTitle={event.title}
-      eventSlug={event.slug}
-      guestlistId={meta.guestlistId}
-      trigger={
-        <button
-          type="button"
-          className="w-full rounded-xl border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10"
-        >
-          Guestlist
-        </button>
-      }
-    />
-  ) : (
-    <p className="rounded-xl border border-dashed border-white/10 px-3 py-2.5 text-center text-xs text-white/40">
-      Guestlist not open for this event
-    </p>
-  );
+  const guestlistButton =
+    meta?.guestlist && meta.guestlistAvailability ? (
+      <GuestlistModal
+        eventTitle={event.title}
+        eventId={meta.eventUuid}
+        guestlist={meta.guestlist}
+        availability={meta.guestlistAvailability}
+      />
+    ) : (
+      <p className="rounded-xl border border-dashed border-white/10 px-3 py-2.5 text-center text-xs text-white/40">
+        Guestlist not open for this event
+      </p>
+    );
 
   const ticketBlock = showTicket ? (
     hasStripeTicket || (hasTicketPrice && meta?.hasTicketRows) ? (
@@ -127,15 +121,16 @@ export function EventDetailsCtas({
         )}
       >
         <div className="mx-auto flex max-w-lg gap-2">
-          {meta?.guestlistId ? (
+          {meta?.guestlist && meta.guestlistAvailability ? (
             <GuestlistModal
               eventTitle={event.title}
-              eventSlug={event.slug}
-              guestlistId={meta.guestlistId}
+              eventId={meta.eventUuid}
+              guestlist={meta.guestlist}
+              availability={meta.guestlistAvailability}
               trigger={
                 <button
                   type="button"
-                  className="flex-1 rounded-xl border border-white/15 bg-white/5 py-3 text-xs font-semibold text-white"
+                  className="flex-1 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/10 py-3 text-xs font-semibold text-fuchsia-100"
                 >
                   Guestlist
                 </button>

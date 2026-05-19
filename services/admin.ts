@@ -1,4 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { listGuestlistRequestsForAdmin } from "@/services/guestlist";
+import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 
 export type AdminVenueRow = {
   id: string;
@@ -66,6 +68,8 @@ export type AdminGuestlistRow = {
   name: string;
   capacity: number | null;
   is_vip: boolean;
+  is_open: boolean;
+  requires_manual_approval: boolean;
 };
 
 export type AdminReservationRow = {
@@ -100,7 +104,10 @@ export async function getAdminDashboardData() {
       .order("starts_at", { ascending: false })
       .limit(200),
     admin.from("tickets").select("id, event_id, tier_name, price_cents, currency, quantity_total, quantity_sold").order("created_at", { ascending: false }),
-    admin.from("guestlists").select("id, event_id, name, capacity, is_vip").order("created_at", { ascending: false }),
+    admin
+      .from("guestlists")
+      .select("id, event_id, name, capacity, is_vip, is_open, requires_manual_approval")
+      .order("created_at", { ascending: false }),
     admin
       .from("reservations")
       .select("id, status, party_size, deposit_cents, payment_method, payment_status, booking_kind, notes, created_at, events(title), venues(name)")
@@ -115,11 +122,19 @@ export async function getAdminDashboardData() {
   const eventCount = eventsRes.data?.length ?? 0;
   const listedEvents = eventsRes.data?.filter((e) => e.is_listed_public).length ?? 0;
 
+  let guestlistRequests: GuestlistRequestWithEvent[] = [];
+  try {
+    guestlistRequests = await listGuestlistRequestsForAdmin({ limit: 300 });
+  } catch {
+    guestlistRequests = [];
+  }
+
   return {
     venues: (venuesRes.data ?? []) as AdminVenueRow[],
     events: (eventsRes.data ?? []) as AdminEventRow[],
     tickets: (ticketsRes.data ?? []) as AdminTicketRow[],
     guestlists: (guestlistsRes.data ?? []) as AdminGuestlistRow[],
+    guestlistRequests,
     reservations: (reservationsRes.data ?? []) as AdminReservationRow[],
     stats: {
       venueCount,

@@ -78,6 +78,7 @@ export default async function AdminPage({ searchParams }: Props) {
             events={data.events}
             tickets={data.tickets}
             guestlists={data.guestlists}
+            guestlistRequests={data.guestlistRequests}
             reservations={data.reservations}
             stats={data.stats}
           />

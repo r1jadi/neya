@@ -19,6 +19,7 @@ import { grantPremiumByUserId } from "@/actions/admin-events";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
 import type {
   AdminEventRow,
   AdminGuestlistRow,
@@ -26,6 +27,7 @@ import type {
   AdminTicketRow,
   AdminVenueRow,
 } from "@/services/admin";
+import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
 import {
   paymentMethodLabel,
@@ -42,6 +44,7 @@ interface AdminDashboardProps {
   events: AdminEventRow[];
   tickets: AdminTicketRow[];
   guestlists: AdminGuestlistRow[];
+  guestlistRequests: GuestlistRequestWithEvent[];
   reservations: AdminReservationRow[];
   stats: {
     venueCount: number;
@@ -81,6 +84,7 @@ export function AdminDashboard({
   events,
   tickets,
   guestlists,
+  guestlistRequests,
   reservations,
   stats,
 }: AdminDashboardProps) {
@@ -287,8 +291,11 @@ export function AdminDashboard({
       ) : null}
 
       {tab === "guestlists" ? (
-        <section className="space-y-6">
+        <section className="space-y-8">
           <GuestlistForm events={events} />
+          <GuestlistRequestsPanel requests={guestlistRequests} events={events} />
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-white">Event guestlists</h3>
           <ul className="space-y-2">
             {guestlists.map((g) => (
               <li key={g.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 px-4 py-3 text-sm">
@@ -307,6 +314,7 @@ export function AdminDashboard({
             ))}
             {!guestlists.length ? <p className="text-sm text-white/45">No guestlists.</p> : null}
           </ul>
+          </div>
         </section>
       ) : null}
 
@@ -615,6 +623,12 @@ function GuestlistForm({ events }: { events: AdminEventRow[] }) {
       <Input name="capacity" type="number" placeholder="Capacity" />
       <label className="flex items-center gap-2 text-sm text-white/80">
         <input type="checkbox" name="is_vip" /> VIP list
+      </label>
+      <label className="flex items-center gap-2 text-sm text-white/80">
+        <input type="checkbox" name="is_open" defaultChecked /> Open for requests
+      </label>
+      <label className="flex items-center gap-2 text-sm text-white/80 sm:col-span-2">
+        <input type="checkbox" name="requires_manual_approval" defaultChecked /> Manual approval required
       </label>
       <Button type="submit" className="sm:col-span-2">
         Add guestlist

@@ -3,10 +3,15 @@ import {
   resolveReservationConfig,
   type ResolvedReservationConfig,
 } from "@/lib/reservations/config";
+import { getEventGuestlistMeta } from "@/services/guestlist";
+import type { GuestlistAvailability, GuestlistConfig } from "@/types/guestlist";
 
 export type EventBookingMeta = {
   eventUuid: string;
   venueUuid: string;
+  guestlist: GuestlistConfig | null;
+  guestlistAvailability: GuestlistAvailability | null;
+  /** @deprecated Use guestlist.id */
   guestlistId: string | null;
   ticketId: string | null;
   /** True when a ticket tier exists but every tier is sold out */
@@ -42,7 +47,7 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
     allows_pay_at_venue: ev.allows_pay_at_venue,
   });
 
-  const { data: gl } = await sb.from("guestlists").select("id").eq("event_id", ev.id).limit(1).maybeSingle();
+  const guestlistMeta = await getEventGuestlistMeta(ev.id);
 
   const { data: tickets } = await sb
     .from("tickets")
@@ -72,7 +77,9 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
   return {
     eventUuid: ev.id,
     venueUuid: ev.venue_id,
-    guestlistId: gl?.id ?? null,
+    guestlist: guestlistMeta?.guestlist ?? null,
+    guestlistAvailability: guestlistMeta?.availability ?? null,
+    guestlistId: guestlistMeta?.guestlist?.id ?? null,
     ticketId,
     ticketSoldOut,
     hasTicketRows,

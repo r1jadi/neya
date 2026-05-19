@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { updateGuestlistEntryStatus } from "@/actions/business-manage";
-import { Button } from "@/components/ui/button";
+import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { listGuestlistRequestsForVenueOwner } from "@/services/guestlist";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: `Guestlists · Venue hub · ${SITE.name}`,
@@ -20,66 +21,61 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business/guestlists");
 
-  const { data: rows } = await supabase
-    .from("guestlist_entries")
-    .select("id, status, contact, created_at, guestlists(name, events(title, slug))")
-    .order("created_at", { ascending: false })
-    .limit(80);
+  let requests = await listGuestlistRequestsForVenueOwner(user.id, 150);
+  let events: { id: string; title: string }[] = [];
+
+  try {
+    const admin = createAdminClient();
+    const { data: venues } = await admin.from("venues").select("id").eq("owner_id", user.id);
+    const venueIds = venues?.map((v) => v.id) ?? [];
+    if (venueIds.length) {
+      const { data: evs } = await admin.from("events").select("id, title").in("venue_id", venueIds);
+      events = evs ?? [];
+    }
+  } catch {
+    requests = [];
+  }
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
       <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Guestlists</h1>
       <p className="mt-2 text-sm text-white/55">Approve door requests for your events.</p>
       {q.ok ? <p className="mt-4 text-sm text-emerald-200/90">Updated.</p> : null}
-      {q.error ? <p className="mt-4 text-sm text-red-300">Could not update.</p> : null}
-      <ul className="mt-8 space-y-3">
-        {rows?.length ? (
-          rows.map((r) => {
-            const gl = r.guestlists as { name?: string; events?: { title?: string; slug?: string } | null } | null;
-            const ev = gl?.events;
-            return (
-              <li key={r.id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/85">
-                <p className="font-medium text-white">{ev?.title ?? "Event"}</p>
-                <p className="text-xs text-white/45">{gl?.name ?? "Guestlist"}</p>
-                <p className="mt-2 text-white/70">{r.contact}</p>
-                <p className="text-xs text-sky-200/80">{r.status}</p>
-                {r.status === "pending" ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <form action={updateGuestlistEntryStatus}>
-                      <input type="hidden" name="entry_id" value={r.id} />
-                      <input type="hidden" name="status" value="approved" />
-                      <Button type="submit" size="sm">
-                        Approve
-                      </Button>
-                    </form>
-                    <form action={updateGuestlistEntryStatus}>
-                      <input type="hidden" name="entry_id" value={r.id} />
-                      <input type="hidden" name="status" value="waitlist" />
-                      <Button type="submit" size="sm" variant="secondary">
-                        Waitlist
-                      </Button>
-                    </form>
-                    <form action={updateGuestlistEntryStatus}>
-                      <input type="hidden" name="entry_id" value={r.id} />
-                      <input type="hidden" name="status" value="rejected" />
-                      <Button type="submit" size="sm" variant="secondary">
-                        Reject
-                      </Button>
-                    </form>
-                  </div>
-                ) : null}
-                {ev?.slug ? (
-                  <Link href={`/events/${ev.slug}`} className="mt-2 inline-block text-xs text-sky-300 hover:underline">
-                    Event page
-                  </Link>
-                ) : null}
-              </li>
-            );
-          })
-        ) : (
-          <li className="text-sm text-white/45">No guestlist entries yet.</li>
-        )}
-      </ul>
+      {q.error ? <p className="mt-4 text-sm text-red-300">Could not update ({q.error}).</p> : null}
+
+      <div className="mt-8">
+        <GuestlistRequestsPanel
+          variant="business"
+          requests={requests}
+          events={events.map((e) => ({
+            id: e.id,
+            title: e.title,
+            slug: "",
+            description: null,
+            venue_id: "",
+            starts_at: "",
+            ends_at: null,
+            genre: null,
+            image_url: null,
+            dj_lineup: [],
+            capacity: null,
+            is_featured: false,
+            is_listed_public: true,
+            is_hidden_premium: false,
+            ticket_from_eur: null,
+            reservation_price_eur: null,
+            requires_online_payment: null,
+            allows_pay_at_venue: null,
+            venues: null,
+          }))}
+        />
+      </div>
+
+      <p className="mt-10 text-center text-sm">
+        <Link href="/business" className="text-sky-300 hover:underline">
+          Back to venue hub
+        </Link>
+      </p>
     </main>
   );
 }
