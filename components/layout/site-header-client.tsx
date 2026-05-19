@@ -18,11 +18,13 @@ export function SiteHeaderClient({
   userEmail,
   isAdmin,
   showBusiness,
+  showVenuePortal,
   isPremium,
 }: {
   userEmail: string | null;
   isAdmin: boolean;
   showBusiness: boolean;
+  showVenuePortal?: boolean;
   isPremium?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -33,7 +35,12 @@ export function SiteHeaderClient({
       <Button variant="ghost" asChild>
         <Link href="/dashboard">Dashboard</Link>
       </Button>
-      {showBusiness ? (
+      {showVenuePortal ? (
+        <Button variant="ghost" asChild>
+          <Link href="/venue">Venue portal</Link>
+        </Button>
+      ) : null}
+      {showBusiness && !showVenuePortal ? (
         <Button variant="ghost" asChild>
           <Link href="/business">Venue hub</Link>
         </Button>
@@ -128,7 +135,16 @@ export function SiteHeaderClient({
                   >
                     Dashboard
                   </Link>
-                  {showBusiness ? (
+                  {showVenuePortal ? (
+                    <Link
+                      href="/venue"
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                      onClick={() => setOpen(false)}
+                    >
+                      Venue portal
+                    </Link>
+                  ) : null}
+                  {showBusiness && !showVenuePortal ? (
                     <Link
                       href="/business"
                       className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"

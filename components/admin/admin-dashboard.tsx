@@ -20,6 +20,7 @@ import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
+import { VenueAccountsPanel } from "@/components/admin/venue-accounts-panel";
 import type {
   AdminEventRow,
   AdminGuestlistRow,
@@ -28,6 +29,7 @@ import type {
   AdminVenueRow,
 } from "@/services/admin";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
+import type { VenueAccountRow } from "@/types/auth";
 import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
 import {
   paymentMethodLabel,
@@ -36,10 +38,11 @@ import {
 } from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
 
-type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium";
+type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts";
 
 interface AdminDashboardProps {
   initialTab: Tab;
+  venueAccounts: VenueAccountRow[];
   venues: AdminVenueRow[];
   events: AdminEventRow[];
   tickets: AdminTicketRow[];
@@ -64,6 +67,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "guestlists", label: "Guestlists" },
   { id: "reservations", label: "Reservations" },
   { id: "premium", label: "Premium" },
+  { id: "venue-accounts", label: "Venue accounts" },
 ];
 
 function venueLabel(v: AdminVenueRow) {
@@ -80,6 +84,7 @@ function venueName(ev: AdminEventRow) {
 
 export function AdminDashboard({
   initialTab,
+  venueAccounts,
   venues,
   events,
   tickets,
@@ -366,6 +371,8 @@ export function AdminDashboard({
           </form>
         </div>
       ) : null}
+
+      {tab === "venue-accounts" ? <VenueAccountsPanel accounts={venueAccounts} venues={venues} /> : null}
     </div>
   );
 }

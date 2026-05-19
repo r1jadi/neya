@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { isAdminEmail } from "@/lib/auth/admin";
+import { getProfileForUser } from "@/lib/auth/profile";
+import { canAccessAdmin } from "@/lib/auth/permissions";
 
 export async function requireAdminUser() {
   const supabase = await createClient();
@@ -8,7 +9,9 @@ export async function requireAdminUser() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user?.email) redirect("/login?next=/admin");
-  if (!isAdminEmail(user.email)) redirect("/admin?error=forbidden");
+
+  const profile = await getProfileForUser(user);
+  if (!canAccessAdmin(profile, user)) redirect("/admin?error=forbidden");
   return user;
 }
 
@@ -17,6 +20,9 @@ export async function getAdminUserOrNull() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user?.email || !isAdminEmail(user.email)) return null;
+  if (!user?.email) return null;
+
+  const profile = await getProfileForUser(user);
+  if (!canAccessAdmin(profile, user)) return null;
   return user;
 }

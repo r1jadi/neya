@@ -88,6 +88,7 @@ async function patchGuestlistRequest(
   if (revalidate) {
     revalidatePath("/admin");
     revalidatePath("/business/guestlists");
+    revalidatePath("/venue/guestlists");
   }
   return { ok: true };
 }
@@ -141,6 +142,7 @@ export async function deleteGuestlistRequest(formData: FormData) {
 
   revalidatePath("/admin");
   revalidatePath("/business/guestlists");
+  revalidatePath("/venue/guestlists");
   redirect(`${safeRedirect}&ok=1`);
 }
 

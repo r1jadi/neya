@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { assertNotVenueAccount } from "@/lib/auth/assert-not-venue-account";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
@@ -16,6 +17,7 @@ export async function requestVenueListing(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business");
+  await assertNotVenueAccount(user.id);
 
   const name = String(formData.get("name") ?? "").trim().slice(0, 120);
   const category = String(formData.get("category") ?? "club").slice(0, 32);
@@ -52,6 +54,7 @@ export async function createVenueEvent(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business");
+  await assertNotVenueAccount(user.id);
 
   const venueId = String(formData.get("venue_id") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim().slice(0, 160);

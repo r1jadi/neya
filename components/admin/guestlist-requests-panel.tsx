@@ -27,12 +27,17 @@ function eventTitle(r: GuestlistRequestWithEvent): string {
 type Props = {
   requests: GuestlistRequestWithEvent[];
   events: AdminEventRow[];
-  /** Admin CMS vs venue owner hub */
-  variant?: "admin" | "business";
+  /** Admin CMS vs legacy business hub vs venue portal */
+  variant?: "admin" | "business" | "venue";
 };
 
 export function GuestlistRequestsPanel({ requests, events, variant = "admin" }: Props) {
-  const redirectPath = variant === "business" ? "/business/guestlists" : "/admin?tab=guestlists";
+  const redirectPath =
+    variant === "venue"
+      ? "/venue/guestlists"
+      : variant === "business"
+        ? "/business/guestlists"
+        : "/admin?tab=guestlists";
   const approveAction = variant === "admin" ? approveGuestlistRequestAdmin : approveGuestlistRequest;
   const updateAction = variant === "admin" ? updateGuestlistRequestStatusAdmin : updateGuestlistRequestStatus;
   const deleteAction = variant === "admin" ? deleteGuestlistRequestAdmin : deleteGuestlistRequest;

@@ -54,10 +54,19 @@ export async function GET(request: NextRequest) {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("onboarding_complete")
+      .select("role, venue_id, account_active, is_admin, onboarding_complete")
       .eq("id", user.id)
       .maybeSingle();
-    if (!profile?.onboarding_complete) {
+
+    const role = profile?.role === "venue" || profile?.role === "admin" ? profile.role : "user";
+    const isVenue = role === "venue" && profile?.account_active !== false && Boolean(profile?.venue_id);
+    const isAdmin = role === "admin" || profile?.is_admin;
+
+    if (isVenue && (path === "/" || path === "/events" || path.startsWith("/onboarding"))) {
+      path = "/venue";
+    } else if (isAdmin && path === "/") {
+      path = safeNext === "/" ? "/admin" : safeNext;
+    } else if (!profile?.onboarding_complete && role === "user") {
       path = "/onboarding";
     }
   }
