@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createClient } from "@supabase/supabase-js";
 
 /** Service role — server-only (webhooks, admin actions after authz). */

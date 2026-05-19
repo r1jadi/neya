@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
 import { createClient } from "@/lib/supabase/server";
+import { adminErrorMessage } from "@/lib/admin/action-errors";
 import { SITE } from "@/lib/constants";
 import { listGuestlistRequestsForVenueOwner } from "@/services/guestlist";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   title: `Guestlists · Venue hub · ${SITE.name}`,
 };
 
-type Props = { searchParams: Promise<{ ok?: string; error?: string }> };
+type Props = { searchParams: Promise<{ ok?: string; error?: string; detail?: string }> };
 
 export default async function BusinessGuestlistsPage({ searchParams }: Props) {
   const q = await searchParams;
@@ -41,7 +42,11 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
       <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Guestlists</h1>
       <p className="mt-2 text-sm text-white/55">Approve door requests for your events.</p>
       {q.ok ? <p className="mt-4 text-sm text-emerald-200/90">Updated.</p> : null}
-      {q.error ? <p className="mt-4 text-sm text-red-300">Could not update ({q.error}).</p> : null}
+      {q.error ? (
+        <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          {adminErrorMessage(q.error, q.detail)}
+        </p>
+      ) : null}
 
       <div className="mt-8">
         <GuestlistRequestsPanel

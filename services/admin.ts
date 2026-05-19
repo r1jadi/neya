@@ -1,5 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { listGuestlistRequestsForAdmin } from "@/services/guestlist";
+import { loadVenueAccounts } from "@/services/venue-accounts";
+import type { VenueAccountRow } from "@/types/auth";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 
 export type AdminVenueRow = {
@@ -89,7 +91,8 @@ export type AdminReservationRow = {
 export async function getAdminDashboardData() {
   const admin = createAdminClient();
 
-  const [venuesRes, eventsRes, ticketsRes, guestlistsRes, reservationsRes, analyticsRes] = await Promise.all([
+  const [venuesRes, eventsRes, ticketsRes, guestlistsRes, reservationsRes, analyticsRes, venueAccountsRes] =
+    await Promise.all([
     admin
       .from("venues")
       .select(
@@ -114,6 +117,7 @@ export async function getAdminDashboardData() {
       .order("created_at", { ascending: false })
       .limit(100),
     admin.from("analytics").select("id", { count: "exact", head: true }),
+    loadVenueAccounts(admin),
   ]);
 
   const venueCount = venuesRes.data?.length ?? 0;
@@ -129,6 +133,11 @@ export async function getAdminDashboardData() {
     guestlistRequests = [];
   }
 
+  const venueAccounts = venueAccountsRes.accounts;
+  if (venueAccountsRes.error) {
+    console.error("[admin] venue accounts load error:", venueAccountsRes.error);
+  }
+
   return {
     venues: (venuesRes.data ?? []) as AdminVenueRow[],
     events: (eventsRes.data ?? []) as AdminEventRow[],
@@ -136,6 +145,8 @@ export async function getAdminDashboardData() {
     guestlists: (guestlistsRes.data ?? []) as AdminGuestlistRow[],
     guestlistRequests,
     reservations: (reservationsRes.data ?? []) as AdminReservationRow[],
+    venueAccounts: venueAccounts as VenueAccountRow[],
+    venueAccountsError: venueAccountsRes.error,
     stats: {
       venueCount,
       approvedVenues,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   createVenueAccount,
   deactivateVenueAccount,
@@ -16,12 +16,40 @@ import type { VenueAccountRow } from "@/types/auth";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  accounts: VenueAccountRow[];
+  initialAccounts?: VenueAccountRow[];
   venues: AdminVenueRow[];
 };
 
-export function VenueAccountsPanel({ accounts, venues }: Props) {
+export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
+  const [accounts, setAccounts] = useState<VenueAccountRow[]>(initialAccounts);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const refreshAccounts = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const res = await fetch("/api/admin/venue-accounts", { cache: "no-store" });
+      const body = (await res.json()) as { accounts?: VenueAccountRow[]; error?: string | null };
+      if (!res.ok) {
+        setLoadError(body.error ?? `Request failed (${res.status})`);
+        setAccounts([]);
+        return;
+      }
+      setAccounts(body.accounts ?? []);
+      if (body.error) setLoadError(body.error);
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Could not load venue accounts");
+      setAccounts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void refreshAccounts();
+  }, [refreshAccounts]);
 
   return (
     <div className="space-y-8">
@@ -56,10 +84,28 @@ export function VenueAccountsPanel({ accounts, venues }: Props) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-white">Venue accounts ({accounts.length})</h2>
-        {accounts.length === 0 ? (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-lg font-semibold text-white">Venue accounts ({accounts.length})</h2>
+          <Button type="button" size="sm" variant="secondary" disabled={loading} onClick={() => void refreshAccounts()}>
+            {loading ? "Loading…" : "Refresh"}
+          </Button>
+        </div>
+
+        {loadError ? (
+          <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+            {loadError}
+          </p>
+        ) : null}
+
+        {loading && accounts.length === 0 ? (
+          <p className="text-sm text-white/45">Loading venue accounts…</p>
+        ) : null}
+
+        {!loading && accounts.length === 0 ? (
           <p className="text-sm text-white/45">No venue partner accounts yet.</p>
-        ) : (
+        ) : null}
+
+        {accounts.length > 0 ? (
           <ul className="space-y-3">
             {accounts.map((a) => {
               const venueName = Array.isArray(a.venues) ? a.venues[0]?.name : a.venues?.name;
@@ -79,7 +125,12 @@ export function VenueAccountsPanel({ accounts, venues }: Props) {
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <Button type="button" size="sm" variant="secondary" onClick={() => setEditingId(isEditing ? null : a.id)}>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setEditingId(isEditing ? null : a.id)}
+                      >
                         {isEditing ? "Cancel" : "Edit"}
                       </Button>
                     </div>
@@ -123,19 +174,25 @@ export function VenueAccountsPanel({ accounts, venues }: Props) {
                     </form>
                     <form action={setVenueAccountPassword} className="flex flex-wrap items-center gap-2">
                       <input type="hidden" name="user_id" value={a.id} />
-                      <Input name="password" type="password" placeholder="New temp password" minLength={8} className="h-8 w-40 text-xs" />
+                      <Input
+                        name="password"
+                        type="password"
+                        placeholder="New temp password"
+                        minLength={8}
+                        className="h-8 w-40 text-xs"
+                      />
                       <Button type="submit" size="sm" variant="secondary">
                         Set password
                       </Button>
                     </form>
-                    {!a.account_active ? null : (
+                    {a.account_active ? (
                       <form action={deactivateVenueAccount}>
                         <input type="hidden" name="user_id" value={a.id} />
                         <Button type="submit" size="sm" variant="secondary">
                           Deactivate
                         </Button>
                       </form>
-                    )}
+                    ) : null}
                     <form action={deleteVenueAccount}>
                       <input type="hidden" name="user_id" value={a.id} />
                       <Button type="submit" size="sm" variant="secondary">
@@ -147,7 +204,7 @@ export function VenueAccountsPanel({ accounts, venues }: Props) {
               );
             })}
           </ul>
-        )}
+        ) : null}
       </section>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   approveVenue,
@@ -96,6 +96,10 @@ export function AdminDashboard({
   const [tab, setTab] = useState<Tab>(initialTab);
   const [editingVenue, setEditingVenue] = useState<AdminVenueRow | "new" | null>(null);
   const [editingEvent, setEditingEvent] = useState<AdminEventRow | "new" | null>(null);
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
 
   return (
     <div className="space-y-8">
@@ -372,7 +376,9 @@ export function AdminDashboard({
         </div>
       ) : null}
 
-      {tab === "venue-accounts" ? <VenueAccountsPanel accounts={venueAccounts} venues={venues} /> : null}
+      {tab === "venue-accounts" ? (
+        <VenueAccountsPanel initialAccounts={venueAccounts} venues={venues} />
+      ) : null}
     </div>
   );
 }

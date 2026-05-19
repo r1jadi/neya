@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { withQueryParam } from "@/lib/admin/action-errors";
 import { countSpotsUsed, resolveGuestlistAvailability } from "@/lib/guestlist/capacity";
 import { parseGuestlistFormData } from "@/lib/guestlist/validation";
 import { requireAdminUser } from "@/lib/auth/require-admin";
@@ -14,6 +15,10 @@ const GL_STATUSES = new Set<GuestlistRequestStatus>(["pending", "approved", "rej
 
 function adminRedirect(query: string) {
   redirect(`/admin?tab=guestlists&${query}`);
+}
+
+function logGuestlist(action: string, meta: Record<string, unknown>) {
+  console.error(`[guestlist] ${action}`, meta);
 }
 
 export async function submitGuestlistRequest(formData: FormData): Promise<SubmitGuestlistResult> {
@@ -68,6 +73,7 @@ export async function submitGuestlistRequest(formData: FormData): Promise<Submit
     return { success: false, error: "A request with this phone is already pending or approved.", code: "duplicate" };
   }
   if (error) {
+    logGuestlist("insert_failed", { eventId, error });
     return { success: false, error: "Could not submit request. Try again.", code: "server" };
   }
 
@@ -79,12 +85,16 @@ async function patchGuestlistRequest(
   requestId: string,
   patch: Record<string, unknown>,
   opts: { asAdmin?: boolean; revalidate?: boolean } = {},
-): Promise<{ ok: boolean }> {
+): Promise<{ ok: boolean; errorMessage?: string }> {
   const { asAdmin = false, revalidate = true } = opts;
-  const { error } = asAdmin
-    ? await createAdminClient().from("guestlist_requests").update(patch).eq("id", requestId)
-    : await (await createClient()).from("guestlist_requests").update(patch).eq("id", requestId);
-  if (error) return { ok: false };
+  const client = asAdmin ? createAdminClient() : await createClient();
+  const { error } = await client.from("guestlist_requests").update(patch).eq("id", requestId);
+
+  if (error) {
+    logGuestlist("patch_failed", { requestId, patch, asAdmin, code: error.code, message: error.message });
+    return { ok: false, errorMessage: error.message };
+  }
+
   if (revalidate) {
     revalidatePath("/admin");
     revalidatePath("/business/guestlists");
@@ -93,36 +103,76 @@ async function patchGuestlistRequest(
   return { ok: true };
 }
 
-export async function updateGuestlistRequestStatus(formData: FormData) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/business/guestlists");
-
+async function applyGuestlistStatusUpdate(
+  formData: FormData,
+  opts: { asAdmin: boolean; defaultRedirect: string },
+): Promise<void> {
   const requestId = String(formData.get("request_id") ?? "").trim();
   const status = String(formData.get("status") ?? "").trim() as GuestlistRequestStatus;
-  const redirectTo = String(formData.get("redirect") ?? "/business/guestlists").trim();
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/business/guestlists";
+  const redirectTo = String(formData.get("redirect") ?? opts.defaultRedirect).trim();
+  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : opts.defaultRedirect;
 
   if (!requestId || !GL_STATUSES.has(status)) {
-    redirect(`${safeRedirect}&error=invalid`);
+    redirect(withQueryParam(safeRedirect, "error=invalid"));
+  }
+
+  let approvedBy: string | null = null;
+  if (!opts.asAdmin) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) redirect(`/login?next=${encodeURIComponent(safeRedirect.split("?")[0] ?? safeRedirect)}`);
+    approvedBy = user.id;
+  } else {
+    await requireAdminUser();
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      approvedBy = user?.id ?? null;
+    } catch {
+      approvedBy = null;
+    }
   }
 
   const now = new Date().toISOString();
   const patch: Record<string, unknown> = { status, updated_at: now };
 
   if (status === "approved" || status === "rejected") {
-    patch.approved_by = user.id;
+    patch.approved_by = approvedBy;
   }
   if (status === "checked_in") {
     patch.checked_in_at = now;
-    patch.approved_by = user.id;
+    if (approvedBy) patch.approved_by = approvedBy;
   }
 
-  const { ok } = await patchGuestlistRequest(requestId, patch, { asAdmin: false });
-  if (!ok) redirect(`${safeRedirect}&error=update`);
-  redirect(`${safeRedirect}&ok=1`);
+  const { ok, errorMessage } = await patchGuestlistRequest(requestId, patch, { asAdmin: opts.asAdmin });
+  if (!ok) {
+    const detail = errorMessage ? encodeURIComponent(errorMessage.slice(0, 160)) : "";
+    redirect(
+      withQueryParam(
+        safeRedirect,
+        detail ? `error=guestlist_update&detail=${detail}` : "error=guestlist_update",
+      ),
+    );
+  }
+  redirect(withQueryParam(safeRedirect, "ok=1"));
+}
+
+export async function updateGuestlistRequestStatus(formData: FormData) {
+  await applyGuestlistStatusUpdate(formData, {
+    asAdmin: false,
+    defaultRedirect: "/business/guestlists",
+  });
+}
+
+export async function updateGuestlistRequestStatusAdmin(formData: FormData) {
+  await applyGuestlistStatusUpdate(formData, {
+    asAdmin: true,
+    defaultRedirect: "/admin?tab=guestlists",
+  });
 }
 
 export async function deleteGuestlistRequest(formData: FormData) {
@@ -135,47 +185,18 @@ export async function deleteGuestlistRequest(formData: FormData) {
   const requestId = String(formData.get("request_id") ?? "").trim();
   const redirectTo = String(formData.get("redirect") ?? "/business/guestlists").trim();
   const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/business/guestlists";
-  if (!requestId) redirect(`${safeRedirect}&error=invalid`);
+  if (!requestId) redirect(withQueryParam(safeRedirect, "error=invalid"));
 
   const { error } = await supabase.from("guestlist_requests").delete().eq("id", requestId);
-  if (error) redirect(`${safeRedirect}&error=delete`);
+  if (error) {
+    logGuestlist("delete_failed", { requestId, message: error.message });
+    redirect(withQueryParam(safeRedirect, "error=delete"));
+  }
 
   revalidatePath("/admin");
   revalidatePath("/business/guestlists");
   revalidatePath("/venue/guestlists");
-  redirect(`${safeRedirect}&ok=1`);
-}
-
-export async function updateGuestlistRequestStatusAdmin(formData: FormData) {
-  await requireAdminUser();
-  const requestId = String(formData.get("request_id") ?? "").trim();
-  const status = String(formData.get("status") ?? "").trim() as GuestlistRequestStatus;
-  const redirectTo = String(formData.get("redirect") ?? "/admin?tab=guestlists").trim();
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/admin?tab=guestlists";
-  if (!requestId || !GL_STATUSES.has(status)) redirect(`${safeRedirect}&error=invalid`);
-
-  let approvedBy: string | null = null;
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    approvedBy = user?.id ?? null;
-  } catch {
-    approvedBy = null;
-  }
-
-  const now = new Date().toISOString();
-  const patch: Record<string, unknown> = { status, updated_at: now };
-  if (status === "approved" || status === "rejected") patch.approved_by = approvedBy;
-  if (status === "checked_in") {
-    patch.checked_in_at = now;
-    if (approvedBy) patch.approved_by = approvedBy;
-  }
-
-  const { ok } = await patchGuestlistRequest(requestId, patch, { asAdmin: true });
-  if (!ok) redirect(`${safeRedirect}&error=update`);
-  redirect(`${safeRedirect}&ok=1`);
+  redirect(withQueryParam(safeRedirect, "ok=1"));
 }
 
 export async function deleteGuestlistRequestAdmin(formData: FormData) {
@@ -183,19 +204,27 @@ export async function deleteGuestlistRequestAdmin(formData: FormData) {
   const requestId = String(formData.get("request_id") ?? "").trim();
   const redirectTo = String(formData.get("redirect") ?? "/admin?tab=guestlists").trim();
   const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/admin?tab=guestlists";
-  if (!requestId) redirect(`${safeRedirect}&error=invalid`);
+  if (!requestId) redirect(withQueryParam(safeRedirect, "error=invalid"));
 
   const { error } = await createAdminClient().from("guestlist_requests").delete().eq("id", requestId);
-  if (error) redirect(`${safeRedirect}&error=delete`);
+  if (error) {
+    logGuestlist("admin_delete_failed", { requestId, message: error.message });
+    redirect(withQueryParam(safeRedirect, "error=delete"));
+  }
 
   revalidatePath("/admin");
   revalidatePath("/business/guestlists");
-  redirect(`${safeRedirect}&ok=1`);
+  revalidatePath("/venue/guestlists");
+  redirect(withQueryParam(safeRedirect, "ok=1"));
 }
 
-async function approveGuestlistRequestCore(formData: FormData, redirectPath: string) {
+async function approveGuestlistRequestCore(
+  formData: FormData,
+  redirectPath: string,
+  asAdmin: boolean,
+): Promise<void> {
   const requestId = String(formData.get("request_id") ?? "").trim();
-  if (!requestId) redirect(`${redirectPath}&error=invalid`);
+  if (!requestId) redirect(withQueryParam(redirectPath, "error=invalid"));
 
   const admin = createAdminClient();
   const { data: row } = await admin
@@ -204,41 +233,55 @@ async function approveGuestlistRequestCore(formData: FormData, redirectPath: str
     .eq("id", requestId)
     .maybeSingle();
 
-  if (!row) redirect(`${redirectPath}&error=missing`);
+  if (!row) redirect(withQueryParam(redirectPath, "error=guestlist_missing"));
 
-  const meta = await getEventGuestlistMeta(row.event_id);
-  if (meta?.guestlist?.capacity != null && meta.availability) {
-    const { data: all } = await admin
-      .from("guestlist_requests")
-      .select("id, group_size, status")
-      .eq("event_id", row.event_id);
+  if (row.status !== "pending") {
+    redirect(withQueryParam(redirectPath, "error=invalid"));
+  }
 
-    const others = (all ?? []).filter((r) => r.id !== requestId);
-    const used = countSpotsUsed(others, true);
-    const availability = resolveGuestlistAvailability(
-      {
-        capacity: meta.guestlist.capacity,
-        isOpen: meta.guestlist.isOpen,
-        requiresManualApproval: meta.guestlist.requiresManualApproval,
-      },
-      used,
-    );
-    if (availability.spotsLeft != null && row.group_size > availability.spotsLeft) {
-      redirect(`${redirectPath}&error=full`);
+  try {
+    const meta = await getEventGuestlistMeta(row.event_id);
+    if (meta?.guestlist?.capacity != null && meta.availability) {
+      const { data: all } = await admin
+        .from("guestlist_requests")
+        .select("id, group_size, status")
+        .eq("event_id", row.event_id);
+
+      const others = (all ?? []).filter((r) => r.id !== requestId);
+      const used = countSpotsUsed(others, true);
+      const availability = resolveGuestlistAvailability(
+        {
+          capacity: meta.guestlist.capacity,
+          isOpen: meta.guestlist.isOpen,
+          requiresManualApproval: meta.guestlist.requiresManualApproval,
+        },
+        used,
+      );
+      if (availability.spotsLeft != null && row.group_size > availability.spotsLeft) {
+        redirect(withQueryParam(redirectPath, "error=full"));
+      }
     }
+  } catch (err) {
+    logGuestlist("approve_capacity_check_failed", { requestId, err });
+    // Continue — capacity check is best-effort; do not block approval
   }
 
   const fd = new FormData();
   fd.set("request_id", requestId);
   fd.set("status", "approved");
   fd.set("redirect", redirectPath);
-  return updateGuestlistRequestStatus(fd);
+
+  if (asAdmin) {
+    await applyGuestlistStatusUpdate(fd, { asAdmin: true, defaultRedirect: redirectPath });
+  } else {
+    await applyGuestlistStatusUpdate(fd, { asAdmin: false, defaultRedirect: redirectPath });
+  }
 }
 
 export async function approveGuestlistRequestAdmin(formData: FormData) {
   await requireAdminUser();
   const redirectPath = String(formData.get("redirect") ?? "/admin?tab=guestlists").trim();
-  return approveGuestlistRequestCore(formData, redirectPath);
+  await approveGuestlistRequestCore(formData, redirectPath, true);
 }
 
 export async function approveGuestlistRequest(formData: FormData) {
@@ -248,5 +291,5 @@ export async function approveGuestlistRequest(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business/guestlists");
   const redirectPath = String(formData.get("redirect") ?? "/business/guestlists").trim();
-  return approveGuestlistRequestCore(formData, redirectPath);
+  await approveGuestlistRequestCore(formData, redirectPath, false);
 }
