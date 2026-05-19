@@ -31,6 +31,10 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
+  icons: {
+    icon: [{ url: "/neyalogo.png", type: "image/png" }],
+    apple: "/neyalogo.png",
+  },
   title: {
     default: `${SITE.name} · ${SITE.tagline}`,
     template: `%s · ${SITE.name}`,
