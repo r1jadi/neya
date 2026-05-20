@@ -5,7 +5,7 @@ export async function sendTransactionalEmail(
   html: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM ?? "NEYA <onboarding@resend.dev>";
+  const from = process.env.RESEND_FROM ?? "NEYA <noreply@neya.live>";
 
   if (!key) {
     return { ok: false, error: "RESEND_API_KEY missing" };
