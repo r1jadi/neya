@@ -1,5 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { listGuestlistRequestsForAdmin } from "@/services/guestlist";
+import { syncGuestlistEntryFromRequest } from "@/lib/guestlist/sync-entry";
+import {
+  listApprovedGuestlistRequestsForAdmin,
+  listGuestlistEntriesForAdmin,
+  listGuestlistRequestsForAdmin,
+} from "@/services/guestlist";
+import type { GuestlistEntryRow } from "@/types/guestlist";
 import { loadVenueAccounts } from "@/services/venue-accounts";
 import type { VenueAccountRow } from "@/types/auth";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
@@ -127,10 +133,24 @@ export async function getAdminDashboardData() {
   const listedEvents = eventsRes.data?.filter((e) => e.is_listed_public).length ?? 0;
 
   let guestlistRequests: GuestlistRequestWithEvent[] = [];
+  let guestlistEntries: GuestlistEntryRow[] = [];
   try {
     guestlistRequests = await listGuestlistRequestsForAdmin({ limit: 300 });
   } catch {
     guestlistRequests = [];
+  }
+  try {
+    guestlistEntries = await listGuestlistEntriesForAdmin({ limit: 500 });
+    const approvedRequests = await listApprovedGuestlistRequestsForAdmin({ limit: 500 });
+    if (approvedRequests.length > guestlistEntries.length) {
+      await Promise.all(
+        approvedRequests.map((r) => syncGuestlistEntryFromRequest(admin, r.id)),
+      );
+      guestlistEntries = await listGuestlistEntriesForAdmin({ limit: 500 });
+    }
+  } catch (err) {
+    console.error("[admin] guestlist entries load error:", err);
+    guestlistEntries = [];
   }
 
   const venueAccounts = venueAccountsRes.accounts;
@@ -144,6 +164,7 @@ export async function getAdminDashboardData() {
     tickets: (ticketsRes.data ?? []) as AdminTicketRow[],
     guestlists: (guestlistsRes.data ?? []) as AdminGuestlistRow[],
     guestlistRequests,
+    guestlistEntries,
     reservations: (reservationsRes.data ?? []) as AdminReservationRow[],
     venueAccounts: venueAccounts as VenueAccountRow[],
     venueAccountsError: venueAccountsRes.error,

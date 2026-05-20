@@ -7,6 +7,12 @@ import { withQueryParam } from "@/lib/admin/action-errors";
 import { countSpotsUsed, resolveGuestlistAvailability } from "@/lib/guestlist/capacity";
 import { parseGuestlistFormData } from "@/lib/guestlist/validation";
 import { requireAdminUser } from "@/lib/auth/require-admin";
+import {
+  notifyGuestlistReceived,
+  notifyGuestlistStatusChange,
+  type GuestlistNotifyContext,
+} from "@/lib/guestlist/notifications";
+import { syncGuestlistEntryFromRequest } from "@/lib/guestlist/sync-entry";
 import { getEventGuestlistMeta } from "@/services/guestlist";
 import type { GuestlistRequestStatus, SubmitGuestlistResult } from "@/types/guestlist";
 import { redirect } from "next/navigation";
@@ -19,6 +25,53 @@ function adminRedirect(query: string) {
 
 function logGuestlist(action: string, meta: Record<string, unknown>) {
   console.error(`[guestlist] ${action}`, meta);
+}
+
+async function loadNotifyContext(
+  admin: ReturnType<typeof createAdminClient>,
+  requestId: string,
+): Promise<GuestlistNotifyContext | null> {
+  const { data } = await admin
+    .from("guestlist_requests")
+    .select(
+      "id, full_name, phone, email, group_size, status, events(title, slug, starts_at, venues(name))",
+    )
+    .eq("id", requestId)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  type EventJoin = {
+    title: string;
+    slug: string;
+    starts_at: string | null;
+    venues: { name: string } | { name: string }[] | null;
+  };
+  const ev = data.events as EventJoin | EventJoin[] | null;
+  const event = Array.isArray(ev) ? ev[0] : ev;
+  const venue = event?.venues;
+  const venueName = Array.isArray(venue) ? venue[0]?.name : venue?.name;
+
+  return {
+    requestId: data.id,
+    fullName: data.full_name,
+    phone: data.phone,
+    email: data.email,
+    groupSize: data.group_size,
+    status: data.status as GuestlistRequestStatus,
+    eventTitle: event?.title ?? "Event",
+    eventSlug: event?.slug ?? "",
+    startsAt: event?.starts_at ?? null,
+    venueName: venueName ?? null,
+  };
+}
+
+function revalidateGuestlistPaths(eventSlug?: string) {
+  revalidatePath("/admin");
+  revalidatePath("/business/guestlists");
+  revalidatePath("/venue/guestlists");
+  if (eventSlug) revalidatePath(`/events/${eventSlug}`);
+  revalidatePath("/events");
 }
 
 export async function submitGuestlistRequest(formData: FormData): Promise<SubmitGuestlistResult> {
@@ -55,19 +108,23 @@ export async function submitGuestlistRequest(formData: FormData): Promise<Submit
   }
 
   const admin = createAdminClient();
-  const { error } = await admin.from("guestlist_requests").insert({
-    event_id: eventId,
-    guestlist_id: meta.guestlist.id,
-    user_id: userId,
-    first_name: firstName,
-    last_name: lastName,
-    full_name: fullName,
-    phone,
-    email,
-    group_size: groupSize,
-    notes,
-    status: "pending",
-  });
+  const { data: inserted, error } = await admin
+    .from("guestlist_requests")
+    .insert({
+      event_id: eventId,
+      guestlist_id: meta.guestlist.id,
+      user_id: userId,
+      first_name: firstName,
+      last_name: lastName,
+      full_name: fullName,
+      phone,
+      email,
+      group_size: groupSize,
+      notes,
+      status: "pending",
+    })
+    .select("id")
+    .single();
 
   if (error?.code === "23505") {
     return { success: false, error: "A request with this phone is already pending or approved.", code: "duplicate" };
@@ -77,7 +134,15 @@ export async function submitGuestlistRequest(formData: FormData): Promise<Submit
     return { success: false, error: "Could not submit request. Try again.", code: "server" };
   }
 
-  revalidatePath(`/events`);
+  if (inserted?.id) {
+    const ctx = await loadNotifyContext(admin, inserted.id);
+    if (ctx) {
+      void notifyGuestlistReceived(ctx).catch((err) => logGuestlist("notify_received_failed", { err }));
+    }
+  }
+
+  const { data: ev } = await admin.from("events").select("slug").eq("id", eventId).maybeSingle();
+  revalidateGuestlistPaths(ev?.slug);
   return { success: true };
 }
 
@@ -96,11 +161,32 @@ async function patchGuestlistRequest(
   }
 
   if (revalidate) {
-    revalidatePath("/admin");
-    revalidatePath("/business/guestlists");
-    revalidatePath("/venue/guestlists");
+    revalidateGuestlistPaths();
   }
   return { ok: true };
+}
+
+async function afterGuestlistRequestChange(
+  requestId: string,
+  asAdmin: boolean,
+): Promise<void> {
+  const admin = createAdminClient();
+  const sync = await syncGuestlistEntryFromRequest(admin, requestId);
+  if (!sync.ok) {
+    logGuestlist("sync_entry_failed", { requestId, error: sync.error });
+  }
+
+  const ctx = await loadNotifyContext(admin, requestId);
+  if (ctx && ctx.status !== "pending") {
+    void notifyGuestlistStatusChange(ctx).catch((err) =>
+      logGuestlist("notify_status_failed", { err }),
+    );
+  }
+  if (ctx?.eventSlug) {
+    revalidateGuestlistPaths(ctx.eventSlug);
+  } else {
+    revalidateGuestlistPaths();
+  }
 }
 
 async function applyGuestlistStatusUpdate(
@@ -148,7 +234,10 @@ async function applyGuestlistStatusUpdate(
     if (approvedBy) patch.approved_by = approvedBy;
   }
 
-  const { ok, errorMessage } = await patchGuestlistRequest(requestId, patch, { asAdmin: opts.asAdmin });
+  const { ok, errorMessage } = await patchGuestlistRequest(requestId, patch, {
+    asAdmin: opts.asAdmin,
+    revalidate: false,
+  });
   if (!ok) {
     const detail = errorMessage ? encodeURIComponent(errorMessage.slice(0, 160)) : "";
     redirect(
@@ -158,6 +247,8 @@ async function applyGuestlistStatusUpdate(
       ),
     );
   }
+
+  await afterGuestlistRequestChange(requestId, opts.asAdmin);
   redirect(withQueryParam(safeRedirect, "ok=1"));
 }
 
@@ -193,9 +284,9 @@ export async function deleteGuestlistRequest(formData: FormData) {
     redirect(withQueryParam(safeRedirect, "error=delete"));
   }
 
-  revalidatePath("/admin");
-  revalidatePath("/business/guestlists");
-  revalidatePath("/venue/guestlists");
+  const admin = createAdminClient();
+  await admin.from("guestlist_entries").delete().eq("guestlist_request_id", requestId);
+  revalidateGuestlistPaths();
   redirect(withQueryParam(safeRedirect, "ok=1"));
 }
 
@@ -206,15 +297,15 @@ export async function deleteGuestlistRequestAdmin(formData: FormData) {
   const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/admin?tab=guestlists";
   if (!requestId) redirect(withQueryParam(safeRedirect, "error=invalid"));
 
-  const { error } = await createAdminClient().from("guestlist_requests").delete().eq("id", requestId);
+  const admin = createAdminClient();
+  const { error } = await admin.from("guestlist_requests").delete().eq("id", requestId);
   if (error) {
     logGuestlist("admin_delete_failed", { requestId, message: error.message });
     redirect(withQueryParam(safeRedirect, "error=delete"));
   }
 
-  revalidatePath("/admin");
-  revalidatePath("/business/guestlists");
-  revalidatePath("/venue/guestlists");
+  await admin.from("guestlist_entries").delete().eq("guestlist_request_id", requestId);
+  revalidateGuestlistPaths();
   redirect(withQueryParam(safeRedirect, "ok=1"));
 }
 

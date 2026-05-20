@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
+import { GuestlistRosterPanel } from "@/components/admin/guestlist-roster-panel";
 import { createClient } from "@/lib/supabase/server";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 import { SITE } from "@/lib/constants";
-import { listGuestlistRequestsForVenueOwner } from "@/services/guestlist";
+import { listGuestlistEntriesForEventIds, listGuestlistRequestsForVenueOwner } from "@/services/guestlist";
+import type { GuestlistEntryRow } from "@/types/guestlist";
+import { Suspense } from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
@@ -24,6 +27,7 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
 
   let requests = await listGuestlistRequestsForVenueOwner(user.id, 150);
   let events: { id: string; title: string }[] = [];
+  let entries: GuestlistEntryRow[] = [];
 
   try {
     const admin = createAdminClient();
@@ -32,9 +36,12 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
     if (venueIds.length) {
       const { data: evs } = await admin.from("events").select("id, title").in("venue_id", venueIds);
       events = evs ?? [];
+      const eventIds = events.map((e) => e.id);
+      entries = await listGuestlistEntriesForEventIds(eventIds, 300);
     }
   } catch {
     requests = [];
+    entries = [];
   }
 
   return (
@@ -48,10 +55,36 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
         </p>
       ) : null}
 
-      <div className="mt-8">
-        <GuestlistRequestsPanel
-          variant="business"
-          requests={requests}
+      <div className="mt-8 space-y-8">
+        <Suspense fallback={<p className="text-sm text-white/45">Loading requests…</p>}>
+          <GuestlistRequestsPanel
+            variant="business"
+            requests={requests}
+            events={events.map((e) => ({
+            id: e.id,
+            title: e.title,
+            slug: "",
+            description: null,
+            venue_id: "",
+            starts_at: "",
+            ends_at: null,
+            genre: null,
+            image_url: null,
+            dj_lineup: [],
+            capacity: null,
+            is_featured: false,
+            is_listed_public: true,
+            is_hidden_premium: false,
+            ticket_from_eur: null,
+            reservation_price_eur: null,
+            requires_online_payment: null,
+            allows_pay_at_venue: null,
+            venues: null,
+          }))}
+          />
+        </Suspense>
+        <GuestlistRosterPanel
+          entries={entries}
           events={events.map((e) => ({
             id: e.id,
             title: e.title,

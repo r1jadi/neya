@@ -20,6 +20,7 @@ import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
+import { GuestlistRosterPanel } from "@/components/admin/guestlist-roster-panel";
 import { VenueAccountsPanel } from "@/components/admin/venue-accounts-panel";
 import type {
   AdminEventRow,
@@ -28,7 +29,7 @@ import type {
   AdminTicketRow,
   AdminVenueRow,
 } from "@/services/admin";
-import type { GuestlistRequestWithEvent } from "@/types/guestlist";
+import type { GuestlistEntryRow, GuestlistRequestWithEvent } from "@/types/guestlist";
 import type { VenueAccountRow } from "@/types/auth";
 import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
 import {
@@ -48,6 +49,7 @@ interface AdminDashboardProps {
   tickets: AdminTicketRow[];
   guestlists: AdminGuestlistRow[];
   guestlistRequests: GuestlistRequestWithEvent[];
+  guestlistEntries: GuestlistEntryRow[];
   reservations: AdminReservationRow[];
   stats: {
     venueCount: number;
@@ -90,6 +92,7 @@ export function AdminDashboard({
   tickets,
   guestlists,
   guestlistRequests,
+  guestlistEntries,
   reservations,
   stats,
 }: AdminDashboardProps) {
@@ -302,7 +305,10 @@ export function AdminDashboard({
       {tab === "guestlists" ? (
         <section className="space-y-8">
           <GuestlistForm events={events} />
-          <GuestlistRequestsPanel requests={guestlistRequests} events={events} />
+          <Suspense fallback={<p className="text-sm text-white/45">Loading requests…</p>}>
+            <GuestlistRequestsPanel requests={guestlistRequests} events={events} />
+          </Suspense>
+          <GuestlistRosterPanel entries={guestlistEntries} events={events} />
           <div>
             <h3 className="mb-3 text-sm font-semibold text-white">Event guestlists</h3>
           <ul className="space-y-2">

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
+import { GuestlistRosterPanel } from "@/components/admin/guestlist-roster-panel";
 import { requireVenueUser } from "@/lib/auth/require-venue";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 import { SITE } from "@/lib/constants";
+import { listGuestlistEntriesForEventIds } from "@/services/guestlist";
+import type { GuestlistEntryRow } from "@/types/guestlist";
 import { getVenueWithEvents, listGuestlistRequestsForVenue } from "@/services/venue-portal";
 
 export const metadata: Metadata = {
@@ -18,13 +22,16 @@ export default async function VenueGuestlistsPage({ searchParams }: Props) {
 
   let requests: Awaited<ReturnType<typeof listGuestlistRequestsForVenue>> = [];
   let events: { id: string; title: string }[] = [];
+  let entries: GuestlistEntryRow[] = [];
 
   try {
     requests = await listGuestlistRequestsForVenue(venueId, 150);
     const { events: evs } = await getVenueWithEvents(venueId);
     events = evs.map((e) => ({ id: e.id, title: e.title }));
+    entries = await listGuestlistEntriesForEventIds(events.map((e) => e.id), 300);
   } catch {
     requests = [];
+    entries = [];
   }
 
   return (
@@ -38,10 +45,36 @@ export default async function VenueGuestlistsPage({ searchParams }: Props) {
         </p>
       ) : null}
 
-      <div className="mt-8">
-        <GuestlistRequestsPanel
-          variant="venue"
-          requests={requests}
+      <div className="mt-8 space-y-8">
+        <Suspense fallback={<p className="text-sm text-white/45">Loading requests…</p>}>
+          <GuestlistRequestsPanel
+            variant="venue"
+            requests={requests}
+            events={events.map((e) => ({
+            id: e.id,
+            title: e.title,
+            slug: "",
+            description: null,
+            venue_id: "",
+            starts_at: "",
+            ends_at: null,
+            genre: null,
+            image_url: null,
+            dj_lineup: [],
+            capacity: null,
+            is_featured: false,
+            is_listed_public: true,
+            is_hidden_premium: false,
+            ticket_from_eur: null,
+            reservation_price_eur: null,
+            requires_online_payment: null,
+            allows_pay_at_venue: null,
+            venues: null,
+          }))}
+          />
+        </Suspense>
+        <GuestlistRosterPanel
+          entries={entries}
           events={events.map((e) => ({
             id: e.id,
             title: e.title,

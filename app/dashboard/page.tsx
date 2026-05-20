@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { guestlistStatusLabel } from "@/lib/guestlist/labels";
 import { paymentMethodLabel, paymentStatusLabel, reservationStatusLabel } from "@/lib/reservations/labels";
 
 export const metadata: Metadata = {
@@ -29,7 +30,14 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
-  const { data: guestlist } = await supabase
+  const { data: guestlistRequests } = await supabase
+    .from("guestlist_requests")
+    .select("id, status, full_name, group_size, created_at, events(title, slug)")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  const { data: guestlistEntries } = await supabase
     .from("guestlist_entries")
     .select("id, status, created_at, guestlists(name, events(title, slug))")
     .eq("user_id", user.id)
@@ -89,8 +97,27 @@ export default async function DashboardPage() {
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Guestlists</h2>
           <ul className="mt-3 space-y-2">
-            {guestlist?.length ? (
-              guestlist.map((g) => {
+            {guestlistRequests?.length ? (
+              guestlistRequests.map((g) => {
+                const ev = g.events as { title?: string; slug?: string } | { title?: string; slug?: string }[] | null;
+                const event = Array.isArray(ev) ? ev[0] : ev;
+                return (
+                  <li
+                    key={g.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
+                  >
+                    <span className="font-medium text-white">{event?.title ?? "Event"}</span> · party of {g.group_size}{" "}
+                    · <span className="text-sky-200/90">{guestlistStatusLabel(g.status)}</span>
+                    {event?.slug ? (
+                      <Link href={`/events/${event.slug}`} className="ml-2 text-xs text-sky-300 hover:underline">
+                        View
+                      </Link>
+                    ) : null}
+                  </li>
+                );
+              })
+            ) : guestlistEntries?.length ? (
+              guestlistEntries.map((g) => {
                 const gl = g.guestlists as { name?: string; events?: { title?: string; slug?: string } | null } | null;
                 const ev = gl?.events;
                 return (
@@ -99,7 +126,7 @@ export default async function DashboardPage() {
                     className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
                   >
                     <span className="font-medium text-white">{ev?.title ?? "Event"}</span> · {gl?.name ?? "List"} ·{" "}
-                    <span className="text-sky-200/90">{g.status}</span>
+                    <span className="text-sky-200/90">{guestlistStatusLabel(g.status)}</span>
                     {ev?.slug ? (
                       <Link href={`/events/${ev.slug}`} className="ml-2 text-xs text-sky-300 hover:underline">
                         View

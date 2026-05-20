@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   approveGuestlistRequest,
   approveGuestlistRequestAdmin,
@@ -31,7 +32,19 @@ type Props = {
   variant?: "admin" | "business" | "venue";
 };
 
-export function GuestlistRequestsPanel({ requests, events, variant = "admin" }: Props) {
+export function GuestlistRequestsPanel({ requests: initialRequests, events, variant = "admin" }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [requests, setRequests] = useState(initialRequests);
+
+  useEffect(() => {
+    setRequests(initialRequests);
+  }, [initialRequests]);
+
+  useEffect(() => {
+    if (searchParams.get("ok") !== "1") return;
+    router.refresh();
+  }, [searchParams, router]);
   const redirectPath =
     variant === "venue"
       ? "/venue/guestlists"

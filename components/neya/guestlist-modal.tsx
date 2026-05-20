@@ -90,7 +90,8 @@ export function GuestlistModal({
               Request submitted
             </h3>
             <p className="mt-2 text-sm text-white/60">
-              You&apos;ll be notified once approved. Show your phone at the door.
+              We&apos;ll email or text you a confirmation if you provided contact details. You&apos;ll hear from us again
+              once the venue approves your request.
             </p>
             <Button type="button" className="mt-6 w-full" onClick={() => handleOpenChange(false)}>
               Done
@@ -136,12 +137,22 @@ export function GuestlistModal({
                     required
                     autoComplete="tel"
                     placeholder="+383 44 …"
+                    minLength={8}
+                    maxLength={20}
+                    pattern="[\d\s+()-]{8,20}"
                     className="h-11"
                   />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-white/45">Email (optional)</label>
-                  <Input name="email" type="email" autoComplete="email" placeholder="you@email.com" className="h-11" />
+                  <Input
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@email.com"
+                    maxLength={200}
+                    className="h-11"
+                  />
                 </div>
                 <div>
                   <label className="mb-1 flex items-center gap-1.5 text-xs text-white/45">

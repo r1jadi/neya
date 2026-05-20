@@ -4,6 +4,7 @@ import { getPublicSupabase } from "@/lib/supabase/public-server";
 import type {
   GuestlistAvailability,
   GuestlistConfig,
+  GuestlistEntryRow,
   GuestlistRequestWithEvent,
 } from "@/types/guestlist";
 
@@ -118,6 +119,84 @@ export async function listGuestlistRequestsForVenueOwner(
     .order("created_at", { ascending: false })
     .limit(limit);
 
+  if (error) throw error;
+  return (data ?? []) as GuestlistRequestWithEvent[];
+}
+
+/** Door-list entries synced from approved guestlist requests. */
+export async function listGuestlistEntriesForAdmin(filters?: {
+  eventId?: string;
+  limit?: number;
+}): Promise<GuestlistEntryRow[]> {
+  const admin = createAdminClient();
+  let query = admin
+    .from("guestlist_entries")
+    .select(
+      `id, guestlist_id, guestlist_request_id, user_id, full_name, phone, group_size, status, contact, created_at,
+       guestlists(id, name, event_id, events(id, title, slug, starts_at))`,
+    )
+    .eq("status", "approved")
+    .order("created_at", { ascending: false })
+    .limit(filters?.limit ?? 500);
+
+  if (filters?.eventId) {
+    const { data: gls } = await admin.from("guestlists").select("id").eq("event_id", filters.eventId);
+    const glIds = gls?.map((g) => g.id) ?? [];
+    if (!glIds.length) return [];
+    query = query.in("guestlist_id", glIds);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.error("[guestlist] list entries failed", error);
+    throw error;
+  }
+
+  return (data ?? []) as GuestlistEntryRow[];
+}
+
+export async function listGuestlistEntriesForEventIds(
+  eventIds: string[],
+  limit = 500,
+): Promise<GuestlistEntryRow[]> {
+  if (!eventIds.length) return [];
+  const admin = createAdminClient();
+  const { data: gls } = await admin.from("guestlists").select("id").in("event_id", eventIds);
+  const glIds = gls?.map((g) => g.id) ?? [];
+  if (!glIds.length) return [];
+
+  const { data, error } = await admin
+    .from("guestlist_entries")
+    .select(
+      `id, guestlist_id, guestlist_request_id, user_id, full_name, phone, group_size, status, contact, created_at,
+       guestlists(id, name, event_id, events(id, title, slug, starts_at))`,
+    )
+    .in("guestlist_id", glIds)
+    .eq("status", "approved")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) throw error;
+  return (data ?? []) as GuestlistEntryRow[];
+}
+
+export async function listApprovedGuestlistRequestsForAdmin(filters?: {
+  eventId?: string;
+  limit?: number;
+}): Promise<GuestlistRequestWithEvent[]> {
+  const admin = createAdminClient();
+  let query = admin
+    .from("guestlist_requests")
+    .select(
+      "id, event_id, guestlist_id, user_id, first_name, last_name, full_name, phone, email, group_size, notes, status, created_at, updated_at, checked_in_at, approved_by, events(title, slug)",
+    )
+    .in("status", ["approved", "checked_in"])
+    .order("updated_at", { ascending: false })
+    .limit(filters?.limit ?? 500);
+
+  if (filters?.eventId) query = query.eq("event_id", filters.eventId);
+
+  const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as GuestlistRequestWithEvent[];
 }

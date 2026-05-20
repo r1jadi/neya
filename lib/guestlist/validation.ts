@@ -1,11 +1,20 @@
 import type { SubmitGuestlistResult } from "@/types/guestlist";
 
 const PHONE_MIN = 8;
-const PHONE_MAX = 20;
+const PHONE_MAX = 15;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 export function normalizePhone(raw: string): string {
   const digits = raw.replace(/\D/g, "");
   return digits.slice(0, PHONE_MAX);
+}
+
+export function isValidPhone(phone: string): boolean {
+  return phone.length >= PHONE_MIN && phone.length <= PHONE_MAX && /^\d+$/.test(phone);
+}
+
+export function isValidEmail(email: string): boolean {
+  return EMAIL_RE.test(email) && email.length <= 200;
 }
 
 export function buildFullName(firstName: string, lastName: string): string {
@@ -42,11 +51,15 @@ export function parseGuestlistFormData(formData: FormData): ParsedGuestlistForm 
   if (!firstName || !lastName) {
     return { success: false, error: "First and last name are required.", code: "invalid" };
   }
-  if (phone.length < PHONE_MIN) {
-    return { success: false, error: "Enter a valid phone number.", code: "invalid" };
+  if (!isValidPhone(phone)) {
+    return {
+      success: false,
+      error: "Enter a valid phone number (8–15 digits, country code optional).",
+      code: "invalid",
+    };
   }
-  if (email && !email.includes("@")) {
-    return { success: false, error: "Enter a valid email or leave it blank.", code: "invalid" };
+  if (email && !isValidEmail(email)) {
+    return { success: false, error: "Enter a valid email address or leave it blank.", code: "invalid" };
   }
 
   return {

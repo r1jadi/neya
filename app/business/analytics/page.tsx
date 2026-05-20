@@ -26,12 +26,12 @@ export default async function BusinessAnalyticsPage() {
     const { data: evs } = await supabase.from("events").select("id").in("venue_id", ids);
     const eids = evs?.map((e) => e.id) ?? [];
     if (eids.length) {
-      const { data: gls } = await supabase.from("guestlists").select("id").in("event_id", eids);
-      const glids = gls?.map((g) => g.id) ?? [];
-      if (glids.length) {
-        const { count: gc } = await supabase.from("guestlist_entries").select("id", { count: "exact", head: true }).in("guestlist_id", glids);
-        glCount = gc ?? 0;
-      }
+      const { count: gc } = await supabase
+        .from("guestlist_requests")
+        .select("id", { count: "exact", head: true })
+        .in("event_id", eids)
+        .in("status", ["approved", "checked_in"]);
+      glCount = gc ?? 0;
       const { data: tks } = await supabase.from("tickets").select("id").in("event_id", eids);
       const tkids = tks?.map((t) => t.id) ?? [];
       if (tkids.length) {
@@ -47,7 +47,7 @@ export default async function BusinessAnalyticsPage() {
 
   const stats = [
     { label: "Total reservations", value: resCount },
-    { label: "Guestlist entries", value: glCount },
+    { label: "Approved on guestlist", value: glCount },
     { label: "Paid tickets (your events)", value: paidTickets },
   ];
 

@@ -43,6 +43,36 @@ export type GuestlistRequestWithEvent = GuestlistRequestRow & {
   events: { title: string; slug: string } | { title: string; slug: string }[] | null;
 };
 
+export type GuestlistEntryRow = {
+  id: string;
+  guestlist_id: string;
+  guestlist_request_id: string | null;
+  user_id: string | null;
+  full_name: string | null;
+  phone: string | null;
+  group_size: number | null;
+  status: string;
+  contact: string | null;
+  created_at: string;
+  guestlists: {
+    id: string;
+    name: string;
+    event_id: string;
+    events:
+      | { id: string; title: string; slug: string; starts_at: string | null }
+      | { id: string; title: string; slug: string; starts_at: string | null }[]
+      | null;
+  } | {
+    id: string;
+    name: string;
+    event_id: string;
+    events:
+      | { id: string; title: string; slug: string; starts_at: string | null }
+      | { id: string; title: string; slug: string; starts_at: string | null }[]
+      | null;
+  }[] | null;
+};
+
 export type SubmitGuestlistResult =
   | { success: true }
   | { success: false; error: string; code?: "full" | "closed" | "duplicate" | "invalid" | "server" };
