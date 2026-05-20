@@ -6,8 +6,6 @@ import { GuestlistRosterPanel } from "@/components/admin/guestlist-roster-panel"
 import { requireVenueUser } from "@/lib/auth/require-venue";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 import { SITE } from "@/lib/constants";
-import { listGuestlistEntriesForEventIds } from "@/services/guestlist";
-import type { GuestlistEntryRow } from "@/types/guestlist";
 import { getVenueWithEvents, listGuestlistRequestsForVenue } from "@/services/venue-portal";
 
 export const metadata: Metadata = {
@@ -22,17 +20,15 @@ export default async function VenueGuestlistsPage({ searchParams }: Props) {
 
   let requests: Awaited<ReturnType<typeof listGuestlistRequestsForVenue>> = [];
   let events: { id: string; title: string }[] = [];
-  let entries: GuestlistEntryRow[] = [];
-
   try {
     requests = await listGuestlistRequestsForVenue(venueId, 150);
     const { events: evs } = await getVenueWithEvents(venueId);
     events = evs.map((e) => ({ id: e.id, title: e.title }));
-    entries = await listGuestlistEntriesForEventIds(events.map((e) => e.id), 300);
   } catch {
     requests = [];
-    entries = [];
   }
+
+  const approvedRequests = requests.filter((r) => r.status === "approved" || r.status === "checked_in");
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
@@ -74,7 +70,7 @@ export default async function VenueGuestlistsPage({ searchParams }: Props) {
           />
         </Suspense>
         <GuestlistRosterPanel
-          entries={entries}
+          approvedRequests={approvedRequests}
           events={events.map((e) => ({
             id: e.id,
             title: e.title,

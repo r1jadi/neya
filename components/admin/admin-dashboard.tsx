@@ -29,7 +29,7 @@ import type {
   AdminTicketRow,
   AdminVenueRow,
 } from "@/services/admin";
-import type { GuestlistEntryRow, GuestlistRequestWithEvent } from "@/types/guestlist";
+import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 import type { VenueAccountRow } from "@/types/auth";
 import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
 import {
@@ -49,7 +49,6 @@ interface AdminDashboardProps {
   tickets: AdminTicketRow[];
   guestlists: AdminGuestlistRow[];
   guestlistRequests: GuestlistRequestWithEvent[];
-  guestlistEntries: GuestlistEntryRow[];
   reservations: AdminReservationRow[];
   stats: {
     venueCount: number;
@@ -92,7 +91,6 @@ export function AdminDashboard({
   tickets,
   guestlists,
   guestlistRequests,
-  guestlistEntries,
   reservations,
   stats,
 }: AdminDashboardProps) {
@@ -308,7 +306,12 @@ export function AdminDashboard({
           <Suspense fallback={<p className="text-sm text-white/45">Loading requests…</p>}>
             <GuestlistRequestsPanel requests={guestlistRequests} events={events} />
           </Suspense>
-          <GuestlistRosterPanel entries={guestlistEntries} events={events} />
+          <GuestlistRosterPanel
+            approvedRequests={guestlistRequests.filter(
+              (r) => r.status === "approved" || r.status === "checked_in",
+            )}
+            events={events}
+          />
           <div>
             <h3 className="mb-3 text-sm font-semibold text-white">Event guestlists</h3>
           <ul className="space-y-2">

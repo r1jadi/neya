@@ -6,8 +6,7 @@ import { GuestlistRosterPanel } from "@/components/admin/guestlist-roster-panel"
 import { createClient } from "@/lib/supabase/server";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 import { SITE } from "@/lib/constants";
-import { listGuestlistEntriesForEventIds, listGuestlistRequestsForVenueOwner } from "@/services/guestlist";
-import type { GuestlistEntryRow } from "@/types/guestlist";
+import { listGuestlistRequestsForVenueOwner } from "@/services/guestlist";
 import { Suspense } from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -27,8 +26,6 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
 
   let requests = await listGuestlistRequestsForVenueOwner(user.id, 150);
   let events: { id: string; title: string }[] = [];
-  let entries: GuestlistEntryRow[] = [];
-
   try {
     const admin = createAdminClient();
     const { data: venues } = await admin.from("venues").select("id").eq("owner_id", user.id);
@@ -36,13 +33,12 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
     if (venueIds.length) {
       const { data: evs } = await admin.from("events").select("id, title").in("venue_id", venueIds);
       events = evs ?? [];
-      const eventIds = events.map((e) => e.id);
-      entries = await listGuestlistEntriesForEventIds(eventIds, 300);
     }
   } catch {
     requests = [];
-    entries = [];
   }
+
+  const approvedRequests = requests.filter((r) => r.status === "approved" || r.status === "checked_in");
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
@@ -84,7 +80,7 @@ export default async function BusinessGuestlistsPage({ searchParams }: Props) {
           />
         </Suspense>
         <GuestlistRosterPanel
-          entries={entries}
+          approvedRequests={approvedRequests}
           events={events.map((e) => ({
             id: e.id,
             title: e.title,

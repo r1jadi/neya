@@ -2,53 +2,43 @@
 
 import { useMemo } from "react";
 import type { AdminEventRow } from "@/services/admin";
-import type { GuestlistEntryRow } from "@/types/guestlist";
-import { guestlistStatusLabel } from "@/lib/guestlist/labels";
+import type { GuestlistRequestWithEvent } from "@/types/guestlist";
+import { guestlistStatusClass, guestlistStatusLabel } from "@/lib/guestlist/labels";
 import { cn } from "@/lib/utils";
 
-function eventFromEntry(e: GuestlistEntryRow) {
-  const gl = e.guestlists;
-  const guestlist = Array.isArray(gl) ? gl[0] : gl;
-  const ev = guestlist?.events;
-  return Array.isArray(ev) ? ev[0] : ev;
-}
-
-function guestlistName(e: GuestlistEntryRow): string {
-  const gl = e.guestlists;
-  const guestlist = Array.isArray(gl) ? gl[0] : gl;
-  return guestlist?.name ?? "Guestlist";
+function eventTitle(r: GuestlistRequestWithEvent, events: AdminEventRow[]): string {
+  const ev = r.events;
+  if (Array.isArray(ev)) return ev[0]?.title ?? "Event";
+  if (ev?.title) return ev.title;
+  return events.find((e) => e.id === r.event_id)?.title ?? "Event";
 }
 
 type Props = {
-  entries: GuestlistEntryRow[];
+  /** Approved / checked-in requests — source of truth for the door list */
+  approvedRequests: GuestlistRequestWithEvent[];
   events: AdminEventRow[];
   eventFilter?: string;
 };
 
-export function GuestlistRosterPanel({ entries, events, eventFilter = "" }: Props) {
+export function GuestlistRosterPanel({ approvedRequests, events, eventFilter = "" }: Props) {
   const filtered = useMemo(() => {
-    if (!eventFilter) return entries;
-    return entries.filter((e) => {
-      const gl = e.guestlists;
-      const guestlist = Array.isArray(gl) ? gl[0] : gl;
-      return guestlist?.event_id === eventFilter;
-    });
-  }, [entries, eventFilter]);
+    let rows = approvedRequests;
+    if (eventFilter) rows = rows.filter((r) => r.event_id === eventFilter);
+    return rows;
+  }, [approvedRequests, eventFilter]);
 
   const byEvent = useMemo(() => {
-    const map = new Map<string, { title: string; entries: GuestlistEntryRow[] }>();
-    for (const e of filtered) {
-      const ev = eventFromEntry(e);
-      const eventId = ev?.id ?? "unknown";
-      const title = ev?.title ?? events.find((x) => x.id === eventId)?.title ?? "Event";
-      const bucket = map.get(eventId) ?? { title, entries: [] };
-      bucket.entries.push(e);
-      map.set(eventId, bucket);
+    const map = new Map<string, { title: string; rows: GuestlistRequestWithEvent[] }>();
+    for (const r of filtered) {
+      const title = eventTitle(r, events);
+      const bucket = map.get(r.event_id) ?? { title, rows: [] };
+      bucket.rows.push(r);
+      map.set(r.event_id, bucket);
     }
     return [...map.entries()].sort((a, b) => a[1].title.localeCompare(b[1].title));
   }, [filtered, events]);
 
-  const totalGuests = filtered.reduce((sum, e) => sum + (e.group_size ?? 1), 0);
+  const totalGuests = filtered.reduce((sum, r) => sum + (r.group_size ?? 1), 0);
 
   return (
     <section className="space-y-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5">
@@ -62,7 +52,7 @@ export function GuestlistRosterPanel({ entries, events, eventFilter = "" }: Prop
 
       {!filtered.length ? (
         <p className="text-sm text-white/40">
-          No approved guests yet. Approving a request adds them here automatically.
+          No approved guests yet. Use <strong className="text-white/60">Approve</strong> on a pending request above.
         </p>
       ) : (
         <div className="space-y-4">
@@ -72,24 +62,25 @@ export function GuestlistRosterPanel({ entries, events, eventFilter = "" }: Prop
                 {group.title}
               </p>
               <ul className="space-y-1.5">
-                {group.entries.map((e) => (
+                {group.rows.map((r) => (
                   <li
-                    key={e.id}
+                    key={r.id}
                     className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm"
                   >
                     <div>
-                      <p className="font-medium text-white">{e.full_name ?? e.contact ?? "Guest"}</p>
+                      <p className="font-medium text-white">{r.full_name}</p>
                       <p className="text-xs text-white/50">
-                        {e.phone ?? e.contact} · party of {e.group_size ?? 1} · {guestlistName(e)}
+                        {r.phone}
+                        {r.email ? ` · ${r.email}` : ""} · party of {r.group_size}
                       </p>
                     </div>
                     <span
                       className={cn(
                         "rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                        "border-emerald-500/30 bg-emerald-500/10 text-emerald-200",
+                        guestlistStatusClass(r.status),
                       )}
                     >
-                      {guestlistStatusLabel("approved")}
+                      {guestlistStatusLabel(r.status)}
                     </span>
                   </li>
                 ))}

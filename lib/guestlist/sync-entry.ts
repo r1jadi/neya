@@ -15,13 +15,23 @@ type RequestRow = {
   status: GuestlistRequestStatus;
 };
 
+function isMissingColumnError(message: string): boolean {
+  return (
+    message.includes("guestlist_request_id") ||
+    message.includes("full_name") ||
+    message.includes("does not exist") ||
+    message.includes("schema cache")
+  );
+}
+
 /**
  * Keep guestlist_entries in sync with guestlist_requests for door-list / analytics.
+ * No-ops gracefully if migration 20240523120000 has not been applied yet.
  */
 export async function syncGuestlistEntryFromRequest(
   admin: SupabaseClient,
   requestId: string,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; error?: string; skipped?: boolean }> {
   const { data: req, error: fetchErr } = await admin
     .from("guestlist_requests")
     .select("id, guestlist_id, user_id, full_name, phone, group_size, status")
@@ -41,7 +51,7 @@ export async function syncGuestlistEntryFromRequest(
       .from("guestlist_entries")
       .delete()
       .eq("guestlist_request_id", requestId);
-    if (delErr) {
+    if (delErr && !isMissingColumnError(delErr.message)) {
       console.error("[guestlist] sync delete entry failed", delErr);
       return { ok: false, error: delErr.message };
     }
@@ -64,13 +74,46 @@ export async function syncGuestlistEntryFromRequest(
     status: "approved" as const,
   };
 
-  const { error: upsertErr } = await admin
+  const { data: existing, error: findErr } = await admin
     .from("guestlist_entries")
-    .upsert(entryPayload, { onConflict: "guestlist_request_id" });
+    .select("id")
+    .eq("guestlist_request_id", requestId)
+    .maybeSingle();
 
-  if (upsertErr) {
-    console.error("[guestlist] sync upsert failed", upsertErr);
-    return { ok: false, error: upsertErr.message };
+  if (findErr) {
+    if (isMissingColumnError(findErr.message)) {
+      return { ok: true, skipped: true };
+    }
+    console.error("[guestlist] sync find entry failed", findErr);
+    return { ok: false, error: findErr.message };
+  }
+
+  if (existing?.id) {
+    const { error: updateErr } = await admin
+      .from("guestlist_entries")
+      .update(entryPayload)
+      .eq("id", existing.id);
+    if (updateErr) {
+      if (isMissingColumnError(updateErr.message)) return { ok: true, skipped: true };
+      console.error("[guestlist] sync update failed", updateErr);
+      return { ok: false, error: updateErr.message };
+    }
+    return { ok: true };
+  }
+
+  const { error: insertErr } = await admin.from("guestlist_entries").insert(entryPayload);
+  if (insertErr) {
+    if (insertErr.code === "23505" && row.user_id) {
+      const { error: updateErr } = await admin
+        .from("guestlist_entries")
+        .update(entryPayload)
+        .eq("guestlist_id", row.guestlist_id)
+        .eq("user_id", row.user_id);
+      if (!updateErr) return { ok: true };
+    }
+    if (isMissingColumnError(insertErr.message)) return { ok: true, skipped: true };
+    console.error("[guestlist] sync insert failed", insertErr);
+    return { ok: false, error: insertErr.message };
   }
 
   return { ok: true };
