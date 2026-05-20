@@ -20,6 +20,10 @@ function tempPassword(): string {
   return out;
 }
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function saveVenueProfile(
   admin: ReturnType<typeof createAdminClient>,
   userId: string,
@@ -29,6 +33,7 @@ async function saveVenueProfile(
   },
 ): Promise<{ ok: true } | { ok: false; code: string; detail?: string }> {
   const profileRow = {
+    id: userId,
     display_name: payload.display_name,
     role: "venue" as const,
     venue_id: payload.venue_id,
@@ -38,42 +43,32 @@ async function saveVenueProfile(
     updated_at: new Date().toISOString(),
   };
 
-  // Auth trigger inserts a default row — update it (service role must bypass protect trigger; see migration)
-  const { data: updated, error: updateErr } = await admin
-    .from("profiles")
-    .update(profileRow)
-    .eq("id", userId)
-    .select("id")
-    .maybeSingle();
+  // Auth trigger may insert a default row after createUser — upsert with retries handles the race.
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const { data, error } = await admin
+      .from("profiles")
+      .upsert(profileRow, { onConflict: "id" })
+      .select("id, role, venue_id")
+      .maybeSingle();
 
-  if (!updateErr && updated) {
-    return verifyVenueProfileSaved(admin, userId, payload.venue_id);
-  }
-
-  if (updateErr) {
-    logVenueAccount("profile_update_failed", { userId, code: updateErr.code, message: updateErr.message });
-  }
-
-  // Trigger may not have run yet — insert full row
-  const { error: insertErr } = await admin.from("profiles").insert({
-    id: userId,
-    ...profileRow,
-  });
-
-  if (insertErr) {
-    logVenueAccount("profile_insert_failed", { userId, code: insertErr.code, message: insertErr.message });
-
-    if (insertErr.code === "23505") {
-      if (insertErr.message.includes("profiles_one_active_venue_account")) {
-        return { ok: false, code: "profile_venue_taken", detail: insertErr.message };
-      }
-      const { error: retryErr } = await admin.from("profiles").update(profileRow).eq("id", userId);
-      if (!retryErr) return verifyVenueProfileSaved(admin, userId, payload.venue_id);
-      logVenueAccount("profile_retry_update_failed", { userId, message: retryErr.message });
-      return { ok: false, code: "profile", detail: retryErr.message };
+    if (!error && data?.role === "venue" && data.venue_id === payload.venue_id) {
+      return { ok: true };
     }
 
-    return { ok: false, code: "profile", detail: insertErr.message };
+    if (error?.code === "23505" && error.message.includes("profiles_one_active_venue_account")) {
+      return { ok: false, code: "profile_venue_taken", detail: error.message };
+    }
+
+    if (error) {
+      logVenueAccount("profile_upsert_failed", {
+        userId,
+        attempt,
+        code: error.code,
+        message: error.message,
+      });
+    }
+
+    if (attempt < 5) await delay(80 * (attempt + 1));
   }
 
   return verifyVenueProfileSaved(admin, userId, payload.venue_id);
@@ -94,19 +89,19 @@ async function verifyVenueProfileSaved(
     return { ok: false, code: "profile", detail: error.message };
   }
 
-  if (!data?.venue_id || data.venue_id !== venueId) {
+  if (!data) {
+    return { ok: false, code: "profile", detail: "Profile row missing after create." };
+  }
+
+  if (data.role !== "venue" || data.venue_id !== venueId) {
     return {
       ok: false,
       code: "profile",
-      detail: "Profile saved but venue_id was not linked. Run DB migrations (venue role columns).",
+      detail:
+        data.role !== "venue"
+          ? "Profile saved but venue role was not applied. Run DB migration 20240522120000_fix_profile_trigger_service_role.sql."
+          : "Profile saved but venue_id was not linked. Run DB migrations (venue role columns).",
     };
-  }
-
-  if (data.role !== "venue") {
-    const { error: fixErr } = await admin.from("profiles").update({ role: "venue" }).eq("id", userId);
-    if (fixErr) {
-      return { ok: false, code: "profile", detail: `Could not set venue role: ${fixErr.message}` };
-    }
   }
 
   return { ok: true };
@@ -215,6 +210,7 @@ export async function updateVenueAccount(formData: FormData) {
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin", "page");
   accountsRedirect("tab=venue-accounts&ok=1");
 }
 
@@ -236,6 +232,7 @@ export async function deactivateVenueAccount(formData: FormData) {
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin", "page");
   accountsRedirect("tab=venue-accounts&ok=1");
 }
 
@@ -252,6 +249,7 @@ export async function deleteVenueAccount(formData: FormData) {
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin", "page");
   accountsRedirect("tab=venue-accounts&ok=1");
 }
 
@@ -274,6 +272,7 @@ export async function sendVenueAccountPasswordReset(formData: FormData) {
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin", "page");
   accountsRedirect("tab=venue-accounts&reset=1");
 }
 
@@ -291,5 +290,6 @@ export async function setVenueAccountPassword(formData: FormData) {
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin", "page");
   accountsRedirect("tab=venue-accounts&ok=1");
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   approveVenue,
@@ -377,7 +377,9 @@ export function AdminDashboard({
       ) : null}
 
       {tab === "venue-accounts" ? (
-        <VenueAccountsPanel initialAccounts={venueAccounts} venues={venues} />
+        <Suspense fallback={<p className="text-sm text-white/45">Loading venue accounts…</p>}>
+          <VenueAccountsPanel initialAccounts={venueAccounts} venues={venues} />
+        </Suspense>
       ) : null}
     </div>
   );

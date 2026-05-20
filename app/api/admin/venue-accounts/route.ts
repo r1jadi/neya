@@ -11,5 +11,9 @@ export async function GET() {
   }
 
   const result = await listVenueAccounts();
-  return NextResponse.json(result);
+  return NextResponse.json(result, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate",
+    },
+  });
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   createVenueAccount,
   deactivateVenueAccount,
@@ -21,35 +22,49 @@ type Props = {
 };
 
 export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<VenueAccountRow[]>(initialAccounts);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAccounts(initialAccounts);
+  }, [initialAccounts]);
 
   const refreshAccounts = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await fetch("/api/admin/venue-accounts", { cache: "no-store" });
+      const res = await fetch("/api/admin/venue-accounts", {
+        cache: "no-store",
+        credentials: "same-origin",
+      });
       const body = (await res.json()) as { accounts?: VenueAccountRow[]; error?: string | null };
       if (!res.ok) {
         setLoadError(body.error ?? `Request failed (${res.status})`);
-        setAccounts([]);
         return;
       }
       setAccounts(body.accounts ?? []);
       if (body.error) setLoadError(body.error);
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : "Could not load venue accounts");
-      setAccounts([]);
     } finally {
       setLoading(false);
     }
   }, []);
 
+  const shouldRefreshFromMutation =
+    searchParams.get("created") === "1" ||
+    searchParams.get("ok") === "1" ||
+    searchParams.get("reset") === "1";
+
   useEffect(() => {
+    if (!shouldRefreshFromMutation) return;
+    router.refresh();
     void refreshAccounts();
-  }, [refreshAccounts]);
+  }, [shouldRefreshFromMutation, router, refreshAccounts]);
 
   return (
     <div className="space-y-8">
