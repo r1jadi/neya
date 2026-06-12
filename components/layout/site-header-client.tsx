@@ -10,6 +10,7 @@ import { SITE } from "@/lib/constants";
 
 const links = [
   { href: "/events", label: "Tonight" },
+  { href: "/guides", label: "Guides" },
   { href: "/#map", label: "Map" },
   { href: "/#business", label: "For venues" },
 ];

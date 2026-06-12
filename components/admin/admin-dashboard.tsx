@@ -39,10 +39,11 @@ import {
 } from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
 
-type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts";
+type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
 
 interface AdminDashboardProps {
   initialTab: Tab;
+  hideNav?: boolean;
   venueAccounts: VenueAccountRow[];
   venues: AdminVenueRow[];
   events: AdminEventRow[];
@@ -69,6 +70,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "reservations", label: "Reservations" },
   { id: "premium", label: "Premium" },
   { id: "venue-accounts", label: "Venue accounts" },
+  { id: "guides", label: "Guides" },
 ];
 
 function venueLabel(v: AdminVenueRow) {
@@ -85,6 +87,7 @@ function venueName(ev: AdminEventRow) {
 
 export function AdminDashboard({
   initialTab,
+  hideNav,
   venueAccounts,
   venues,
   events,
@@ -104,21 +107,23 @@ export function AdminDashboard({
 
   return (
     <div className="space-y-8">
-      <nav className="flex flex-wrap gap-2">
-        {TABS.map((t) => (
-          <Link
-            key={t.id}
-            href={`/admin?tab=${t.id}`}
-            onClick={() => setTab(t.id)}
-            className={cn(
-              "rounded-full px-3 py-1.5 text-xs font-medium transition",
-              tab === t.id ? "bg-white text-black" : "border border-white/15 text-white/70 hover:text-white",
-            )}
-          >
-            {t.label}
-          </Link>
-        ))}
-      </nav>
+      {!hideNav ? (
+        <nav className="flex flex-wrap gap-2">
+          {TABS.map((t) => (
+            <Link
+              key={t.id}
+              href={`/admin?tab=${t.id}`}
+              onClick={() => setTab(t.id)}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-xs font-medium transition",
+                tab === t.id ? "bg-white text-black" : "border border-white/15 text-white/70 hover:text-white",
+              )}
+            >
+              {t.label}
+            </Link>
+          ))}
+        </nav>
+      ) : null}
 
       {tab === "overview" ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

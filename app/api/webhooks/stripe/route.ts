@@ -76,6 +76,30 @@ export async function POST(req: Request) {
       }
     }
 
+    if (type === "guide") {
+      const purchaseId = session.metadata?.guide_purchase_id;
+      const userId = session.metadata?.user_id;
+      if (purchaseId && userId) {
+        const accessUntil = new Date();
+        accessUntil.setFullYear(accessUntil.getFullYear() + 1);
+        await admin
+          .from("guide_purchases")
+          .update({
+            status: "active",
+            purchase_date: new Date().toISOString(),
+            access_until: accessUntil.toISOString(),
+            stripe_checkout_session: session.id,
+          })
+          .eq("id", purchaseId)
+          .eq("user_id", userId);
+
+        await logSystemActivity(admin, "purchased_guide", "guide_purchase", purchaseId, {
+          user_id: userId,
+          guide_id: session.metadata?.guide_id,
+        });
+      }
+    }
+
     if (type === "ticket") {
       const orderId = session.metadata?.ticket_order_id;
       const ticketId = session.metadata?.ticket_id;

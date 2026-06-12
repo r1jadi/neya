@@ -5,7 +5,8 @@ export type ActivityVerb =
   | "checked_in"
   | "bought_ticket"
   | "confirmed_table"
-  | "pulse_vote";
+  | "pulse_vote"
+  | "purchased_guide";
 
 export async function logUserActivity(
   supabase: SupabaseClient,

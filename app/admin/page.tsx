@@ -7,7 +7,10 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { getAdminUserOrNull } from "@/lib/auth/require-admin";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { AdminTabNav } from "@/components/admin/admin-tab-nav";
+import { GuidesPanel } from "@/components/admin/guides-panel";
 import { getAdminDashboardData } from "@/services/admin";
+import { getAdminGuideDetail, getAdminGuides, getAdminIntercityRoutes } from "@/services/admin-guides";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
   title: `Admin · ${SITE.name}`,
 };
 
-type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts";
+type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
 
 const TABS: Tab[] = [
   "overview",
@@ -28,6 +31,7 @@ const TABS: Tab[] = [
   "reservations",
   "premium",
   "venue-accounts",
+  "guides",
 ];
 
 type Props = {
@@ -36,6 +40,7 @@ type Props = {
     detail?: string;
     approved?: string;
     tab?: string;
+    edit?: string;
     ok?: string;
     created?: string;
     reset?: string;
@@ -86,7 +91,7 @@ export default async function AdminPage({ searchParams }: Props) {
       <SiteHeader />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6">
         <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Admin CMS</h1>
-        <p className="mt-1 text-sm text-white/50">Manage venues, events, tickets, and guestlists.</p>
+        <p className="mt-1 text-sm text-white/50">Manage venues, events, guides, tickets, and guestlists.</p>
 
         {q.error ? (
           <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
@@ -113,17 +118,28 @@ export default async function AdminPage({ searchParams }: Props) {
         ) : null}
 
         <div className="mt-8">
-          <AdminDashboard
-            initialTab={tab}
-            venueAccounts={data.venueAccounts}
-            venues={data.venues}
-            events={data.events}
-            tickets={data.tickets}
-            guestlists={data.guestlists}
-            guestlistRequests={data.guestlistRequests}
-            reservations={data.reservations}
-            stats={data.stats}
-          />
+          <AdminTabNav activeTab={tab} />
+          {tab === "guides" ? (
+            <GuidesPanel
+              guides={await getAdminGuides()}
+              editGuideId={q.edit ?? null}
+              editDetail={q.edit ? await getAdminGuideDetail(q.edit) : null}
+              intercityRoutes={await getAdminIntercityRoutes()}
+            />
+          ) : (
+            <AdminDashboard
+              initialTab={tab}
+              hideNav
+              venueAccounts={data.venueAccounts}
+              venues={data.venues}
+              events={data.events}
+              tickets={data.tickets}
+              guestlists={data.guestlists}
+              guestlistRequests={data.guestlistRequests}
+              reservations={data.reservations}
+              stats={data.stats}
+            />
+          )}
         </div>
 
         <p className="mt-10 text-center text-sm">

@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { getUserPurchasedGuides } from "@/services/guides";
 import { guestlistStatusLabel } from "@/lib/guestlist/labels";
 import { paymentMethodLabel, paymentStatusLabel, reservationStatusLabel } from "@/lib/reservations/labels";
 
@@ -58,6 +59,8 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const purchasedGuides = await getUserPurchasedGuides(user.id, supabase);
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
@@ -65,10 +68,31 @@ export default async function DashboardPage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Your NEYA</h1>
-            <p className="mt-1 text-sm text-white/55">Reservations, tickets, and saved nights.</p>
+            <p className="mt-1 text-sm text-white/55">Reservations, tickets, travel guides, and saved nights.</p>
           </div>
           <SignOutButton variant="secondary" />
         </div>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Travel guides</h2>
+          <ul className="mt-3 space-y-2">
+            {purchasedGuides.length ? (
+              purchasedGuides.map((g) => (
+                <li key={g.id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm">
+                  <Link href={`/guides/${g.slug}/view`} className="font-medium text-white hover:underline">
+                    {g.title}
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <li className="text-sm text-white/45">
+                <Link href="/guides" className="text-sky-300 hover:underline">
+                  Browse Kosovo travel guides
+                </Link>
+              </li>
+            )}
+          </ul>
+        </section>
 
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Saved events</h2>
