@@ -6,6 +6,9 @@ export const DEFAULT_CITY = {
   country: "Kosovo",
 } as const;
 
+/** Max image upload size for admin CMS (must match next.config serverActions.bodySizeLimit). */
+export const MAX_IMAGE_UPLOAD_BYTES = 50 * 1024 * 1024;
+
 export const SITE = {
   name: "NEYA",
   tagline: "What's happening tonight?",

@@ -98,6 +98,16 @@ export default async function GuideDetailPage({ params, searchParams }: Props) {
               Payment unavailable. Try again later.
             </p>
           ) : null}
+          {q.error === "purchase" ? (
+            <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">
+              Could not start your purchase. Make sure you are logged in and try again.
+            </p>
+          ) : null}
+          {q.error === "access" ? (
+            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+              Purchase this guide to unlock the full itinerary.
+            </p>
+          ) : null}
 
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">

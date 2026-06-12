@@ -2,8 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminUser } from "@/lib/auth/require-admin";
-
-const MAX_BYTES = 5 * 1024 * 1024;
+import { MAX_IMAGE_UPLOAD_BYTES } from "@/lib/constants";
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 
 export async function uploadAdminImage(formData: FormData): Promise<{ url?: string; error?: string }> {
@@ -11,7 +10,7 @@ export async function uploadAdminImage(formData: FormData): Promise<{ url?: stri
 
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) return { error: "No file" };
-  if (file.size > MAX_BYTES) return { error: "File too large (max 5MB)" };
+  if (file.size > MAX_IMAGE_UPLOAD_BYTES) return { error: "File too large (max 50MB)" };
   if (!ALLOWED.has(file.type)) return { error: "Invalid type" };
 
   const folder = String(formData.get("folder") ?? "uploads").replace(/[^a-z0-9-_]/gi, "").slice(0, 32) || "uploads";

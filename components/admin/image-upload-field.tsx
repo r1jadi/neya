@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { uploadAdminImage } from "@/actions/admin-upload";
+import { MAX_IMAGE_UPLOAD_BYTES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -21,6 +22,11 @@ export function ImageUploadField({ name, label, defaultUrl = "", folder = "venue
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > MAX_IMAGE_UPLOAD_BYTES) {
+      setError("File too large (max 50MB)");
+      e.target.value = "";
+      return;
+    }
     setUploading(true);
     setError(null);
     const fd = new FormData();

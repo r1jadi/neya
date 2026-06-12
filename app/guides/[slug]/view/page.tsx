@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getGuideBySlug, userHasGuideAccess } from "@/services/guides";
 
 type Props = {
@@ -44,7 +45,8 @@ export default async function GuideViewPage({ params, searchParams }: Props) {
   }
 
   if (isFree && !hasAccess) {
-    await supabase.from("guide_purchases").upsert(
+    const admin = createAdminClient();
+    await admin.from("guide_purchases").upsert(
       {
         guide_id: guide.id,
         user_id: user.id,
