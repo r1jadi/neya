@@ -102,7 +102,7 @@ export async function purchaseGuide(formData: FormData) {
       redirect(`${redirectTo}?error=purchase`);
     }
     purchaseId = purchase.id;
-  } else if (existingPurchase.status !== "pending") {
+  } else if (existingPurchase && existingPurchase.status !== "pending") {
     const { error: resetErr } = await admin
       .from("guide_purchases")
       .update({ status: "pending", stripe_checkout_session: null })
