@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { EventCard } from "@/components/neya/event-card";
-import { ExternalLink, Globe, Instagram, Mail, MapPin, Music, Phone, Users } from "lucide-react";
+import { ExternalLink, Globe, Mail, MapPin, Music, Phone, Users } from "lucide-react";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -190,7 +190,7 @@ export default async function VenuePage({ params }: Props) {
                       ) : null}
                       {venue.social_links?.instagram ? (
                         <Link href={`https://instagram.com/${venue.social_links.instagram.replace('@', '')}`} target="_blank" className="text-white/80 hover:text-white hover:underline flex items-center gap-2">
-                          <Instagram className="h-4 w-4 text-white/40" /> Instagram
+                          <svg className="h-4 w-4 text-white/40" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5Zm4.25 3.25a5.25 5.25 0 1 1 0 10.5 5.25 5.25 0 0 1 0-10.5Zm0 1.5a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Zm5.5-.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg> Instagram
                         </Link>
                       ) : null}
                       {venue.social_links?.facebook ? (
