@@ -1,14 +1,14 @@
 import { CITY_TZ, formatEventWhen, isHappeningNow } from "@/lib/event-dates";
 import type { Event, MusicGenre } from "@/types";
 
-const GENRE_LABELS: Partial<Record<MusicGenre, string>> = {
+const GENRE_LABELS: Record<MusicGenre, string> = {
   house: "House",
   techno: "Techno",
   afro: "Afro",
   "hip hop": "Hip Hop",
   "r&b": "R&B",
   latin: "Latin",
-  "live music": "Live",
+  live: "Live",
   mixed: "Mixed",
 };
 
