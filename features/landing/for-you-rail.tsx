@@ -13,7 +13,7 @@ export function ForYouRail({ events, musicGenres, venueInterests, savedEventIds 
   const byMusic = matchGenres(events, musicGenres);
   const byVenue =
     venueInterests.length > 0
-      ? events.filter((e) => e.venue && venueInterests.map((x) => x.toLowerCase()).includes(e.venue.category))
+      ? events.filter((e) => venueInterests.map((x) => x.toLowerCase()).includes(e.venue.category))
       : [];
   const picks = uniqueBySlug([...byMusic, ...byVenue]).slice(0, 10);
   if (!picks.length) return null;
