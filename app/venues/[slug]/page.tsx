@@ -45,7 +45,7 @@ export default async function VenuePage({ params }: Props) {
   ]);
   if (!venue) notFound();
 
-  const events = allEvents.filter((e) => e.venue?.slug === venue.slug);
+  const events = allEvents.filter((e) => e.venue.slug === venue.slug);
   const jsonLd = venueJsonLd(venue);
 
   let publicCheckins = 0;
