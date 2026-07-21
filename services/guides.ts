@@ -204,8 +204,8 @@ export async function getEventsNearStop(
 
     return events
       .filter((e) => {
-        const vLat = e.venue.lat;
-        const vLng = e.venue.lng;
+        const vLat = e.venue?.lat;
+        const vLng = e.venue?.lng;
         if (vLat == null || vLng == null) return false;
         return haversineKm(lat, lng, vLat, vLng) <= 15;
       })

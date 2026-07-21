@@ -116,6 +116,7 @@ export function mapEventRow(row: {
   is_hidden_premium?: boolean | null;
   is_listed_public?: boolean | null;
   is_featured?: boolean | null;
+  price_level?: number | null;
   venues:
     | {
         id: string;

@@ -63,6 +63,8 @@ export type MusicGenre =
   | "arabic"
   | "instrumental"
   | "experimental"
+  | "afro"
+  | "mixed"
   | "other";
 
 export type VenueCategory =

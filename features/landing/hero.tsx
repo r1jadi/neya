@@ -112,7 +112,7 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
                 <div className="absolute bottom-0 left-0 right-0 space-y-2 p-6">
                   <p className="text-xs font-semibold uppercase tracking-widest text-fuchsia-300">Featured</p>
                   <p className="text-2xl font-bold text-white">
-                    {spotlight.venue.name} · {spotlight.title}
+                    {spotlight.venue ? `${spotlight.venue.name} · ` : ""}{spotlight.title}
                   </p>
                   <p className="text-sm text-white/60">
                     {spotlight.fomo_line || formatEventWhen(spotlight.starts_at)}
