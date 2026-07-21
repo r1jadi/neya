@@ -5,7 +5,7 @@ const DJ_GENRES: MusicGenre[] = ["house", "techno", "afro"];
 
 /** Events starting later today (Prishtina TZ). */
 export function tonightEvents(events: Event[], now = new Date()) {
-  return events.filter((e) => isTonight(e.starts_at, now));
+  return events.filter((e) => isTonight(e.starts_at, now) && !isPast(e.starts_at, e.ends_at, now));
 }
 
 /** Events with start time in the future. */
@@ -40,7 +40,7 @@ export function liveNow(events: Event[], now = new Date()) {
 }
 
 export function rooftopEvents(events: Event[]) {
-  return events.filter((e) => e.venue?.category === "rooftop");
+  return events.filter((e) => e.venue.category === "rooftop");
 }
 
 export function djSets(events: Event[]) {

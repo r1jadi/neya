@@ -3,7 +3,7 @@ import { getPublicSupabase } from "@/lib/supabase/public-server";
 import type { Venue } from "@/types";
 
 const venueSelect =
-  "id, slug, name, city_slug, category, address, lat, lng, image_url, price_level, atmosphere_score, crowd_count, is_live, is_featured, is_trending, description, capacity, website, social_links, gallery_urls, music_genres, contact_email, contact_phone";
+  "id, slug, name, city_slug, category, address, lat, lng, image_url, price_level, atmosphere_score, crowd_count, is_live, is_featured, is_trending";
 
 export async function getVenues(): Promise<Venue[]> {
   try {

@@ -21,15 +21,6 @@ function parseJsonArray(raw: string | null): string[] {
   return [];
 }
 
-function parseJsonArrayOfObjects(raw: string | null): any[] {
-  if (!raw?.trim()) return [];
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (Array.isArray(parsed)) return parsed.filter(Boolean);
-  } catch {}
-  return [];
-}
-
 function parseTriState(raw: FormDataEntryValue | null): boolean | null {
   const v = String(raw ?? "").trim();
   if (v === "true" || v === "on") return true;
@@ -150,11 +141,10 @@ export async function saveEvent(formData: FormData) {
   await requireAdminUser();
   const id = String(formData.get("id") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim().slice(0, 160);
-  const venueIdRaw = String(formData.get("venue_id") ?? "").trim();
-  const venueId = venueIdRaw || null;
+  const venueId = String(formData.get("venue_id") ?? "").trim();
   const startsAtLocal = String(formData.get("starts_at") ?? "").trim();
   const startsAt = datetimeLocalToUtcIso(startsAtLocal);
-  if (!title || !startsAt) adminRedirect("tab=events&error=fields");
+  if (!title || !venueId || !startsAt) adminRedirect("tab=events&error=fields");
 
   const endsLocal = String(formData.get("ends_at") ?? "").trim();
   const endsAt = endsLocal ? datetimeLocalToUtcIso(endsLocal) : null;
@@ -169,7 +159,7 @@ export async function saveEvent(formData: FormData) {
     ends_at: endsAt,
     genre: String(formData.get("genre") ?? "mixed").slice(0, 32),
     image_url: String(formData.get("image_url") ?? "").trim().slice(0, 2000) || null,
-    lineup: parseJsonArrayOfObjects(String(formData.get("lineup") ?? "")),
+    dj_lineup: parseJsonArray(String(formData.get("dj_lineup") ?? "")),
     capacity: formData.get("capacity") ? Number(formData.get("capacity")) : null,
     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_eur")) : null,
     reservation_price_eur: formData.get("reservation_price_eur")

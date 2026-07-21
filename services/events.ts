@@ -12,7 +12,7 @@ const eventSelect = `
         ends_at,
         genre,
         image_url,
-        lineup,
+        dj_lineup,
         capacity,
         ticket_url,
         crowd_count,
@@ -24,7 +24,7 @@ const eventSelect = `
         is_hidden_premium,
         is_listed_public,
         is_featured,
-        venues (
+        venues!inner (
           id,
           slug,
           name,

@@ -1,17 +1,7 @@
 import { resolveImageUrl } from "@/lib/images";
 import type { Event, MusicGenre, Venue, VenueCategory } from "@/types";
 
-const GENRES: MusicGenre[] = [
-  "house", "deep house", "tech house", "progressive house", "afro house", "melodic house",
-  "techno", "melodic techno", "minimal", "hard techno", "trance", "psytrance",
-  "drum & bass", "dubstep", "garage", "uk garage", "bass house", "future house",
-  "edm", "electro", "electro house", "big room", "dance", "disco", "funk", "soul",
-  "jazz", "blues", "r&b", "hip hop", "rap", "trap", "pop", "rock", "alternative rock",
-  "indie", "metal", "punk", "reggae", "dancehall", "reggaeton", "latin", "salsa",
-  "bachata", "kizomba", "folk", "world", "classical", "opera", "ambient", "lo-fi",
-  "chillout", "lounge", "acoustic", "live music", "balkan", "albanian", "serbian",
-  "macedonian", "turkish", "greek", "arabic", "instrumental", "experimental", "other"
-];
+const GENRES: MusicGenre[] = ["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"];
 
 function normalizeGenre(g: string | null | undefined): MusicGenre {
   const x = (g ?? "mixed").toLowerCase().replace(/\s+/g, "-") as MusicGenre;
@@ -58,14 +48,6 @@ export function mapVenueRow(row: {
   is_live?: boolean | null;
   is_featured?: boolean | null;
   is_trending?: boolean | null;
-  capacity?: number | null;
-  website?: string | null;
-  social_links?: any;
-  gallery_urls?: string[] | null;
-  music_genres?: string[] | null;
-  contact_email?: string | null;
-  contact_phone?: string | null;
-  description?: string | null;
 }): Venue {
   const price = Math.min(4, Math.max(1, Math.round(num(row.price_level, 2)))) as Venue["price_level"];
   return {
@@ -84,14 +66,6 @@ export function mapVenueRow(row: {
     is_live: row.is_live ?? undefined,
     is_featured: row.is_featured ?? undefined,
     is_trending: row.is_trending ?? undefined,
-    capacity: row.capacity ?? undefined,
-    website: row.website ?? undefined,
-    social_links: row.social_links ?? undefined,
-    gallery_urls: Array.isArray(row.gallery_urls) ? row.gallery_urls : undefined,
-    music_genres: Array.isArray(row.music_genres) ? row.music_genres : undefined,
-    contact_email: row.contact_email ?? undefined,
-    contact_phone: row.contact_phone ?? undefined,
-    description: row.description ?? undefined,
   };
 }
 
@@ -104,7 +78,7 @@ export function mapEventRow(row: {
   ends_at?: string | null;
   genre?: string | null;
   image_url?: string | null;
-  lineup?: any[] | null;
+  dj_lineup?: string[] | null;
   capacity?: number | null;
   ticket_url?: string | null;
   crowd_count?: number | null;
@@ -149,18 +123,18 @@ export function mapEventRow(row: {
 }): Event | null {
   const raw = row.venues;
   const v = Array.isArray(raw) ? raw[0] : raw;
-  if (v && v.approved === false) return null;
-  
-  const price = Math.min(4, Math.max(1, Math.round(num(v?.price_level ?? row.price_level, 2)))) as Event["price_level"];
-  const img = resolveImageUrl(row.image_url || v?.image_url);
-  const lineup = Array.isArray(row.lineup) ? row.lineup : undefined;
-  
+  if (!v || v.approved === false) return null;
+  const price = Math.min(4, Math.max(1, Math.round(num(v.price_level, 2)))) as Event["price_level"];
+  const img = resolveImageUrl(row.image_url || v.image_url);
+  const djLineup = Array.isArray(row.dj_lineup)
+    ? row.dj_lineup.map((d) => d.trim()).filter(Boolean)
+    : undefined;
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     description: row.description?.trim() || null,
-    venue: v ? {
+    venue: {
       id: v.id,
       slug: v.slug,
       name: v.name,
@@ -171,12 +145,12 @@ export function mapEventRow(row: {
       lat: v.lat ?? undefined,
       lng: v.lng ?? undefined,
       is_trending: Boolean(v.is_trending),
-    } : null,
+    },
     starts_at: row.starts_at,
     ends_at: row.ends_at ?? undefined,
     genre: normalizeGenre(row.genre),
     image_url: img,
-    lineup,
+    dj_lineup: djLineup?.length ? djLineup : undefined,
     capacity: row.capacity ?? undefined,
     ticket_url: row.ticket_url?.trim() || null,
     crowd_count: Math.round(num(row.crowd_count, 0)),

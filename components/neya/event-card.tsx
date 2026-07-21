@@ -56,16 +56,14 @@ export function EventCard({ event, className, saved }: EventCardProps) {
               Featured
             </Badge>
           ) : null}
-          {event.venue?.is_trending ? (
+          {event.venue.is_trending ? (
             <Badge variant="secondary" className="border-amber-400/30 text-amber-200 backdrop-blur-md">
               Trending
             </Badge>
           ) : null}
-          {event.venue ? (
-            <Badge variant="secondary" className="backdrop-blur-md">
-              {event.venue.category.replace(/_/g, " ")}
-            </Badge>
-          ) : null}
+          <Badge variant="secondary" className="backdrop-blur-md">
+            {event.venue.category.replace(/_/g, " ")}
+          </Badge>
           <Badge variant="neon" className="backdrop-blur-md">
             <Sparkles className="mr-1 h-3 w-3" />
             {event.genre}
@@ -74,7 +72,7 @@ export function EventCard({ event, className, saved }: EventCardProps) {
       </div>
       <div className="space-y-3 p-4">
         <div>
-          <p className="text-xs uppercase tracking-widest text-white/45">{event.venue?.name ?? "TBA"}</p>
+          <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}</p>
           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
           <p className="mt-1 text-xs text-sky-300/90">{whenLabel}</p>
         </div>

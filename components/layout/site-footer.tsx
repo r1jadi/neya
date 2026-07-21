@@ -33,14 +33,15 @@ export function SiteFooter() {
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Business</p>
           <ul className="mt-3 space-y-2 text-sm text-white/70">
             <li>
-              <Link href="/business" className="hover:text-white">
-                Venue Hub
+              <Link href="/#business" className="hover:text-white">
+                Promote your night
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-white">
-                Contact Us
-              </Link>
+              <span className="text-white/45">Reservations &amp; guestlists</span>
+            </li>
+            <li>
+              <span className="text-white/45">Analytics &amp; payouts</span>
             </li>
           </ul>
         </div>
@@ -48,13 +49,13 @@ export function SiteFooter() {
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Legal</p>
           <ul className="mt-3 space-y-2 text-sm text-white/70">
             <li>
-              <Link href="/privacy" className="hover:text-white">
-                Privacy Policy
+              <Link href="#" className="hover:text-white">
+                Privacy
               </Link>
             </li>
             <li>
-              <Link href="/terms" className="hover:text-white">
-                Terms of Service
+              <Link href="#" className="hover:text-white">
+                Terms
               </Link>
             </li>
           </ul>

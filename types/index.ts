@@ -1,69 +1,12 @@
 export type MusicGenre =
   | "house"
-  | "deep house"
-  | "tech house"
-  | "progressive house"
-  | "afro house"
-  | "melodic house"
   | "techno"
-  | "melodic techno"
-  | "minimal"
-  | "hard techno"
-  | "trance"
-  | "psytrance"
-  | "drum & bass"
-  | "dubstep"
-  | "garage"
-  | "uk garage"
-  | "bass house"
-  | "future house"
-  | "edm"
-  | "electro"
-  | "electro house"
-  | "big room"
-  | "dance"
-  | "disco"
-  | "funk"
-  | "soul"
-  | "jazz"
-  | "blues"
+  | "afro"
+  | "hip-hop"
   | "r&b"
-  | "hip hop"
-  | "rap"
-  | "trap"
-  | "pop"
-  | "rock"
-  | "alternative rock"
-  | "indie"
-  | "metal"
-  | "punk"
-  | "reggae"
-  | "dancehall"
-  | "reggaeton"
   | "latin"
-  | "salsa"
-  | "bachata"
-  | "kizomba"
-  | "folk"
-  | "world"
-  | "classical"
-  | "opera"
-  | "ambient"
-  | "lo-fi"
-  | "chillout"
-  | "lounge"
-  | "acoustic"
-  | "live music"
-  | "balkan"
-  | "albanian"
-  | "serbian"
-  | "macedonian"
-  | "turkish"
-  | "greek"
-  | "arabic"
-  | "instrumental"
-  | "experimental"
-  | "other";
+  | "live"
+  | "mixed";
 
 export type VenueCategory =
   | "club"
@@ -95,14 +38,6 @@ export interface Venue {
   is_featured?: boolean;
   is_trending?: boolean;
   distance_km?: number;
-  capacity?: number;
-  website?: string;
-  contact_email?: string;
-  contact_phone?: string;
-  social_links?: any;
-  gallery_urls?: string[];
-  music_genres?: string[];
-  description?: string;
 }
 
 export type EventVenue = Pick<
@@ -110,29 +45,17 @@ export type EventVenue = Pick<
   "id" | "slug" | "name" | "image_url" | "category" | "address" | "city_slug" | "lat" | "lng" | "is_trending"
 >;
 
-export interface LineupMember {
-  name: string;
-  image?: string;
-  genre?: string;
-  socials?: {
-    instagram?: string;
-    soundcloud?: string;
-    spotify?: string;
-    [key: string]: string | undefined;
-  };
-}
-
 export interface Event {
   id: string;
   slug: string;
   title: string;
-  venue?: EventVenue | null;
+  venue: EventVenue;
   starts_at: string;
   ends_at?: string;
   genre: MusicGenre;
   image_url: string;
   description?: string | null;
-  lineup?: LineupMember[];
+  dj_lineup?: string[];
   capacity?: number | null;
   ticket_url?: string | null;
   crowd_count: number;
