@@ -5,7 +5,7 @@ const GENRE_LABELS: Record<MusicGenre, string> = {
   house: "House",
   techno: "Techno",
   afro: "Afro",
-  "hip hop": "Hip Hop",
+  "hip-hop": "Hip-hop",
   "r&b": "R&B",
   latin: "Latin",
   live: "Live",
