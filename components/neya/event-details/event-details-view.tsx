@@ -116,10 +116,14 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
             {event.title}
           </h1>
           <p className="mx-auto mt-2 max-w-6xl text-base text-white/75">
-            <Link href={`/venues/${event.venue.slug}`} className="font-medium hover:text-white hover:underline">
-              {event.venue.name}
-            </Link>
-            <span className="mx-2 text-white/30">·</span>
+            {event.venue ? (
+              <>
+                <Link href={`/venues/${event.venue.slug}`} className="font-medium hover:text-white hover:underline">
+                  {event.venue.name}
+                </Link>
+                <span className="mx-2 text-white/30">·</span>
+              </>
+            ) : null}
             <span className="text-sky-300/90">{whenShort}</span>
           </p>
         </div>
@@ -143,21 +147,21 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
                 <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-white/75">{description}</p>
               ) : (
                 <div className="mt-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">
-                  No description yet — check back closer to the night or follow {event.venue.name} for updates.
+                  No description yet — check back closer to the night or follow {event.venue?.name ?? "the organizer"} for updates.
                 </div>
               )}
             </section>
 
             <section>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Lineup</h2>
-              {event.dj_lineup?.length ? (
+              {event.lineup?.length ? (
                 <ul className="mt-3 flex flex-wrap gap-2">
-                  {event.dj_lineup.map((dj) => (
+                  {event.lineup.map((performer, idx) => (
                     <li
-                      key={dj}
+                      key={performer.name || idx}
                       className="rounded-full border border-fuchsia-500/25 bg-fuchsia-500/10 px-4 py-2 text-sm font-medium text-fuchsia-100"
                     >
-                      {dj}
+                      {performer.name}
                     </li>
                   ))}
                 </ul>
@@ -170,16 +174,22 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
 
             <section>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Location</h2>
-              <div className="mt-3 flex items-start gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />
-                <div>
-                  <Link href={`/venues/${event.venue.slug}`} className="font-medium text-white hover:underline">
-                    {event.venue.name}
-                  </Link>
-                  <p className="mt-1 text-sm text-white/55">{locationLabel ?? "Prishtina"}</p>
-                  <p className="mt-1 text-xs capitalize text-white/40">{event.venue.category.replace(/_/g, " ")}</p>
+              {event.venue ? (
+                <div className="mt-3 flex items-start gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
+                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />
+                  <div>
+                    <Link href={`/venues/${event.venue.slug}`} className="font-medium text-white hover:underline">
+                      {event.venue.name}
+                    </Link>
+                    <p className="mt-1 text-sm text-white/55">{locationLabel ?? "Prishtina"}</p>
+                    <p className="mt-1 text-xs capitalize text-white/40">{event.venue.category.replace(/_/g, " ")}</p>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="mt-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">
+                  Location TBA. Check back later for updates.
+                </div>
+              )}
             </section>
 
             <section className="space-y-4">
@@ -188,7 +198,7 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
               {isUuid(event.id) ? (
                 <LiveAtmospherePanel
                   eventId={event.id}
-                  venueId={event.venue.id}
+                  venueId={event.venue?.id ?? ""}
                   eventSlug={event.slug}
                   initialScore={event.atmosphere_rating}
                 />

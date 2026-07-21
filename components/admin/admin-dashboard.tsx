@@ -520,9 +520,21 @@ function EventForm({
   venues: AdminVenueRow[];
   onClose: () => void;
 }) {
-  const lineup = event?.dj_lineup?.join(", ") ?? "";
+  const lineup = event?.lineup ? JSON.stringify(event.lineup) : "";
   const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
   const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
+
+  const GENRES = [
+    "house", "deep house", "tech house", "progressive house", "afro house", "melodic house",
+    "techno", "melodic techno", "minimal", "hard techno", "trance", "psytrance",
+    "drum & bass", "dubstep", "garage", "uk garage", "bass house", "future house",
+    "edm", "electro", "electro house", "big room", "dance", "disco", "funk", "soul",
+    "jazz", "blues", "r&b", "hip hop", "rap", "trap", "pop", "rock", "alternative rock",
+    "indie", "metal", "punk", "reggae", "dancehall", "reggaeton", "latin", "salsa",
+    "bachata", "kizomba", "folk", "world", "classical", "opera", "ambient", "lo-fi",
+    "chillout", "lounge", "acoustic", "live music", "balkan", "albanian", "serbian",
+    "macedonian", "turkish", "greek", "arabic", "instrumental", "experimental", "other"
+  ];
 
   return (
     <form action={saveEvent} className="space-y-4 rounded-xl border border-sky-500/30 bg-sky-950/10 p-6">
@@ -537,11 +549,10 @@ function EventForm({
         <Input name="title" placeholder="Event title" defaultValue={event?.title} required className="sm:col-span-2" />
         <select
           name="venue_id"
-          required
-          defaultValue={event?.venue_id}
+          defaultValue={event?.venue_id ?? ""}
           className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white sm:col-span-2"
         >
-          <option value="">Select venue</option>
+          <option value="">No venue (TBA)</option>
           {venues.map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}
@@ -555,14 +566,15 @@ function EventForm({
           defaultValue={event?.genre ?? "mixed"}
           className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white"
         >
-          {["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"].map((g) => (
+          <option value="mixed">mixed</option>
+          {GENRES.map((g) => (
             <option key={g} value={g}>
               {g}
             </option>
           ))}
         </select>
         <Input name="capacity" type="number" placeholder="Capacity" defaultValue={event?.capacity ?? ""} />
-        <Input name="dj_lineup" placeholder="DJ lineup (comma-separated)" defaultValue={lineup} className="sm:col-span-2" />
+        <Input name="lineup" placeholder='Lineup JSON e.g. [{"name":"Artist"}]' defaultValue={lineup} className="sm:col-span-2 font-mono text-xs" />
         <Input name="ticket_from_eur" type="number" step="0.01" placeholder="From price (EUR)" defaultValue={event?.ticket_from_eur ?? ""} />
         <ImageUploadField name="image_url" label="Poster / cover" defaultUrl={event?.image_url ?? ""} folder="events" />
         <textarea

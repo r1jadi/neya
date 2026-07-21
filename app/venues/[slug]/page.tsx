@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { EventCard } from "@/components/neya/event-card";
+import { ExternalLink, Globe, Instagram, Mail, MapPin, Music, Phone, Users } from "lucide-react";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -95,17 +96,134 @@ export default async function VenuePage({ params }: Props) {
               )}
             </div>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-white">Upcoming here</h2>
-            {events.length ? (
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {events.map((e) => (
-                  <EventCard key={e.id} event={e} />
-                ))}
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="space-y-12 pb-12">
+              <section>
+                <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">About</h2>
+                {venue.description ? (
+                  <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-white/75">{venue.description}</p>
+                ) : (
+                  <div className="mt-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">
+                    No description available yet.
+                  </div>
+                )}
+              </section>
+
+              {venue.gallery_urls?.length ? (
+                <section>
+                  <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Gallery</h2>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {venue.gallery_urls.map((url, i) => (
+                      <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
+                        <Image src={url} alt={`${venue.name} gallery image ${i + 1}`} fill className="object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              <section>
+                <h2 className="text-lg font-semibold text-white">Upcoming here</h2>
+                {events.length ? (
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                    {events.map((e) => (
+                      <EventCard key={e.id} event={e} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-4 text-sm text-white/50">No events listed yet.</p>
+                )}
+              </section>
+            </div>
+
+            <aside className="space-y-6">
+              <div className="sticky top-24 rounded-2xl border border-white/[0.08] bg-zinc-950/80 p-5 backdrop-blur-xl space-y-6">
+                
+                {venue.address ? (
+                  <div>
+                    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white/40 mb-2">
+                      <MapPin className="h-4 w-4" /> Location
+                    </h3>
+                    <p className="text-sm text-white/80">{venue.address}</p>
+                    <Link
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${venue.name} ${venue.address || venue.city_slug}`)}`}
+                      target="_blank"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky-300 hover:underline"
+                    >
+                      Open in Maps <ExternalLink className="h-3 w-3" />
+                    </Link>
+                  </div>
+                ) : null}
+
+                {venue.capacity ? (
+                  <div>
+                    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white/40 mb-2">
+                      <Users className="h-4 w-4" /> Capacity
+                    </h3>
+                    <p className="text-sm text-white/80">~{venue.capacity} people</p>
+                  </div>
+                ) : null}
+
+                {venue.music_genres?.length ? (
+                  <div>
+                    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white/40 mb-2">
+                      <Music className="h-4 w-4" /> Music
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {venue.music_genres.map((g) => (
+                        <span key={g} className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-xs text-white/80 capitalize">{g}</span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {(venue.website || venue.social_links?.instagram || venue.social_links?.facebook) ? (
+                  <div>
+                    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white/40 mb-2">
+                      <Globe className="h-4 w-4" /> Links
+                    </h3>
+                    <div className="flex flex-col gap-2 text-sm">
+                      {venue.website ? (
+                        <Link href={venue.website.startsWith('http') ? venue.website : `https://${venue.website}`} target="_blank" className="text-white/80 hover:text-white hover:underline flex items-center gap-2">
+                          <Globe className="h-4 w-4 text-white/40" /> Website
+                        </Link>
+                      ) : null}
+                      {venue.social_links?.instagram ? (
+                        <Link href={`https://instagram.com/${venue.social_links.instagram.replace('@', '')}`} target="_blank" className="text-white/80 hover:text-white hover:underline flex items-center gap-2">
+                          <Instagram className="h-4 w-4 text-white/40" /> Instagram
+                        </Link>
+                      ) : null}
+                      {venue.social_links?.facebook ? (
+                        <Link href={venue.social_links.facebook} target="_blank" className="text-white/80 hover:text-white hover:underline flex items-center gap-2">
+                          <svg className="h-4 w-4 text-white/40" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-1.11 9-5.39 9-10.45z"/></svg> Facebook
+                        </Link>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
+                {(venue.contact_email || venue.contact_phone) ? (
+                  <div>
+                    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white/40 mb-2">
+                      <Mail className="h-4 w-4" /> Contact
+                    </h3>
+                    <div className="flex flex-col gap-2 text-sm text-white/80">
+                      {venue.contact_email ? (
+                        <Link href={`mailto:${venue.contact_email}`} className="hover:text-white hover:underline flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-white/40" /> {venue.contact_email}
+                        </Link>
+                      ) : null}
+                      {venue.contact_phone ? (
+                        <Link href={`tel:${venue.contact_phone}`} className="hover:text-white hover:underline flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-white/40" /> {venue.contact_phone}
+                        </Link>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
               </div>
-            ) : (
-              <p className="mt-4 text-sm text-white/50">No events listed yet.</p>
-            )}
+            </aside>
           </div>
         </div>
       </main>

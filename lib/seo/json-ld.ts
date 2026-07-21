@@ -26,13 +26,13 @@ export function eventJsonLd(event: Event) {
     endDate: event.ends_at,
     image: event.image_url,
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    location: {
+    location: event.venue ? {
       "@type": "Place",
       name: event.venue.name,
       address: event.venue.address,
-    },
-    performer: event.dj_lineup?.length
-      ? event.dj_lineup.map((name) => ({ "@type": "Person", name }))
+    } : undefined,
+    performer: event.lineup?.length
+      ? event.lineup.map((l) => ({ "@type": "Person", name: l.name }))
       : undefined,
     offers: event.ticket_from_eur
       ? {
