@@ -82,7 +82,6 @@ export function isEventLiveNow(event: Event): boolean {
 }
 
 export function getVenueLocationLabel(event: Event): string | null {
-  if (!event.venue) return null;
   if (event.venue.address) return event.venue.address;
   const city = event.venue.city_slug === "prishtina" ? "Prishtina" : event.venue.city_slug;
   return city ? `${event.venue.name}, ${city}` : event.venue.name;

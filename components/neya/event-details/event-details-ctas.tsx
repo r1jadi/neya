@@ -42,7 +42,7 @@ export function EventDetailsCtas({
 
   const reserveButton = meta && canReserve ? (
     <ReservationModal
-      venueName={event.venue?.name ?? event.title}
+      venueName={event.venue.name}
       venueId={meta.venueUuid}
       eventId={meta.eventUuid}
       eventSlug={event.slug}
@@ -139,7 +139,7 @@ export function EventDetailsCtas({
           ) : null}
           {meta && canReserve ? (
             <ReservationModal
-              venueName={event.venue?.name ?? event.title}
+              venueName={event.venue.name}
               venueId={meta.venueUuid}
               eventId={meta.eventUuid}
               eventSlug={event.slug}

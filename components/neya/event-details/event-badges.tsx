@@ -15,7 +15,7 @@ export function EventBadges({ event, className }: EventBadgesProps) {
     <div className={className}>
       <LiveBadge live={live} />
       {event.is_featured ? <Badge variant="neon">Featured</Badge> : null}
-      {event.venue?.is_trending ? (
+      {event.venue.is_trending ? (
         <Badge variant="secondary" className="border-amber-400/30 text-amber-200">
           Trending
         </Badge>
