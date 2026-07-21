@@ -49,10 +49,14 @@ export async function getFeaturedEvents(client?: SupabaseClient | null): Promise
     const supabase = clientOrPublic(client);
     if (!supabase) return [];
 
+    // Include events that are currently happening (started up to 8 hours ago) or in the future
+    const cutoff = new Date(Date.now() - 8 * 3600000).toISOString();
+
     const { data, error } = await supabase
       .from("events")
       .select(eventSelect)
       .eq("is_listed_public", true)
+      .gte("starts_at", cutoff)
       .order("is_featured", { ascending: false })
       .order("starts_at", { ascending: true })
       .limit(80);
