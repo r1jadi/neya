@@ -38,10 +38,9 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <span className="text-white/45">Reservations &amp; guestlists</span>
-            </li>
-            <li>
-              <span className="text-white/45">Analytics &amp; payouts</span>
+              <Link href="/contact" className="hover:text-white">
+                Contact Us
+              </Link>
             </li>
           </ul>
         </div>
