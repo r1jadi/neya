@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { mapEventRow } from "@/lib/mappers/supabase";
 import { getPublicSupabase } from "@/lib/supabase/public-server";
+import { getTodayRangeInTz } from "@/lib/event-dates";
 import type { Event } from "@/types";
 
 const eventSelect = `
@@ -93,6 +94,31 @@ export async function getEventBySlug(slug: string, client?: SupabaseClient | nul
   } catch (e) {
     console.error("[neya] getEventBySlug", e);
     return null;
+  }
+}
+
+/** Public events that start during the current calendar day in Prishtina. */
+export async function getTonightEvents(client?: SupabaseClient | null): Promise<Event[]> {
+  try {
+    const supabase = clientOrPublic(client);
+    if (!supabase) return [];
+    const { start, end } = getTodayRangeInTz();
+    const { data, error } = await supabase
+      .from("events")
+      .select(eventSelect)
+      .eq("is_listed_public", true)
+      .gte("starts_at", start)
+      .lt("starts_at", end)
+      .order("starts_at", { ascending: true })
+      .limit(80);
+    if (error) {
+      console.error("[neya] getTonightEvents", error.message);
+      return [];
+    }
+    return data?.map((row) => mapEventRow(row as Parameters<typeof mapEventRow>[0])).filter((e): e is Event => e !== null) ?? [];
+  } catch (e) {
+    console.error("[neya] getTonightEvents", e);
+    return [];
   }
 }
 

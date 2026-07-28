@@ -105,6 +105,17 @@ export function isTonight(startsAt: string, now = new Date()): boolean {
   return ymdInTz(startsAt) === ymdInTz(now);
 }
 
+/** UTC boundaries for the current calendar day in the supplied timezone. */
+export function getTodayRangeInTz(now = new Date(), tz = CITY_TZ): { start: string; end: string } {
+  const wall = wallClockParts(now.getTime(), tz);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const start = datetimeLocalToUtcIso(`${wall.y}-${pad(wall.m)}-${pad(wall.d)}T00:00`, tz);
+  const tomorrow = addCalendarDaysInTz(wall.y, wall.m, wall.d, 1, tz);
+  const end = datetimeLocalToUtcIso(`${tomorrow.y}-${pad(tomorrow.m)}-${pad(tomorrow.d)}T00:00`, tz);
+  if (!start || !end) throw new Error("Could not determine today range");
+  return { start, end };
+}
+
 export function isUpcoming(startsAt: string, now = new Date()): boolean {
   return new Date(startsAt).getTime() > now.getTime();
 }
