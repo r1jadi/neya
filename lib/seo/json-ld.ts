@@ -33,8 +33,8 @@ export function eventJsonLd(event: Event) {
           address: event.venue.address,
         }
       : undefined,
-    performer: event.dj_lineup?.length
-      ? event.dj_lineup.map((name) => ({ "@type": "Person", name }))
+    performer: event.performers?.length
+      ? event.performers.map((performer) => ({ "@type": "Person", name: performer.name, image: performer.image_url, genre: performer.genre }))
       : undefined,
     offers: event.ticket_from_eur
       ? {

@@ -89,6 +89,15 @@ function MetaTile({
   );
 }
 
+function safeExternalUrl(value: string): string | null {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export function EventDetailsView({ event, meta, saved, showSave, flash }: EventDetailsViewProps) {
   const description = getEventDescription(event);
   const capacityLabel = formatCapacity(event.capacity);
@@ -154,16 +163,23 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
 
             <section>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Lineup</h2>
-              {event.dj_lineup?.length ? (
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {event.dj_lineup.map((dj) => (
-                    <li
-                      key={dj}
-                      className="rounded-full border border-fuchsia-500/25 bg-fuchsia-500/10 px-4 py-2 text-sm font-medium text-fuchsia-100"
-                    >
-                      {dj}
-                    </li>
-                  ))}
+              {event.performers?.length ? (
+                <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {event.performers.map((performer) => {
+                    const links = Object.entries(performer.social_links ?? {})
+                      .map(([label, value]) => [label, safeExternalUrl(value)] as const)
+                      .filter((entry): entry is [string, string] => entry[1] !== null);
+                    return (
+                      <li key={`${performer.name}-${performer.genre ?? ""}`} className="flex gap-3 rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-3">
+                        {performer.image_url ? <Image src={performer.image_url} alt="" width={48} height={48} className="h-12 w-12 rounded-xl object-cover" /> : null}
+                        <div className="min-w-0">
+                          <p className="font-medium text-fuchsia-100">{performer.name}</p>
+                          {performer.genre ? <p className="mt-0.5 text-xs text-white/50">{performer.genre}</p> : null}
+                          {links.length ? <div className="mt-1 flex flex-wrap gap-2">{links.map(([label, url]) => <a key={label} href={url} target="_blank" rel="noopener noreferrer" className="text-xs capitalize text-sky-300 hover:underline">{label}</a>)}</div> : null}
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <div className="mt-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">

@@ -14,6 +14,7 @@ const eventSelect = `
         genre,
         image_url,
         dj_lineup,
+        performers,
         capacity,
         ticket_url,
         crowd_count,

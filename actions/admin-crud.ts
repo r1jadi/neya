@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdminUser } from "@/lib/auth/require-admin";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
+import type { EventPerformer } from "@/types";
 
 function parseJsonArray(raw: string | null): string[] {
   if (!raw?.trim()) return [];
@@ -35,6 +36,27 @@ function parseSocialLinks(raw: string | null): Record<string, string> {
     return typeof parsed === "object" && parsed ? parsed : {};
   } catch {
     return {};
+  }
+}
+
+function parsePerformers(raw: string | null): EventPerformer[] {
+  if (!raw?.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.flatMap((item) => {
+      if (!item || typeof item !== "object") return [];
+      const row = item as Record<string, unknown>;
+      const name = typeof row.name === "string" ? row.name.trim().slice(0, 160) : "";
+      if (!name) return [];
+      const social = row.social_links;
+      const social_links = social && typeof social === "object" && !Array.isArray(social)
+        ? Object.fromEntries(Object.entries(social).filter(([, value]) => typeof value === "string" && value.trim()).map(([key, value]) => [key.slice(0, 40), (value as string).trim().slice(0, 2000)]))
+        : undefined;
+      return [{ name, image_url: typeof row.image_url === "string" && row.image_url.trim() ? row.image_url.trim().slice(0, 2000) : undefined, genre: typeof row.genre === "string" && row.genre.trim() ? row.genre.trim().slice(0, 80) : undefined, social_links }];
+    }).slice(0, 30);
+  } catch {
+    return [];
   }
 }
 
@@ -155,6 +177,7 @@ export async function saveEvent(formData: FormData) {
   if (endsLocal && !endsAt) adminRedirect("tab=events&error=fields");
 
   const admin = createAdminClient();
+  const performers = parsePerformers(String(formData.get("performers") ?? ""));
   const payload = {
     title,
     venue_id: venueId || null,
@@ -163,7 +186,9 @@ export async function saveEvent(formData: FormData) {
     ends_at: endsAt,
     genre: String(formData.get("genre") ?? "mixed").slice(0, 32),
     image_url: String(formData.get("image_url") ?? "").trim().slice(0, 2000) || null,
-    dj_lineup: parseJsonArray(String(formData.get("dj_lineup") ?? "")),
+    performers,
+    // Keep the legacy field populated for existing integrations and reads.
+    dj_lineup: performers.map((performer) => performer.name),
     capacity: formData.get("capacity") ? Number(formData.get("capacity")) : null,
     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_eur")) : null,
     reservation_price_eur: formData.get("reservation_price_eur")

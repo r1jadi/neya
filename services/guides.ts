@@ -188,7 +188,7 @@ export async function getEventsNearStop(
     const { data } = await supabase
       .from("events")
       .select(
-        `id, slug, title, description, starts_at, ends_at, genre, image_url, dj_lineup, capacity,
+        `id, slug, title, description, starts_at, ends_at, genre, image_url, dj_lineup, performers, capacity,
          crowd_count, atmosphere_rating, live_status, reservation_spots_left, ticket_from_eur,
          is_featured, is_listed_public, is_hidden_premium, fomo_line,
          venues (id, slug, name, image_url, category, address, city_slug, lat, lng, approved, is_trending, price_level)`,

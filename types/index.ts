@@ -53,6 +53,13 @@ export type EventVenue = Pick<
   "id" | "slug" | "name" | "image_url" | "category" | "address" | "city_slug" | "lat" | "lng" | "is_trending"
 >;
 
+export type EventPerformer = {
+  name: string;
+  image_url?: string;
+  genre?: string;
+  social_links?: Record<string, string>;
+};
+
 export interface Event {
   id: string;
   slug: string;
@@ -64,6 +71,7 @@ export interface Event {
   image_url: string;
   description?: string | null;
   dj_lineup?: string[];
+  performers?: EventPerformer[];
   capacity?: number | null;
   ticket_url?: string | null;
   crowd_count: number;

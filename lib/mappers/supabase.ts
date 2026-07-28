@@ -1,5 +1,5 @@
 import { resolveImageUrl } from "@/lib/images";
-import type { Event, MusicGenre, Venue, VenueCategory } from "@/types";
+import type { Event, EventPerformer, MusicGenre, Venue, VenueCategory } from "@/types";
 
 const GENRES: MusicGenre[] = ["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"];
 
@@ -30,6 +30,22 @@ function num(n: unknown, fallback: number): number {
     if (!Number.isNaN(p)) return p;
   }
   return fallback;
+}
+
+function mapPerformers(value: unknown): EventPerformer[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const performers = value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const row = item as Record<string, unknown>;
+    const name = typeof row.name === "string" ? row.name.trim().slice(0, 160) : "";
+    if (!name) return [];
+    const social = row.social_links;
+    const social_links = social && typeof social === "object" && !Array.isArray(social)
+      ? Object.fromEntries(Object.entries(social).filter(([key, url]) => typeof key === "string" && typeof url === "string" && url.trim()).map(([key, url]) => [key.slice(0, 40), (url as string).trim().slice(0, 2000)]))
+      : undefined;
+    return [{ name, image_url: typeof row.image_url === "string" && row.image_url.trim() ? row.image_url.trim().slice(0, 2000) : undefined, genre: typeof row.genre === "string" && row.genre.trim() ? row.genre.trim().slice(0, 80) : undefined, social_links }];
+  });
+  return performers.length ? performers : undefined;
 }
 
 export function mapVenueRow(row: {
@@ -95,6 +111,7 @@ export function mapEventRow(row: {
   genre?: string | null;
   image_url?: string | null;
   dj_lineup?: string[] | null;
+  performers?: unknown;
   capacity?: number | null;
   ticket_url?: string | null;
   crowd_count?: number | null;
@@ -145,6 +162,7 @@ export function mapEventRow(row: {
   const djLineup = Array.isArray(row.dj_lineup)
     ? row.dj_lineup.map((d) => d.trim()).filter(Boolean)
     : undefined;
+  const performers = mapPerformers(row.performers) ?? djLineup?.map((name) => ({ name }));
   return {
     id: row.id,
     slug: row.slug,
@@ -169,6 +187,7 @@ export function mapEventRow(row: {
     genre: normalizeGenre(row.genre),
     image_url: img,
     dj_lineup: djLineup?.length ? djLineup : undefined,
+    performers,
     capacity: row.capacity ?? undefined,
     ticket_url: row.ticket_url?.trim() || null,
     crowd_count: Math.round(num(row.crowd_count, 0)),

@@ -9,6 +9,7 @@ import type { GuestlistEntryRow } from "@/types/guestlist";
 import { loadVenueAccounts } from "@/services/venue-accounts";
 import type { VenueAccountRow } from "@/types/auth";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
+import type { EventPerformer } from "@/types";
 
 export type AdminVenueRow = {
   id: string;
@@ -53,6 +54,7 @@ export type AdminEventRow = {
   genre: string | null;
   image_url: string | null;
   dj_lineup: string[];
+  performers?: EventPerformer[];
   capacity: number | null;
   is_featured: boolean;
   is_listed_public: boolean;
@@ -112,7 +114,7 @@ export async function getAdminDashboardData() {
     admin
       .from("events")
       .select(
-        "id, slug, title, description, venue_id, starts_at, ends_at, genre, image_url, dj_lineup, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
+        "id, slug, title, description, venue_id, starts_at, ends_at, genre, image_url, dj_lineup, performers, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
       )
       .order("starts_at", { ascending: false })
       .limit(200),

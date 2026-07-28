@@ -17,6 +17,7 @@ import {
 } from "@/actions/admin-crud";
 import { grantPremiumByUserId } from "@/actions/admin-events";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
+import { PerformerFields } from "@/components/admin/performer-fields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GuestlistRequestsPanel } from "@/components/admin/guestlist-requests-panel";
@@ -524,7 +525,9 @@ function EventForm({
   venues: AdminVenueRow[];
   onClose: () => void;
 }) {
-  const lineup = event?.dj_lineup?.join(", ") ?? "";
+  const performers = event?.performers?.length
+    ? event.performers
+    : event?.dj_lineup?.map((name) => ({ name })) ?? [];
   const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
   const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
 
@@ -565,7 +568,7 @@ function EventForm({
           ))}
         </select>
         <Input name="capacity" type="number" placeholder="Capacity" defaultValue={event?.capacity ?? ""} />
-        <Input name="dj_lineup" placeholder="DJ lineup (comma-separated)" defaultValue={lineup} className="sm:col-span-2" />
+        <PerformerFields initialPerformers={performers} />
         <Input name="ticket_from_eur" type="number" step="0.01" placeholder="From price (EUR)" defaultValue={event?.ticket_from_eur ?? ""} />
         <ImageUploadField name="image_url" label="Poster / cover" defaultUrl={event?.image_url ?? ""} folder="events" />
         <textarea
