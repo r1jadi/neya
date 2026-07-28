@@ -49,7 +49,7 @@ export interface Event {
   id: string;
   slug: string;
   title: string;
-  venue: EventVenue;
+  venue: EventVenue | null;
   starts_at: string;
   ends_at?: string;
   genre: MusicGenre;

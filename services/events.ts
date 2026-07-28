@@ -24,7 +24,7 @@ const eventSelect = `
         is_hidden_premium,
         is_listed_public,
         is_featured,
-        venues!inner (
+        venues (
           id,
           slug,
           name,

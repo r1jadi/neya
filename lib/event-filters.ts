@@ -40,7 +40,7 @@ export function liveNow(events: Event[], now = new Date()) {
 }
 
 export function rooftopEvents(events: Event[]) {
-  return events.filter((e) => e.venue.category === "rooftop");
+  return events.filter((e) => e.venue?.category === "rooftop");
 }
 
 export function djSets(events: Event[]) {

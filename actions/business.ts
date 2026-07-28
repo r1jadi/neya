@@ -61,26 +61,29 @@ export async function createVenueEvent(formData: FormData) {
   const startsAtLocal = String(formData.get("starts_at") ?? "").trim();
   const startsAt = datetimeLocalToUtcIso(startsAtLocal);
   const genre = String(formData.get("genre") ?? "mixed").slice(0, 32);
-  if (!venueId || !title || !startsAt) redirect("/business?error=fields");
+  if (!title || !startsAt) redirect("/business?error=fields");
 
   const slug = slugify(title);
 
-  const { data: venue, error: vErr } = await supabase
-    .from("venues")
-    .select("id, image_url")
-    .eq("id", venueId)
-    .eq("owner_id", user.id)
-    .maybeSingle();
-
-  if (vErr || !venue) redirect("/business?error=forbidden");
+  let venue: { id: string; image_url: string | null } | null = null;
+  if (venueId) {
+    const { data, error: vErr } = await supabase
+      .from("venues")
+      .select("id, image_url")
+      .eq("id", venueId)
+      .eq("owner_id", user.id)
+      .maybeSingle();
+    if (vErr || !data) redirect("/business?error=forbidden");
+    venue = data;
+  }
 
   const { error } = await supabase.from("events").insert({
     slug,
-    venue_id: venue.id,
+    venue_id: venue?.id ?? null,
     title,
     starts_at: startsAt,
     genre,
-    image_url: venue.image_url,
+    image_url: venue?.image_url ?? null,
     crowd_count: 0,
     atmosphere_rating: 8.5,
     live_status: false,

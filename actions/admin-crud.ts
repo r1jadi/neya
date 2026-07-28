@@ -144,7 +144,7 @@ export async function saveEvent(formData: FormData) {
   const venueId = String(formData.get("venue_id") ?? "").trim();
   const startsAtLocal = String(formData.get("starts_at") ?? "").trim();
   const startsAt = datetimeLocalToUtcIso(startsAtLocal);
-  if (!title || !venueId || !startsAt) adminRedirect("tab=events&error=fields");
+  if (!title || !startsAt) adminRedirect("tab=events&error=fields");
 
   const endsLocal = String(formData.get("ends_at") ?? "").trim();
   const endsAt = endsLocal ? datetimeLocalToUtcIso(endsLocal) : null;
@@ -153,7 +153,7 @@ export async function saveEvent(formData: FormData) {
   const admin = createAdminClient();
   const payload = {
     title,
-    venue_id: venueId,
+    venue_id: venueId || null,
     description: String(formData.get("description") ?? "").trim().slice(0, 4000) || null,
     starts_at: startsAt,
     ends_at: endsAt,

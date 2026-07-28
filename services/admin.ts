@@ -43,7 +43,7 @@ export type AdminEventRow = {
   slug: string;
   title: string;
   description: string | null;
-  venue_id: string;
+  venue_id: string | null;
   starts_at: string;
   ends_at: string | null;
   genre: string | null;

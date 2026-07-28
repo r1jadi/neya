@@ -33,7 +33,7 @@ export default async function BusinessPage({ searchParams }: Props) {
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
       <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Venue hub</h1>
       <p className="mt-2 text-sm text-white/55">
-        Request a new listing (pending admin approval) and publish events for venues you own.
+        Request a new listing (pending admin approval) and publish events with or without a venue.
       </p>
 
       {q.created ? (
@@ -107,16 +107,15 @@ export default async function BusinessPage({ searchParams }: Props) {
 
       <section className="mt-10 space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
         <h2 className="text-lg font-semibold text-white">Create event</h2>
-        {venues?.length ? (
-          <form action={createVenueEvent} className="grid gap-3">
+        <form action={createVenueEvent} className="grid gap-3">
             <label className="text-xs text-white/60">
               Venue
               <select
                 name="venue_id"
-                required
                 className="mt-1 w-full rounded-lg border border-white/15 bg-black/50 px-3 py-2 text-sm text-white"
               >
-                {venues.map((v) => (
+                <option value="">No venue yet</option>
+                {(venues ?? []).map((v) => (
                   <option key={v.id} value={v.id}>
                     {v.name} {!v.approved ? "(pending)" : ""}
                   </option>
@@ -143,10 +142,7 @@ export default async function BusinessPage({ searchParams }: Props) {
               </select>
             </label>
             <Button type="submit">Publish event</Button>
-          </form>
-        ) : (
-          <p className="text-sm text-white/45">Create a venue first.</p>
-        )}
+        </form>
       </section>
 
       <p className="mt-10 text-center text-sm">

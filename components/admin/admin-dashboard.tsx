@@ -537,11 +537,10 @@ function EventForm({
         <Input name="title" placeholder="Event title" defaultValue={event?.title} required className="sm:col-span-2" />
         <select
           name="venue_id"
-          required
-          defaultValue={event?.venue_id}
+          defaultValue={event?.venue_id ?? ""}
           className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white sm:col-span-2"
         >
-          <option value="">Select venue</option>
+          <option value="">No venue</option>
           {venues.map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}

@@ -116,9 +116,13 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
             {event.title}
           </h1>
           <p className="mx-auto mt-2 max-w-6xl text-base text-white/75">
-            <Link href={`/venues/${event.venue.slug}`} className="font-medium hover:text-white hover:underline">
-              {event.venue.name}
-            </Link>
+            {event.venue ? (
+              <Link href={`/venues/${event.venue.slug}`} className="font-medium hover:text-white hover:underline">
+                {event.venue.name}
+              </Link>
+            ) : (
+              <span className="font-medium">Venue TBA</span>
+            )}
             <span className="mx-2 text-white/30">·</span>
             <span className="text-sky-300/90">{whenShort}</span>
           </p>
@@ -143,7 +147,7 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
                 <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-white/75">{description}</p>
               ) : (
                 <div className="mt-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">
-                  No description yet — check back closer to the night or follow {event.venue.name} for updates.
+                  No description yet — check back closer to the night or follow {event.venue?.name ?? "the organizers"} for updates.
                 </div>
               )}
             </section>
@@ -173,11 +177,17 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
               <div className="mt-3 flex items-start gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />
                 <div>
-                  <Link href={`/venues/${event.venue.slug}`} className="font-medium text-white hover:underline">
-                    {event.venue.name}
-                  </Link>
-                  <p className="mt-1 text-sm text-white/55">{locationLabel ?? "Prishtina"}</p>
-                  <p className="mt-1 text-xs capitalize text-white/40">{event.venue.category.replace(/_/g, " ")}</p>
+                  {event.venue ? (
+                    <>
+                      <Link href={`/venues/${event.venue.slug}`} className="font-medium text-white hover:underline">
+                        {event.venue.name}
+                      </Link>
+                      <p className="mt-1 text-sm text-white/55">{locationLabel ?? "Prishtina"}</p>
+                      <p className="mt-1 text-xs capitalize text-white/40">{event.venue.category.replace(/_/g, " ")}</p>
+                    </>
+                  ) : (
+                    <p className="font-medium text-white">Venue to be announced</p>
+                  )}
                 </div>
               </div>
             </section>
@@ -185,7 +195,7 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
             <section className="space-y-4">
               <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Live pulse</h2>
               <CrowdIndicator count={event.crowd_count} />
-              {isUuid(event.id) ? (
+              {isUuid(event.id) && event.venue ? (
                 <LiveAtmospherePanel
                   eventId={event.id}
                   venueId={event.venue.id}

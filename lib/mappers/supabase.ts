@@ -123,9 +123,9 @@ export function mapEventRow(row: {
 }): Event | null {
   const raw = row.venues;
   const v = Array.isArray(raw) ? raw[0] : raw;
-  if (!v || v.approved === false) return null;
-  const price = Math.min(4, Math.max(1, Math.round(num(v.price_level, 2)))) as Event["price_level"];
-  const img = resolveImageUrl(row.image_url || v.image_url);
+  if (v?.approved === false) return null;
+  const price = Math.min(4, Math.max(1, Math.round(num(v?.price_level, 2)))) as Event["price_level"];
+  const img = resolveImageUrl(row.image_url || v?.image_url);
   const djLineup = Array.isArray(row.dj_lineup)
     ? row.dj_lineup.map((d) => d.trim()).filter(Boolean)
     : undefined;
@@ -134,18 +134,20 @@ export function mapEventRow(row: {
     slug: row.slug,
     title: row.title,
     description: row.description?.trim() || null,
-    venue: {
-      id: v.id,
-      slug: v.slug,
-      name: v.name,
-      image_url: resolveImageUrl(v.image_url),
-      category: normalizeCategory(v.category ?? undefined),
-      address: v.address?.trim() || undefined,
-      city_slug: v.city_slug ?? "prishtina",
-      lat: v.lat ?? undefined,
-      lng: v.lng ?? undefined,
-      is_trending: Boolean(v.is_trending),
-    },
+    venue: v
+      ? {
+          id: v.id,
+          slug: v.slug,
+          name: v.name,
+          image_url: resolveImageUrl(v.image_url),
+          category: normalizeCategory(v.category ?? undefined),
+          address: v.address?.trim() || undefined,
+          city_slug: v.city_slug ?? "prishtina",
+          lat: v.lat ?? undefined,
+          lng: v.lng ?? undefined,
+          is_trending: Boolean(v.is_trending),
+        }
+      : null,
     starts_at: row.starts_at,
     ends_at: row.ends_at ?? undefined,
     genre: normalizeGenre(row.genre),
