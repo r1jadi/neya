@@ -3,6 +3,7 @@ export async function sendTransactionalEmail(
   to: string,
   subject: string,
   html: string,
+  options?: { replyTo?: string },
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM ?? "NEYA <noreply@neya.live>";
@@ -18,7 +19,7 @@ export async function sendTransactionalEmail(
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from, to: [to], subject, html }),
+      body: JSON.stringify({ from, to: [to], subject, html, ...(options?.replyTo ? { reply_to: options.replyTo } : {}) }),
     });
 
     if (!res.ok) {
