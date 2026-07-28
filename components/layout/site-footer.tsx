@@ -48,12 +48,12 @@ export function SiteFooter() {
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Legal</p>
           <ul className="mt-3 space-y-2 text-sm text-white/70">
             <li>
-              <Link href="#" className="hover:text-white">
+              <Link href="/privacy" className="hover:text-white">
                 Privacy
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-white">
+              <Link href="/terms" className="hover:text-white">
                 Terms
               </Link>
             </li>
