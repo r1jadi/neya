@@ -48,6 +48,14 @@ export function mapVenueRow(row: {
   is_live?: boolean | null;
   is_featured?: boolean | null;
   is_trending?: boolean | null;
+  description?: string | null;
+  gallery_urls?: string[] | null;
+  music_genres?: string[] | null;
+  social_links?: Record<string, string> | null;
+  website_url?: string | null;
+  contact_email?: string | null;
+  contact_phone?: string | null;
+  capacity?: number | null;
 }): Venue {
   const price = Math.min(4, Math.max(1, Math.round(num(row.price_level, 2)))) as Venue["price_level"];
   return {
@@ -66,6 +74,14 @@ export function mapVenueRow(row: {
     is_live: row.is_live ?? undefined,
     is_featured: row.is_featured ?? undefined,
     is_trending: row.is_trending ?? undefined,
+    description: row.description?.trim() || undefined,
+    gallery_urls: Array.isArray(row.gallery_urls) ? row.gallery_urls.map((url) => url.trim()).filter(Boolean) : undefined,
+    music_genres: Array.isArray(row.music_genres) ? row.music_genres.map((genre) => genre.trim()).filter(Boolean) : undefined,
+    social_links: row.social_links ?? undefined,
+    website_url: row.website_url?.trim() || undefined,
+    contact_email: row.contact_email?.trim() || undefined,
+    contact_phone: row.contact_phone?.trim() || undefined,
+    capacity: row.capacity ?? undefined,
   };
 }
 

@@ -95,3 +95,30 @@ export async function getEventBySlug(slug: string, client?: SupabaseClient | nul
     return null;
   }
 }
+
+export async function getUpcomingEventsForVenue(
+  venueId: string,
+  client?: SupabaseClient | null,
+): Promise<Event[]> {
+  try {
+    const supabase = clientOrPublic(client);
+    if (!supabase) return [];
+
+    const { data, error } = await supabase
+      .from("events")
+      .select(eventSelect)
+      .eq("venue_id", venueId)
+      .eq("is_listed_public", true)
+      .gte("starts_at", new Date().toISOString())
+      .order("starts_at", { ascending: true })
+      .limit(24);
+    if (error) {
+      console.error("[neya] getUpcomingEventsForVenue", error.message);
+      return [];
+    }
+    return data?.map((row) => mapEventRow(row as Parameters<typeof mapEventRow>[0])).filter((e): e is Event => e !== null) ?? [];
+  } catch (e) {
+    console.error("[neya] getUpcomingEventsForVenue", e);
+    return [];
+  }
+}

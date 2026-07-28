@@ -35,7 +35,10 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const needsGuard =
-    pathname.startsWith("/admin") || pathname.startsWith("/venue") || pathname.startsWith("/business");
+    pathname.startsWith("/admin") ||
+    pathname === "/venue" ||
+    pathname.startsWith("/venue/") ||
+    pathname.startsWith("/business");
 
   if (needsGuard) {
     let profile: UserProfile | null = null;

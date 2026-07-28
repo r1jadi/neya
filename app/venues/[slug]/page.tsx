@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
+import { ExternalLink, Globe, Mail, MapPin, Music2, Phone, Users } from "lucide-react";
 import { EventCard } from "@/components/neya/event-card";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { ReservationModal } from "@/components/neya/reservation-modal";
@@ -10,7 +11,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Badge } from "@/components/ui/badge";
 import { getPublicCheckinCount, getVenueMetaBySlug } from "@/services/booking-meta";
-import { getFeaturedEvents } from "@/services/events";
+import { getUpcomingEventsForVenue } from "@/services/events";
 import { getVenueBySlug } from "@/services/venues";
 import { SITE } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
@@ -20,13 +21,23 @@ import { CheckInWidget } from "@/components/neya/check-in-widget";
 
 type Props = { params: Promise<{ slug: string }> };
 
+function externalUrl(value: string | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value.startsWith("http") ? value : `https://${value}`);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const venue = await getVenueBySlug(slug);
   if (!venue) return { title: "Venue not found" };
   return {
     title: `${venue.name} · ${SITE.name}`,
-    description: `${venue.name} in Prishtina — nightlife on NEYA.`,
+    description: venue.description ?? `${venue.name} in Prishtina — nightlife on NEYA.`,
     openGraph: {
       title: venue.name,
       images: [{ url: venue.image_url }],
@@ -37,15 +48,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function VenuePage({ params }: Props) {
   const { slug } = await params;
   const supabase = await createClient();
-  const [venue, allEvents, venueMeta] = await Promise.all([
+  const [venue, venueMeta] = await Promise.all([
     getVenueBySlug(slug),
-    getFeaturedEvents(supabase),
     getVenueMetaBySlug(slug),
   ]);
   if (!venue) notFound();
 
-  const events = allEvents.filter((e) => e.venue?.slug === venue.slug);
+  const events = await getUpcomingEventsForVenue(venue.id, supabase);
   const jsonLd = venueJsonLd(venue);
+  const gallery = venue.gallery_urls?.filter((url) => url !== venue.image_url) ?? [];
+  const mapQuery = venue.lat != null && venue.lng != null ? `${venue.lat},${venue.lng}` : venue.address;
+  const mapUrl = mapQuery ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed` : null;
+  const websiteUrl = externalUrl(venue.website_url ?? venue.social_links?.website);
+  const socialLinks = Object.entries(venue.social_links ?? {})
+    .filter(([name]) => name.toLowerCase() !== "website")
+    .map(([name, value]) => [name, externalUrl(value)] as const)
+    .filter((entry): entry is [string, string] => entry[1] !== null);
 
   let publicCheckins = 0;
   if (venueMeta && isUuid(venueMeta.venueUuid)) {
@@ -94,6 +112,79 @@ export default async function VenuePage({ params }: Props) {
                 <p className="text-xs text-white/45">Table reservations open when the venue is live on NEYA.</p>
               )}
             </div>
+          </div>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="space-y-8">
+              <section>
+                <h2 className="text-lg font-semibold text-white">About {venue.name}</h2>
+                {venue.description ? (
+                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-white/65">{venue.description}</p>
+                ) : (
+                  <p className="mt-3 text-sm text-white/45">Details for this venue are coming soon.</p>
+                )}
+              </section>
+
+              {gallery.length ? (
+                <section>
+                  <h2 className="text-lg font-semibold text-white">Gallery</h2>
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    {gallery.map((url, index) => (
+                      <div key={`${url}-${index}`} className="relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
+                        <Image src={url} alt={`${venue.name} gallery image ${index + 1}`} fill className="object-cover" sizes="(max-width: 640px) 50vw, 25vw" />
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              <section>
+                <h2 className="text-lg font-semibold text-white">Location</h2>
+                {mapUrl ? (
+                  <iframe
+                    title={`Map of ${venue.name}`}
+                    src={mapUrl}
+                    className="mt-4 h-72 w-full rounded-2xl border border-white/10 bg-white/[0.03]"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                ) : (
+                  <p className="mt-3 text-sm text-white/45">Location details are coming soon.</p>
+                )}
+              </section>
+            </div>
+
+            <aside className="h-fit space-y-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
+              <h2 className="text-lg font-semibold text-white">Venue details</h2>
+              {venue.address ? (
+                <p className="flex items-start gap-3 text-sm text-white/65"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" />{venue.address}</p>
+              ) : null}
+              {venue.capacity != null ? (
+                <p className="flex items-center gap-3 text-sm text-white/65"><Users className="h-4 w-4 shrink-0 text-sky-300" />Capacity {venue.capacity.toLocaleString()}</p>
+              ) : null}
+              {venue.music_genres?.length ? (
+                <div className="flex items-start gap-3 text-sm text-white/65">
+                  <Music2 className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" />
+                  <div className="flex flex-wrap gap-2">{venue.music_genres.map((genre) => <Badge key={genre} variant="secondary">{genre}</Badge>)}</div>
+                </div>
+              ) : null}
+              {websiteUrl ? (
+                <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-sky-300 hover:text-sky-200 hover:underline"><Globe className="h-4 w-4" />Website <ExternalLink className="h-3.5 w-3.5" /></a>
+              ) : null}
+              {venue.contact_email ? (
+                <a href={`mailto:${venue.contact_email}`} className="flex items-center gap-3 text-sm text-white/65 hover:text-white"><Mail className="h-4 w-4 text-sky-300" />{venue.contact_email}</a>
+              ) : null}
+              {venue.contact_phone ? (
+                <a href={`tel:${venue.contact_phone}`} className="flex items-center gap-3 text-sm text-white/65 hover:text-white"><Phone className="h-4 w-4 text-sky-300" />{venue.contact_phone}</a>
+              ) : null}
+              {socialLinks.length ? (
+                <div className="border-t border-white/10 pt-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Follow</p>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    {socialLinks.map(([name, url]) => <a key={name} href={url} target="_blank" rel="noopener noreferrer" className="text-sm capitalize text-sky-300 hover:text-sky-200 hover:underline">{name}</a>)}
+                  </div>
+                </div>
+              ) : null}
+            </aside>
           </div>
           <div>
             <h2 className="text-lg font-semibold text-white">Upcoming here</h2>

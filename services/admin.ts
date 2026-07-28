@@ -35,6 +35,10 @@ export type AdminVenueRow = {
   is_featured: boolean;
   is_trending: boolean;
   price_level: number;
+  website_url: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  capacity: number | null;
   created_at: string;
 };
 
@@ -102,7 +106,7 @@ export async function getAdminDashboardData() {
     admin
       .from("venues")
       .select(
-        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, opening_hours, social_links, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
+        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, opening_hours, social_links, website_url, contact_email, contact_phone, capacity, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
       )
       .order("created_at", { ascending: false }),
     admin

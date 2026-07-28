@@ -467,6 +467,10 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
         <ImageUploadField name="image_url" label="Cover image" defaultUrl={venue?.image_url ?? ""} folder="venues" />
         <Input name="gallery_urls" placeholder="Gallery URLs (comma-separated)" defaultValue={gallery} className="sm:col-span-2" />
         <Input name="music_genres" placeholder="Music genres (comma-separated)" defaultValue={genres} />
+        <Input name="capacity" type="number" min={0} placeholder="Venue capacity" defaultValue={venue?.capacity ?? ""} />
+        <Input name="website_url" type="url" placeholder="Website URL" defaultValue={venue?.website_url ?? ""} />
+        <Input name="contact_email" type="email" placeholder="Contact email" defaultValue={venue?.contact_email ?? ""} />
+        <Input name="contact_phone" type="tel" placeholder="Contact phone" defaultValue={venue?.contact_phone ?? ""} />
         <Input name="social_links" placeholder='Social links JSON e.g. {"instagram":"@neya"}' defaultValue={social} className="sm:col-span-2 font-mono text-xs" />
         <Input name="price_level" type="number" min={1} max={4} placeholder="Price level 1-4" defaultValue={venue?.price_level ?? 2} />
       </div>

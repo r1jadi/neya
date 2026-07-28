@@ -38,6 +38,14 @@ export interface Venue {
   is_featured?: boolean;
   is_trending?: boolean;
   distance_km?: number;
+  description?: string;
+  gallery_urls?: string[];
+  music_genres?: string[];
+  social_links?: Record<string, string>;
+  website_url?: string;
+  contact_email?: string;
+  contact_phone?: string;
+  capacity?: number;
 }
 
 export type EventVenue = Pick<
