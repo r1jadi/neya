@@ -7,7 +7,7 @@ import { requireAdminUser } from "@/lib/auth/require-admin";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 import type { EventPerformer } from "@/types";
-import { MUSIC_GENRES } from "@/types";
+import { isVenueCategory, MUSIC_GENRES } from "@/types";
 
 function parseJsonArray(raw: string | null): string[] {
   if (!raw?.trim()) return [];
@@ -75,7 +75,7 @@ export async function saveVenue(formData: FormData) {
   const payload = {
     name,
     city_slug: String(formData.get("city_slug") ?? "prishtina").slice(0, 64),
-    category: String(formData.get("category") ?? "club").slice(0, 32),
+    category: (() => { const value = String(formData.get("category") ?? "nightclub").slice(0, 32); return isVenueCategory(value) ? value : "other"; })(),
     description: String(formData.get("description") ?? "").trim().slice(0, 4000) || null,
     address: String(formData.get("address") ?? "").trim().slice(0, 240) || null,
     lat: formData.get("lat") ? Number(formData.get("lat")) : null,

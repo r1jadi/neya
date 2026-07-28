@@ -30,6 +30,7 @@ import type {
   AdminTicketRow,
   AdminVenueRow,
 } from "@/services/admin";
+import { VENUE_CATEGORIES } from "@/types";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 import type { VenueAccountRow } from "@/types/auth";
 import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
@@ -447,12 +448,13 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
         <Input name="name" placeholder="Venue name" defaultValue={venue?.name} required />
         <select
           name="category"
-          defaultValue={venue?.category ?? "club"}
+          defaultValue={venue?.category ?? "nightclub"}
           className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white"
         >
-          {["club", "lounge", "bar", "rooftop", "cafe", "live_music", "festival"].map((c) => (
-            <option key={c} value={c}>
-              {c}
+          {venue?.category === "club" ? <option value="club">Club (legacy)</option> : null}
+          {VENUE_CATEGORIES.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.label}
             </option>
           ))}
         </select>

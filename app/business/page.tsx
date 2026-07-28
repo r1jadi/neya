@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
-import { MUSIC_GENRES } from "@/types";
+import { MUSIC_GENRES, VENUE_CATEGORIES } from "@/types";
 
 export const metadata: Metadata = {
   title: `Venue hub · ${SITE.name}`,
@@ -60,15 +60,18 @@ export default async function BusinessPage({ searchParams }: Props) {
             <select
               name="category"
               className="mt-1 w-full rounded-lg border border-white/15 bg-black/50 px-3 py-2 text-sm text-white"
-              defaultValue="club"
+              defaultValue="nightclub"
             >
-              <option value="club">Club</option>
+              <option value="nightclub">Nightclub</option>
               <option value="lounge">Lounge</option>
               <option value="bar">Bar</option>
               <option value="rooftop">Rooftop</option>
               <option value="cafe">Café</option>
               <option value="live_music">Live music</option>
               <option value="festival">Festival</option>
+              {VENUE_CATEGORIES.filter((category) => !["nightclub", "lounge", "bar", "rooftop", "cafe", "live_music", "festival"].includes(category.id)).map((category) => (
+                <option key={category.id} value={category.id}>{category.label}</option>
+              ))}
             </select>
           </label>
           <Input name="address" placeholder="Address (optional)" maxLength={240} />

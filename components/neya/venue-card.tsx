@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
-import type { Venue } from "@/types";
+import { VENUE_CATEGORIES, type Venue } from "@/types";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -14,15 +14,8 @@ interface VenueCardProps {
   className?: string;
 }
 
-const categoryLabel: Record<Venue["category"], string> = {
-  club: "Club",
-  lounge: "Lounge",
-  bar: "Bar",
-  rooftop: "Rooftop",
-  cafe: "Cafe",
-  live_music: "Live",
-  festival: "Festival",
-};
+const categoryLabel = (category: Venue["category"]) =>
+  category === "club" ? "Club" : VENUE_CATEGORIES.find((item) => item.id === category)?.label ?? "Other";
 
 export function VenueCard({ venue, className }: VenueCardProps) {
   return (
@@ -40,7 +33,7 @@ export function VenueCard({ venue, className }: VenueCardProps) {
         <Image src={venue.image_url} alt="" fill className="object-cover" sizes="(max-width:768px) 50vw, 25vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
         <div className="absolute left-3 top-3 flex gap-2">
-          <Badge variant="secondary">{categoryLabel[venue.category]}</Badge>
+          <Badge variant="secondary">{categoryLabel(venue.category)}</Badge>
           <LiveBadge live={venue.is_live} />
         </div>
         <div className="absolute bottom-3 left-3 right-3">

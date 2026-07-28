@@ -1,5 +1,5 @@
 import { resolveImageUrl } from "@/lib/images";
-import { MUSIC_GENRES, type Event, type EventPerformer, type MusicGenre, type Venue, type VenueCategory } from "@/types";
+import { MUSIC_GENRES, VENUE_CATEGORIES, type Event, type EventPerformer, type MusicGenre, type Venue, type VenueCategory } from "@/types";
 
 const LEGACY_GENRES: Record<string, MusicGenre> = {
   afro: "afro_house",
@@ -17,15 +17,7 @@ function normalizeGenre(g: string | null | undefined): MusicGenre {
     : LEGACY_GENRES[g?.toLowerCase() ?? ""] ?? "other";
 }
 
-const CATEGORIES: VenueCategory[] = [
-  "club",
-  "lounge",
-  "bar",
-  "rooftop",
-  "cafe",
-  "live_music",
-  "festival",
-];
+const CATEGORIES: VenueCategory[] = ["club", ...VENUE_CATEGORIES.map((category) => category.id)];
 
 function normalizeCategory(c: string | null | undefined): VenueCategory {
   const x = (c ?? "club").toLowerCase() as VenueCategory;

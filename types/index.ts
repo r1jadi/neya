@@ -67,14 +67,57 @@ export const MUSIC_GENRES = [
 
 export type MusicGenre = (typeof MUSIC_GENRES)[number]["id"] | "afro" | "hip-hop" | "r&b" | "live" | "mixed";
 
-export type VenueCategory =
-  | "club"
-  | "lounge"
-  | "bar"
-  | "rooftop"
-  | "cafe"
-  | "live_music"
-  | "festival";
+/** Stable database-safe venue category identifiers. `club` remains a legacy value. */
+export const VENUE_CATEGORIES = [
+  { id: "nightclub", label: "Nightclub" },
+  { id: "lounge", label: "Lounge" },
+  { id: "bar", label: "Bar" },
+  { id: "rooftop", label: "Rooftop" },
+  { id: "cafe", label: "Café" },
+  { id: "live_music", label: "Live Music" },
+  { id: "festival", label: "Festival" },
+  { id: "concert_hall", label: "Concert Hall" },
+  { id: "arena", label: "Arena" },
+  { id: "stadium", label: "Stadium" },
+  { id: "open_air_venue", label: "Open Air Venue" },
+  { id: "beach_club", label: "Beach Club" },
+  { id: "pool_club", label: "Pool Club" },
+  { id: "restaurant", label: "Restaurant" },
+  { id: "pub", label: "Pub" },
+  { id: "cocktail_bar", label: "Cocktail Bar" },
+  { id: "wine_bar", label: "Wine Bar" },
+  { id: "jazz_club", label: "Jazz Club" },
+  { id: "theater", label: "Theater" },
+  { id: "cinema", label: "Cinema" },
+  { id: "gallery", label: "Gallery" },
+  { id: "cultural_center", label: "Cultural Center" },
+  { id: "community_space", label: "Community Space" },
+  { id: "warehouse", label: "Warehouse" },
+  { id: "underground_venue", label: "Underground Venue" },
+  { id: "event_hall", label: "Event Hall" },
+  { id: "conference_center", label: "Conference Center" },
+  { id: "hotel_venue", label: "Hotel Venue" },
+  { id: "resort", label: "Resort" },
+  { id: "park", label: "Park" },
+  { id: "outdoor_space", label: "Outdoor Space" },
+  { id: "private_venue", label: "Private Venue" },
+  { id: "wedding_venue", label: "Wedding Venue" },
+  { id: "university_venue", label: "University Venue" },
+  { id: "sports_venue", label: "Sports Venue" },
+  { id: "festival_ground", label: "Festival Ground" },
+  { id: "clubbing_venue", label: "Clubbing Venue" },
+  { id: "music_venue", label: "Music Venue" },
+  { id: "exhibition_space", label: "Exhibition Space" },
+  { id: "rooftop_bar", label: "Rooftop Bar" },
+  { id: "food_hall", label: "Food Hall" },
+  { id: "other", label: "Other" },
+] as const;
+
+export type VenueCategory = (typeof VENUE_CATEGORIES)[number]["id"] | "club";
+
+export function isVenueCategory(value: string): value is VenueCategory {
+  return value === "club" || VENUE_CATEGORIES.some((category) => category.id === value);
+}
 
 export type LiveVibe = "packed" | "chill" | "energetic" | "vip";
 

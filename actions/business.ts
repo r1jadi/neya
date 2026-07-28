@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
-import { MUSIC_GENRES } from "@/types";
+import { isVenueCategory, MUSIC_GENRES } from "@/types";
 
 export async function requestVenueListing(formData: FormData) {
   const rl = await rateLimit("venue-request", 5, 3600);
@@ -21,7 +21,8 @@ export async function requestVenueListing(formData: FormData) {
   await assertNotVenueAccount(user.id);
 
   const name = String(formData.get("name") ?? "").trim().slice(0, 120);
-  const category = String(formData.get("category") ?? "club").slice(0, 32);
+  const categoryRaw = String(formData.get("category") ?? "nightclub").slice(0, 32);
+  const category = isVenueCategory(categoryRaw) ? categoryRaw : "other";
   const description = String(formData.get("description") ?? "").trim().slice(0, 2000);
   const address = String(formData.get("address") ?? "").trim().slice(0, 240);
   if (!name) redirect("/business?error=fields");
