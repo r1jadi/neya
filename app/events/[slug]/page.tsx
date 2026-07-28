@@ -60,7 +60,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
     saved = Boolean(s);
   }
 
-  const jsonLd = eventJsonLd(event);
+  const jsonLd = eventJsonLd(event, meta?.ticketTypes);
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">

@@ -104,25 +104,32 @@ export async function POST(req: Request) {
       const orderId = session.metadata?.ticket_order_id;
       const ticketId = session.metadata?.ticket_id;
       if (orderId) {
-        await admin
-          .from("ticket_orders")
-          .update({
-            status: "paid",
-            stripe_checkout_session: session.id,
-            qr_payload: `neya:${orderId}:${randomUUID()}`,
-          })
-          .eq("id", orderId);
-
-        if (ticketId) {
-          const { data: tix } = await admin.from("tickets").select("quantity_sold").eq("id", ticketId).maybeSingle();
-          const nextSold = (tix?.quantity_sold ?? 0) + 1;
-          await admin.from("tickets").update({ quantity_sold: nextSold }).eq("id", ticketId);
+        const { data: completed, error: completionError } = await admin.rpc("complete_ticket_order", {
+          p_order_id: orderId,
+          p_session_id: session.id,
+          p_qr_payload: `neya:${orderId}:${randomUUID()}`,
+        });
+        if (completionError || !completed) {
+          console.error("[neya] ticket order completion failed", completionError);
+          return NextResponse.json({ error: "Ticket order could not be completed" }, { status: 409 });
         }
 
         const { data: ord } = await admin.from("ticket_orders").select("user_id").eq("id", orderId).maybeSingle();
         if (ord?.user_id) {
           await logSystemActivity(admin, "bought_ticket", "ticket_order", orderId, { ticket_id: ticketId });
         }
+      }
+    }
+  }
+
+  if (event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    if (session.metadata?.neya_type === "ticket" && session.metadata.ticket_order_id) {
+      try {
+        const admin = createAdminClient();
+        await admin.rpc("release_ticket_order", { p_order_id: session.metadata.ticket_order_id });
+      } catch (err) {
+        console.error("[neya] ticket inventory release failed", err);
       }
     }
   }

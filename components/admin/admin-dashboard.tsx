@@ -645,7 +645,11 @@ function TicketForm({ events }: { events: AdminEventRow[] }) {
       </select>
       <Input name="tier_name" placeholder="Tier name" required />
       <Input name="price_cents" type="number" placeholder="Price (cents)" required />
+      <Input name="description" placeholder="Description (optional)" className="sm:col-span-2" />
       <Input name="quantity_total" type="number" placeholder="Quantity" />
+      <select name="status" defaultValue="available" className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white">
+        <option value="available">Available</option><option value="sold_out">Sold out</option><option value="closed">Closed</option>
+      </select>
       <Button type="submit" className="sm:col-span-2">
         Add ticket
       </Button>

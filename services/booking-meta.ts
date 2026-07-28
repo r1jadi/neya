@@ -18,7 +18,19 @@ export type EventBookingMeta = {
   ticketSoldOut: boolean;
   /** At least one ticket row exists for this event */
   hasTicketRows: boolean;
+  ticketTypes: TicketType[];
   reservation: ResolvedReservationConfig;
+};
+
+export type TicketType = {
+  id: string;
+  name: string;
+  description: string | null;
+  priceCents: number;
+  currency: string;
+  quantityAvailable: number | null;
+  status: "available" | "sold_out" | "closed";
+  salesEnd: string | null;
 };
 
 const VENUE_RESERVATION_SELECT =
@@ -51,26 +63,25 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
 
   const { data: tickets } = await sb
     .from("tickets")
-    .select("id, price_cents, quantity_total, quantity_sold")
+    .select("id, tier_name, description, price_cents, currency, quantity_total, quantity_sold, quantity_reserved, sales_start, sales_end, status")
     .eq("event_id", ev.id)
     .order("price_cents", { ascending: true });
 
+  const now = Date.now();
+  const ticketTypes: TicketType[] = (tickets ?? []).map((ticket) => {
+    const quantityAvailable = ticket.quantity_total == null ? null : Math.max(0, ticket.quantity_total - (ticket.quantity_sold ?? 0) - (ticket.quantity_reserved ?? 0));
+    const outsideSalesWindow = (ticket.sales_start && new Date(ticket.sales_start).getTime() > now) || (ticket.sales_end && new Date(ticket.sales_end).getTime() <= now);
+    const status: TicketType["status"] = ticket.status === "available" && !outsideSalesWindow && (quantityAvailable == null || quantityAvailable > 0) ? "available" : ticket.status === "closed" || outsideSalesWindow ? "closed" : "sold_out";
+    return { id: ticket.id, name: ticket.tier_name, description: ticket.description ?? null, priceCents: ticket.price_cents, currency: ticket.currency ?? "EUR", quantityAvailable, status, salesEnd: ticket.sales_end ?? null };
+  });
   let ticketId: string | null = null;
   let ticketSoldOut = false;
   const hasTicketRows = Boolean(tickets?.length);
 
   if (tickets?.length) {
-    const anyAvailable = tickets.some((t) => {
-      const cap = t.quantity_total;
-      const sold = t.quantity_sold ?? 0;
-      return cap == null || sold < cap;
-    });
+    const anyAvailable = ticketTypes.some((ticket) => ticket.status === "available");
     ticketSoldOut = !anyAvailable;
-    const firstAvailable = tickets.find((t) => {
-      const cap = t.quantity_total;
-      const sold = t.quantity_sold ?? 0;
-      return cap == null || sold < cap;
-    });
+    const firstAvailable = ticketTypes.find((ticket) => ticket.status === "available");
     ticketId = firstAvailable?.id ?? null;
   }
 
@@ -83,6 +94,7 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
     ticketId,
     ticketSoldOut,
     hasTicketRows,
+    ticketTypes,
     reservation,
   };
 }

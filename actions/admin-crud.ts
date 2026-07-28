@@ -250,6 +250,10 @@ export async function saveTicket(formData: FormData) {
     price_cents: Math.round(priceCents),
     currency: String(formData.get("currency") ?? "EUR").slice(0, 8),
     quantity_total: formData.get("quantity_total") ? Number(formData.get("quantity_total")) : null,
+    description: String(formData.get("description") ?? "").trim().slice(0, 1000) || null,
+    status: ["available", "sold_out", "closed"].includes(String(formData.get("status") ?? "available"))
+      ? String(formData.get("status"))
+      : "available",
     sales_start: String(formData.get("sales_start") ?? "").trim() || null,
     sales_end: String(formData.get("sales_end") ?? "").trim() || null,
   };

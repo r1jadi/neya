@@ -1,5 +1,6 @@
 import type { Event, Venue } from "@/types";
 import { SITE } from "@/lib/constants";
+import type { TicketType } from "@/services/booking-meta";
 
 export function organizationJsonLd() {
   return {
@@ -16,7 +17,7 @@ export function organizationJsonLd() {
   };
 }
 
-export function eventJsonLd(event: Event) {
+export function eventJsonLd(event: Event, ticketTypes: TicketType[] = []) {
   return {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -36,7 +37,16 @@ export function eventJsonLd(event: Event) {
     performer: event.performers?.length
       ? event.performers.map((performer) => ({ "@type": "Person", name: performer.name, image: performer.image_url, genre: performer.genre }))
       : undefined,
-    offers: event.ticket_from_eur
+    offers: ticketTypes.length
+      ? ticketTypes.map((ticket) => ({
+          "@type": "Offer",
+          name: ticket.name,
+          description: ticket.description ?? undefined,
+          price: ticket.priceCents / 100,
+          priceCurrency: ticket.currency,
+          availability: ticket.status === "available" ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
+        }))
+      : event.ticket_from_eur
       ? {
           "@type": "Offer",
           price: event.ticket_from_eur,

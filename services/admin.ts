@@ -74,6 +74,8 @@ export type AdminTicketRow = {
   currency: string;
   quantity_total: number | null;
   quantity_sold: number | null;
+  description: string | null;
+  status: "available" | "sold_out" | "closed";
 };
 
 export type AdminGuestlistRow = {
@@ -118,7 +120,7 @@ export async function getAdminDashboardData() {
       )
       .order("starts_at", { ascending: false })
       .limit(200),
-    admin.from("tickets").select("id, event_id, tier_name, price_cents, currency, quantity_total, quantity_sold").order("created_at", { ascending: false }),
+    admin.from("tickets").select("id, event_id, tier_name, description, price_cents, currency, quantity_total, quantity_sold, status").order("created_at", { ascending: false }),
     admin
       .from("guestlists")
       .select("id, event_id, name, capacity, is_vip, is_open, requires_manual_approval")

@@ -226,36 +226,31 @@ export async function createTicketCheckout(formData: FormData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect(loginNext("/events"));
+  const redirectTo = safeRedirectPath(String(formData.get("redirect") ?? "/events"));
+  if (!user) redirect(loginNext(redirectTo));
 
   const ticketId = String(formData.get("ticket_id") ?? "");
-  if (!ticketId) redirect("/events?error=ticket");
+  const quantity = Math.min(20, Math.max(1, Number.parseInt(String(formData.get("quantity") ?? "1"), 10) || 1));
+  if (!ticketId) redirect(`${redirectTo}?error=ticket`);
 
   const { data: ticket, error: tErr } = await supabase
     .from("tickets")
-    .select("id, price_cents, currency, quantity_total, quantity_sold, event_id")
+    .select("id, tier_name, price_cents, currency, status, sales_start, sales_end")
     .eq("id", ticketId)
     .single();
 
-  if (tErr || !ticket) redirect("/events?error=ticket");
-  const cap = ticket.quantity_total;
-  const sold = ticket.quantity_sold ?? 0;
-  if (cap != null && sold >= cap) redirect("/events?error=soldout");
+  if (tErr || !ticket) redirect(`${redirectTo}?error=ticket`);
+  if (ticket.status !== "available") redirect(`${redirectTo}?error=soldout`);
 
-  const { data: order, error: oErr } = await supabase
-    .from("ticket_orders")
-    .insert({
-      ticket_id: ticketId,
-      user_id: user.id,
-      status: "pending",
-    })
-    .select("id")
-    .single();
+  const { data: orderId, error: oErr } = await supabase.rpc("reserve_ticket_order", {
+    p_ticket_id: ticketId,
+    p_quantity: quantity,
+  });
 
-  if (oErr || !order) redirect("/events?error=order");
+  if (oErr || !orderId) redirect(`${redirectTo}?error=soldout`);
 
   const stripe = getStripe();
-  if (!stripe) redirect("/events?error=stripe");
+  if (!stripe) redirect(`${redirectTo}?error=stripe`);
 
   const origin = getPublicSiteUrl();
   const session = await stripe.checkout.sessions.create({
@@ -267,23 +262,28 @@ export async function createTicketCheckout(formData: FormData) {
           currency: (ticket.currency ?? "eur").toLowerCase(),
           unit_amount: ticket.price_cents,
           product_data: {
-            name: "NEYA event ticket",
+            name: `${ticket.tier_name} · NEYA event ticket`,
           },
         },
-        quantity: 1,
+        quantity,
       },
     ],
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/checkout/cancel`,
+    cancel_url: `${origin}/checkout/cancel?ticket_order_id=${orderId}`,
     metadata: {
       neya_type: "ticket",
-      ticket_order_id: order.id,
+      ticket_order_id: orderId,
       ticket_id: ticketId,
     },
   });
 
-  await supabase.from("ticket_orders").update({ stripe_checkout_session: session.id }).eq("id", order.id);
+  const { error: sessionError } = await supabase.from("ticket_orders").update({ stripe_checkout_session: session.id }).eq("id", orderId);
+  if (sessionError || !session.url) {
+    // The reservation remains protected until Stripe expires it; release it immediately on setup failure.
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    try { await createAdminClient().rpc("release_ticket_order", { p_order_id: orderId }); } catch { /* Stripe expiry is a safe fallback. */ }
+    redirect(`${redirectTo}?error=stripe`);
+  }
 
-  if (!session.url) redirect("/events?error=stripe");
   redirect(session.url);
 }
