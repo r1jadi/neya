@@ -39,6 +39,7 @@ import {
   reservationStatusLabel,
 } from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
+import { MUSIC_GENRES } from "@/types";
 
 type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
 
@@ -528,6 +529,16 @@ function EventForm({
   const performers = event?.performers?.length
     ? event.performers
     : event?.dj_lineup?.map((name) => ({ name })) ?? [];
+  const legacyGenreMap: Record<string, string> = {
+    afro: "afro_house",
+    "hip-hop": "hip_hop",
+    "r&b": "r_and_b",
+    live: "live_music",
+    mixed: "other",
+  };
+  const selectedGenre = event?.genre
+    ? legacyGenreMap[event.genre] ?? (MUSIC_GENRES.some((option) => option.id === event.genre) ? event.genre : "other")
+    : "other";
   const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
   const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
 
@@ -558,12 +569,12 @@ function EventForm({
         <Input name="ends_at" type="datetime-local" defaultValue={endsLocal} />
         <select
           name="genre"
-          defaultValue={event?.genre ?? "mixed"}
+          defaultValue={selectedGenre}
           className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white"
         >
-          {["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"].map((g) => (
-            <option key={g} value={g}>
-              {g}
+          {MUSIC_GENRES.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.label}
             </option>
           ))}
         </select>

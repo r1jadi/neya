@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
+import { MUSIC_GENRES } from "@/types";
 
 export async function requestVenueListing(formData: FormData) {
   const rl = await rateLimit("venue-request", 5, 3600);
@@ -60,7 +61,8 @@ export async function createVenueEvent(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim().slice(0, 160);
   const startsAtLocal = String(formData.get("starts_at") ?? "").trim();
   const startsAt = datetimeLocalToUtcIso(startsAtLocal);
-  const genre = String(formData.get("genre") ?? "mixed").slice(0, 32);
+  const genreRaw = String(formData.get("genre") ?? "other").slice(0, 32);
+  const genre = MUSIC_GENRES.some((option) => option.id === genreRaw) ? genreRaw : "other";
   if (!title || !startsAt) redirect("/business?error=fields");
 
   const slug = slugify(title);

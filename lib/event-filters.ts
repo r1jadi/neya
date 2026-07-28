@@ -1,7 +1,7 @@
 import { isHappeningNow, isOnThisWeekend, isPast, isTonight, isUpcoming } from "@/lib/event-dates";
 import type { Event, MusicGenre, VenueCategory } from "@/types";
 
-const DJ_GENRES: MusicGenre[] = ["house", "techno", "afro"];
+const DJ_GENRES: MusicGenre[] = ["house", "deep_house", "tech_house", "techno", "melodic_techno", "hard_techno"];
 
 /** Events starting later today (Prishtina TZ). */
 export function tonightEvents(events: Event[], now = new Date()) {

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPublicSiteUrl } from "@/lib/env";
+import { MUSIC_GENRES } from "@/types";
 
 export async function signUpWithEmail(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -42,7 +43,11 @@ export async function completeOnboarding(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/onboarding");
 
-  const genres = formData.getAll("genre").map((g) => String(g)).filter(Boolean).slice(0, 12);
+  const genres = formData
+    .getAll("genre")
+    .map((g) => String(g))
+    .filter((genre) => MUSIC_GENRES.some((option) => option.id === genre))
+    .slice(0, 12);
   const interests = formData.getAll("category").map((g) => String(g)).filter(Boolean).slice(0, 20);
   const city = String(formData.get("city_slug") ?? "prishtina").slice(0, 40);
   const ageRaw = String(formData.get("age") ?? "").trim();

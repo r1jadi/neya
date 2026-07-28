@@ -7,21 +7,11 @@ import { Input } from "@/components/ui/input";
 import { completeOnboarding } from "@/actions/auth-account";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { MUSIC_GENRES } from "@/types";
 
 export const metadata: Metadata = {
   title: `Onboarding · ${SITE.name}`,
 };
-
-const GENRES = [
-  { id: "house", label: "House" },
-  { id: "techno", label: "Techno" },
-  { id: "afro", label: "Afro" },
-  { id: "hip-hop", label: "Hip-hop" },
-  { id: "r&b", label: "R&B" },
-  { id: "latin", label: "Latin" },
-  { id: "live", label: "Live" },
-  { id: "mixed", label: "Mixed" },
-];
 
 const CATEGORIES = [
   { id: "club", label: "Clubs" },
@@ -68,7 +58,7 @@ export default async function OnboardingPage() {
           <fieldset>
             <legend className="text-sm font-medium text-white/80">Music</legend>
             <div className="mt-3 flex flex-wrap gap-2">
-              {GENRES.map((g) => (
+              {MUSIC_GENRES.map((g) => (
                 <label key={g.id} className="flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-white/85 has-[:checked]:border-sky-400/60 has-[:checked]:bg-sky-500/10">
                   <input type="checkbox" name="genre" value={g.id} className="rounded border-white/30" />
                   {g.label}

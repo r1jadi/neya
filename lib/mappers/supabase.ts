@@ -1,11 +1,20 @@
 import { resolveImageUrl } from "@/lib/images";
-import type { Event, EventPerformer, MusicGenre, Venue, VenueCategory } from "@/types";
+import { MUSIC_GENRES, type Event, type EventPerformer, type MusicGenre, type Venue, type VenueCategory } from "@/types";
 
-const GENRES: MusicGenre[] = ["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"];
+const LEGACY_GENRES: Record<string, MusicGenre> = {
+  afro: "afro_house",
+  "hip-hop": "hip_hop",
+  "r&b": "r_and_b",
+  live: "live_music",
+  mixed: "other",
+};
 
 function normalizeGenre(g: string | null | undefined): MusicGenre {
-  const x = (g ?? "mixed").toLowerCase().replace(/\s+/g, "-") as MusicGenre;
-  return GENRES.includes(x) ? x : "mixed";
+  const raw = (g ?? "other").toLowerCase().trim().replace(/[\s-]+/g, "_");
+  if (raw === "r_b") return "r_and_b";
+  return MUSIC_GENRES.some((genre) => genre.id === raw)
+    ? raw as MusicGenre
+    : LEGACY_GENRES[g?.toLowerCase() ?? ""] ?? "other";
 }
 
 const CATEGORIES: VenueCategory[] = [

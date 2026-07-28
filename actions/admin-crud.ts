@@ -7,6 +7,7 @@ import { requireAdminUser } from "@/lib/auth/require-admin";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 import type { EventPerformer } from "@/types";
+import { MUSIC_GENRES } from "@/types";
 
 function parseJsonArray(raw: string | null): string[] {
   if (!raw?.trim()) return [];
@@ -175,6 +176,8 @@ export async function saveEvent(formData: FormData) {
   const endsLocal = String(formData.get("ends_at") ?? "").trim();
   const endsAt = endsLocal ? datetimeLocalToUtcIso(endsLocal) : null;
   if (endsLocal && !endsAt) adminRedirect("tab=events&error=fields");
+  const genreRaw = String(formData.get("genre") ?? "other").slice(0, 32);
+  const genre = MUSIC_GENRES.some((option) => option.id === genreRaw) ? genreRaw : "other";
 
   const admin = createAdminClient();
   const performers = parsePerformers(String(formData.get("performers") ?? ""));
@@ -184,7 +187,7 @@ export async function saveEvent(formData: FormData) {
     description: String(formData.get("description") ?? "").trim().slice(0, 4000) || null,
     starts_at: startsAt,
     ends_at: endsAt,
-    genre: String(formData.get("genre") ?? "mixed").slice(0, 32),
+    genre,
     image_url: String(formData.get("image_url") ?? "").trim().slice(0, 2000) || null,
     performers,
     // Keep the legacy field populated for existing integrations and reads.

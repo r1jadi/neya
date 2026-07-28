@@ -6,12 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { MUSIC_GENRES } from "@/types";
 
 export const metadata: Metadata = {
   title: `Venue hub · ${SITE.name}`,
 };
-
-const GENRES = ["house", "techno", "afro", "hip-hop", "r&b", "latin", "live", "mixed"];
 
 type Props = { searchParams: Promise<{ error?: string; created?: string; event?: string }> };
 
@@ -132,11 +131,11 @@ export default async function BusinessPage({ searchParams }: Props) {
               <select
                 name="genre"
                 className="mt-1 w-full rounded-lg border border-white/15 bg-black/50 px-3 py-2 text-sm text-white"
-                defaultValue="mixed"
+                defaultValue="other"
               >
-                {GENRES.map((g) => (
-                  <option key={g} value={g}>
-                    {g}
+                {MUSIC_GENRES.map((genre) => (
+                  <option key={genre.id} value={genre.id}>
+                    {genre.label}
                   </option>
                 ))}
               </select>

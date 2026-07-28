@@ -1,12 +1,71 @@
-export type MusicGenre =
-  | "house"
-  | "techno"
-  | "afro"
-  | "hip-hop"
-  | "r&b"
-  | "latin"
-  | "live"
-  | "mixed";
+export const MUSIC_GENRES = [
+  { id: "acoustic", label: "Acoustic" },
+  { id: "afro_house", label: "Afro House" },
+  { id: "albanian", label: "Albanian" },
+  { id: "alternative_rock", label: "Alternative Rock" },
+  { id: "ambient", label: "Ambient" },
+  { id: "arabic", label: "Arabic" },
+  { id: "bachata", label: "Bachata" },
+  { id: "balkan", label: "Balkan" },
+  { id: "bass_house", label: "Bass House" },
+  { id: "big_room", label: "Big Room" },
+  { id: "blues", label: "Blues" },
+  { id: "classical", label: "Classical" },
+  { id: "dance", label: "Dance" },
+  { id: "dancehall", label: "Dancehall" },
+  { id: "deep_house", label: "Deep House" },
+  { id: "disco", label: "Disco" },
+  { id: "drum_and_bass", label: "Drum & Bass" },
+  { id: "dubstep", label: "Dubstep" },
+  { id: "edm", label: "EDM" },
+  { id: "electro", label: "Electro" },
+  { id: "electro_house", label: "Electro House" },
+  { id: "experimental", label: "Experimental" },
+  { id: "folk", label: "Folk" },
+  { id: "funk", label: "Funk" },
+  { id: "future_house", label: "Future House" },
+  { id: "garage", label: "Garage" },
+  { id: "greek", label: "Greek" },
+  { id: "hard_techno", label: "Hard Techno" },
+  { id: "hip_hop", label: "Hip Hop" },
+  { id: "house", label: "House" },
+  { id: "indie", label: "Indie" },
+  { id: "instrumental", label: "Instrumental" },
+  { id: "jazz", label: "Jazz" },
+  { id: "kizomba", label: "Kizomba" },
+  { id: "latin", label: "Latin" },
+  { id: "live_music", label: "Live Music" },
+  { id: "lo_fi", label: "Lo-fi" },
+  { id: "lounge", label: "Lounge" },
+  { id: "macedonian", label: "Macedonian" },
+  { id: "melodic_house", label: "Melodic House" },
+  { id: "melodic_techno", label: "Melodic Techno" },
+  { id: "metal", label: "Metal" },
+  { id: "minimal", label: "Minimal" },
+  { id: "opera", label: "Opera" },
+  { id: "other", label: "Other" },
+  { id: "pop", label: "Pop" },
+  { id: "progressive_house", label: "Progressive House" },
+  { id: "punk", label: "Punk" },
+  { id: "psytrance", label: "Psytrance" },
+  { id: "r_and_b", label: "R&B" },
+  { id: "rap", label: "Rap" },
+  { id: "reggae", label: "Reggae" },
+  { id: "reggaeton", label: "Reggaeton" },
+  { id: "rock", label: "Rock" },
+  { id: "salsa", label: "Salsa" },
+  { id: "serbian", label: "Serbian" },
+  { id: "soul", label: "Soul" },
+  { id: "tech_house", label: "Tech House" },
+  { id: "techno", label: "Techno" },
+  { id: "trance", label: "Trance" },
+  { id: "trap", label: "Trap" },
+  { id: "turkish", label: "Turkish" },
+  { id: "uk_garage", label: "UK Garage" },
+  { id: "world", label: "World" },
+] as const;
+
+export type MusicGenre = (typeof MUSIC_GENRES)[number]["id"] | "afro" | "hip-hop" | "r&b" | "live" | "mixed";
 
 export type VenueCategory =
   | "club"
