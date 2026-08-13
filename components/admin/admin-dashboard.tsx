@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   approveVenue,
@@ -17,6 +17,7 @@ import {
 } from "@/actions/admin-crud";
 import { grantPremiumByUserId } from "@/actions/admin-events";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
+import { EventPosterGenerator, type PosterEventData } from "@/components/admin/event-poster-generator";
 import { PerformerFields } from "@/components/admin/performer-fields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -528,6 +529,7 @@ function EventForm({
   venues: AdminVenueRow[];
   onClose: () => void;
 }) {
+  const formRef = useRef<HTMLFormElement>(null);
   const performers = event?.performers?.length
     ? event.performers
     : event?.dj_lineup?.map((name) => ({ name })) ?? [];
@@ -543,9 +545,26 @@ function EventForm({
     : "other";
   const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
   const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
+  const getPosterEventData = (): PosterEventData => {
+    const form = formRef.current;
+    const values = form ? new FormData(form) : new FormData();
+    const venueId = String(values.get("venue_id") ?? "");
+    const selectedVenue = venues.find((venue) => venue.id === venueId);
+    const ticketFrom = String(values.get("ticket_from_eur") ?? "").trim();
+    const ticketValue = Number(ticketFrom);
+
+    return {
+      title: String(values.get("title") ?? "").trim(),
+      startsAt: String(values.get("starts_at") ?? "").trim(),
+      venue: selectedVenue?.name,
+      location: selectedVenue?.address ?? undefined,
+      ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketValue.toLocaleString("en-GB", { maximumFractionDigits: 2 })}` : undefined,
+      imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+    };
+  };
 
   return (
-    <form action={saveEvent} className="space-y-4 rounded-xl border border-sky-500/30 bg-sky-950/10 p-6">
+    <form ref={formRef} action={saveEvent} className="space-y-4 rounded-xl border border-sky-500/30 bg-sky-950/10 p-6">
       {event?.id ? <input type="hidden" name="id" value={event.id} /> : null}
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-white">{event ? "Edit event" : "New event"}</h3>
@@ -628,7 +647,14 @@ function EventForm({
           <input type="checkbox" name="is_hidden_premium" defaultChecked={event?.is_hidden_premium} /> Premium-only
         </label>
       </div>
-      <Button type="submit">Save event</Button>
+      <div className="flex flex-wrap gap-3">
+        <Button type="submit">Save event</Button>
+        <EventPosterGenerator
+          eventId={event?.id}
+          posterUrl={event?.poster_url}
+          getEventData={getPosterEventData}
+        />
+      </div>
     </form>
   );
 }
