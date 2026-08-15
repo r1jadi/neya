@@ -75,6 +75,9 @@ export default async function VenuePortalPage({ searchParams }: Props) {
         <Link href="/venue/reservations" className="text-sky-300 hover:underline">
           Reservations →
         </Link>
+        <Link href="/venue/scan" className="text-sky-300 hover:underline">
+          Scan tickets →
+        </Link>
       </div>
     </main>
   );

@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdminEmail } from "@/lib/auth/admin";
+import { getProfileForUser } from "@/lib/auth/profile";
+import { canAccessVenuePortal } from "@/lib/auth/permissions";
 
 async function assertStaff() {
   const supabase = await createClient();
@@ -27,18 +29,21 @@ export async function validateTicketAtDoor(formData: FormData) {
     } catch {
       redirect("/business/scan?error=config");
     }
-    const { data: o2 } = await admin.from("ticket_orders").select("id, status, used_at").eq("qr_payload", raw).maybeSingle();
+    const { data: o2 } = await admin.from("ticket_orders").select("id, payment_status, used_at").eq("qr_payload", raw).maybeSingle();
     if (!o2) redirect("/business/scan?error=notfound");
-    if (o2.status !== "paid") redirect("/business/scan?error=unpaid");
+    if (o2.payment_status !== "paid") redirect("/business/scan?error=unpaid");
     if (o2.used_at) redirect("/business/scan?info=already");
     await admin.from("ticket_orders").update({ used_at: new Date().toISOString() }).eq("id", o2.id);
     revalidatePath("/business/scan");
     redirect("/business/scan?ok=1");
   };
 
+  const profile = await getProfileForUser(user);
+  const assignedVenueId = canAccessVenuePortal(profile) ? profile?.venue_id : null;
+
   const { data: order, error } = await supabase
     .from("ticket_orders")
-    .select("id, status, used_at, qr_payload, ticket_id")
+    .select("id, payment_status, used_at, qr_payload, ticket_id")
     .eq("qr_payload", raw)
     .maybeSingle();
 
@@ -59,12 +64,17 @@ export async function validateTicketAtDoor(formData: FormData) {
   const { data: venue } = await supabase.from("venues").select("owner_id").eq("id", ev.venue_id).maybeSingle();
   if (!venue) redirect("/business/scan?error=notfound");
 
-  if (!adminUser && venue.owner_id !== user.id) redirect("/business/scan?error=forbidden");
+  if (!adminUser && venue.owner_id !== user.id && assignedVenueId !== ev.venue_id) {
+    redirect("/business/scan?error=forbidden");
+  }
 
-  if (order.status !== "paid") redirect("/business/scan?error=unpaid");
+  if (order.payment_status !== "paid") redirect("/business/scan?error=unpaid");
   if (order.used_at) redirect("/business/scan?info=already");
 
-  const { error: uErr } = await supabase.from("ticket_orders").update({ used_at: new Date().toISOString() }).eq("id", order.id);
+  const { error: uErr } = await createAdminClient()
+    .from("ticket_orders")
+    .update({ used_at: new Date().toISOString() })
+    .eq("id", order.id);
   if (uErr) redirect("/business/scan?error=update");
 
   revalidatePath("/business/scan");

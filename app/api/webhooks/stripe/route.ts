@@ -114,6 +114,19 @@ export async function POST(req: Request) {
           return NextResponse.json({ error: "Ticket order could not be completed" }, { status: 409 });
         }
 
+        await admin
+          .from("ticket_payment_attempts")
+          .update({
+            status: "paid",
+            provider_transaction_id:
+              typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id ?? null,
+            provider_status_code: "paid",
+            provider_status_message: "Stripe Checkout payment completed",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("provider", "stripe")
+          .eq("checkout_session_id", session.id);
+
         const { data: ord } = await admin.from("ticket_orders").select("user_id").eq("id", orderId).maybeSingle();
         if (ord?.user_id) {
           await logSystemActivity(admin, "bought_ticket", "ticket_order", orderId, { ticket_id: ticketId });
@@ -127,6 +140,15 @@ export async function POST(req: Request) {
     if (session.metadata?.neya_type === "ticket" && session.metadata.ticket_order_id) {
       try {
         const admin = createAdminClient();
+        await admin
+          .from("ticket_payment_attempts")
+          .update({
+            status: event.type === "checkout.session.expired" ? "cancelled" : "failed",
+            provider_status_message: event.type,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("provider", "stripe")
+          .eq("checkout_session_id", session.id);
         await admin.rpc("release_ticket_order", { p_order_id: session.metadata.ticket_order_id });
       } catch (err) {
         console.error("[neya] ticket inventory release failed", err);

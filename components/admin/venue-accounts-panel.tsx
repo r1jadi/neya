@@ -30,7 +30,7 @@ export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
-    setAccounts(initialAccounts);
+    queueMicrotask(() => setAccounts(initialAccounts));
   }, [initialAccounts]);
 
   const refreshAccounts = useCallback(async () => {
@@ -62,8 +62,10 @@ export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
 
   useEffect(() => {
     if (!shouldRefreshFromMutation) return;
-    router.refresh();
-    void refreshAccounts();
+    queueMicrotask(() => {
+      router.refresh();
+      void refreshAccounts();
+    });
   }, [shouldRefreshFromMutation, router, refreshAccounts]);
 
   return (

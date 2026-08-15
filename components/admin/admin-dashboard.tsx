@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import Link from "next/link";
 import {
   approveVenue,
@@ -101,13 +101,9 @@ export function AdminDashboard({
   reservations,
   stats,
 }: AdminDashboardProps) {
-  const [tab, setTab] = useState<Tab>(initialTab);
   const [editingVenue, setEditingVenue] = useState<AdminVenueRow | "new" | null>(null);
   const [editingEvent, setEditingEvent] = useState<AdminEventRow | "new" | null>(null);
-
-  useEffect(() => {
-    setTab(initialTab);
-  }, [initialTab]);
+  const tab = initialTab;
 
   return (
     <div className="space-y-8">
@@ -117,7 +113,6 @@ export function AdminDashboard({
             <Link
               key={t.id}
               href={`/admin?tab=${t.id}`}
-              onClick={() => setTab(t.id)}
               className={cn(
                 "rounded-full px-3 py-1.5 text-xs font-medium transition",
                 tab === t.id ? "bg-white text-black" : "border border-white/15 text-white/70 hover:text-white",

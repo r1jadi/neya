@@ -47,7 +47,7 @@ export default async function DashboardPage() {
 
   const { data: orders } = await supabase
     .from("ticket_orders")
-    .select("id, status, created_at, qr_payload, tickets(tier_name, events(title, slug))")
+    .select("id, status, payment_status, created_at, qr_payload, tickets(tier_name, events(title, slug))")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -207,8 +207,8 @@ export default async function DashboardPage() {
                     className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
                   >
                     <span className="font-medium text-white">{ev?.title ?? "Event"}</span> · {t?.tier_name ?? "Ticket"}{" "}
-                    · <span className="text-sky-200/90">{o.status}</span>
-                    {o.status === "paid" && o.qr_payload ? (
+                    · <span className="text-sky-200/90">{o.payment_status}</span>
+                    {o.payment_status === "paid" && o.qr_payload ? (
                       <span className="mt-2 block font-mono text-xs text-white/50">QR: {o.qr_payload}</span>
                     ) : null}
                     {ev?.slug ? (

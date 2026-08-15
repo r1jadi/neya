@@ -45,7 +45,7 @@ export default async function VenueAnalyticsPage() {
       const { count: tc } = await supabase
         .from("ticket_orders")
         .select("id", { count: "exact", head: true })
-        .eq("status", "paid")
+        .eq("payment_status", "paid")
         .in("ticket_id", tkids);
       paidTickets = tc ?? 0;
     }

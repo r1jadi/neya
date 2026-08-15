@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 
 function callbackUrl(redirectPath?: string) {
   if (typeof window === "undefined") return "";
-  const q = redirectPath && redirectPath.startsWith("/") ? `?next=${encodeURIComponent(redirectPath)}` : "";
+  const isInternalPath = redirectPath?.startsWith("/") && !redirectPath.startsWith("//") && !redirectPath.startsWith("/\\");
+  const q = isInternalPath && redirectPath ? `?next=${encodeURIComponent(redirectPath)}` : "";
   return `${window.location.origin}/auth/callback${q}`;
 }
 
@@ -37,7 +38,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       setError(err.message);
       return;
     }
-    const dest = redirectTo && redirectTo.startsWith("/") ? redirectTo : "/events";
+    const dest = redirectTo?.startsWith("/") && !redirectTo.startsWith("//") && !redirectTo.startsWith("/\\") ? redirectTo : "/events";
     window.location.href = dest;
   }
 

@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { GuideDay, GuideStop, GuideTransport } from "@/types/guides";
+import type { GuideStop, GuideTransport } from "@/types/guides";
 
 export type AdminGuideRow = {
   id: string;

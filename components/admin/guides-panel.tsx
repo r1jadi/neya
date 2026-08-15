@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   deleteGuide,
@@ -79,12 +79,6 @@ export function GuidesPanel({ guides, editGuideId, editDetail, intercityRoutes }
       reorderGuideStops(fd);
     };
   }
-
-  useEffect(() => {
-    if (editGuideId && editDetail) {
-      setEditing(editDetail.guide);
-    }
-  }, [editGuideId, editDetail]);
 
   return (
     <section className="space-y-8">

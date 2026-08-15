@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Download, FileText, HardDrive } from "lucide-react";
 import type { Guide } from "@/types/guides";
 import { Button } from "@/components/ui/button";
@@ -12,15 +12,7 @@ interface OfflineGuideToolsProps {
 }
 
 export function OfflineGuideTools({ guide }: OfflineGuideToolsProps) {
-  const [cached, setCached] = useState(false);
-
-  useEffect(() => {
-    try {
-      setCached(Boolean(localStorage.getItem(`${CACHE_KEY_PREFIX}${guide.slug}`)));
-    } catch {
-      setCached(false);
-    }
-  }, [guide.slug]);
+  const [cached, setCached] = useState(() => getCachedGuide(guide.slug) !== null);
 
   const cacheGuide = useCallback(() => {
     try {

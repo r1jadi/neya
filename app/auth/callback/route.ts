@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { safeInternalPath } from "@/lib/redirect";
 
 type CookieJar = { name: string; value: string; options?: Record<string, unknown> };
 
@@ -7,7 +8,7 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const next = url.searchParams.get("next") ?? "/";
-  const safeNext = next.startsWith("/") ? next : "/";
+  const safeNext = safeInternalPath(next, "/");
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

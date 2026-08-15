@@ -35,11 +35,7 @@ type Props = {
 export function GuestlistRequestsPanel({ requests: initialRequests, events, variant = "admin" }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [requests, setRequests] = useState(initialRequests);
-
-  useEffect(() => {
-    setRequests(initialRequests);
-  }, [initialRequests]);
+  const requests = initialRequests;
 
   useEffect(() => {
     if (searchParams.get("ok") !== "1") return;

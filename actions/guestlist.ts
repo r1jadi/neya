@@ -16,12 +16,9 @@ import { syncGuestlistEntryFromRequest } from "@/lib/guestlist/sync-entry";
 import { getEventGuestlistMeta } from "@/services/guestlist";
 import type { GuestlistRequestStatus, SubmitGuestlistResult } from "@/types/guestlist";
 import { redirect } from "next/navigation";
+import { safeInternalPath } from "@/lib/redirect";
 
 const GL_STATUSES = new Set<GuestlistRequestStatus>(["pending", "approved", "rejected", "checked_in"]);
-
-function adminRedirect(query: string) {
-  redirect(`/admin?tab=guestlists&${query}`);
-}
 
 function logGuestlist(action: string, meta: Record<string, unknown>) {
   console.error(`[guestlist] ${action}`, meta);
@@ -166,10 +163,7 @@ async function patchGuestlistRequest(
   return { ok: true };
 }
 
-async function afterGuestlistRequestChange(
-  requestId: string,
-  asAdmin: boolean,
-): Promise<void> {
+async function afterGuestlistRequestChange(requestId: string): Promise<void> {
   const admin = createAdminClient();
   const sync = await syncGuestlistEntryFromRequest(admin, requestId);
   if (!sync.ok) {
@@ -196,7 +190,7 @@ async function applyGuestlistStatusUpdate(
   const requestId = String(formData.get("request_id") ?? "").trim();
   const status = String(formData.get("status") ?? "").trim() as GuestlistRequestStatus;
   const redirectTo = String(formData.get("redirect") ?? opts.defaultRedirect).trim();
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : opts.defaultRedirect;
+  const safeRedirect = safeInternalPath(redirectTo, opts.defaultRedirect);
 
   if (!requestId || !GL_STATUSES.has(status)) {
     redirect(withQueryParam(safeRedirect, "error=invalid"));
@@ -248,7 +242,7 @@ async function applyGuestlistStatusUpdate(
     );
   }
 
-  await afterGuestlistRequestChange(requestId, opts.asAdmin);
+  await afterGuestlistRequestChange(requestId);
   redirect(withQueryParam(safeRedirect, "ok=1"));
 }
 
@@ -275,7 +269,7 @@ export async function deleteGuestlistRequest(formData: FormData) {
 
   const requestId = String(formData.get("request_id") ?? "").trim();
   const redirectTo = String(formData.get("redirect") ?? "/business/guestlists").trim();
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/business/guestlists";
+  const safeRedirect = safeInternalPath(redirectTo, "/business/guestlists");
   if (!requestId) redirect(withQueryParam(safeRedirect, "error=invalid"));
 
   const { error } = await supabase.from("guestlist_requests").delete().eq("id", requestId);
@@ -294,7 +288,7 @@ export async function deleteGuestlistRequestAdmin(formData: FormData) {
   await requireAdminUser();
   const requestId = String(formData.get("request_id") ?? "").trim();
   const redirectTo = String(formData.get("redirect") ?? "/admin?tab=guestlists").trim();
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/admin?tab=guestlists";
+  const safeRedirect = safeInternalPath(redirectTo, "/admin?tab=guestlists");
   if (!requestId) redirect(withQueryParam(safeRedirect, "error=invalid"));
 
   const admin = createAdminClient();

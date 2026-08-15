@@ -7,14 +7,14 @@ import { getStripe } from "@/lib/stripe/server";
 import { getPublicSiteUrl } from "@/lib/env";
 import { logUserActivity } from "@/lib/activity-log";
 import { resolveReservationConfig, type ReservationPaymentMethod } from "@/lib/reservations/config";
+import { safeInternalPath } from "@/lib/redirect";
 
 function loginNext(path: string) {
   return `/login?next=${encodeURIComponent(path)}`;
 }
 
 function safeRedirectPath(raw: string | null): string {
-  const path = String(raw ?? "/events").trim();
-  return path.startsWith("/") ? path : "/events";
+  return safeInternalPath(raw, "/events");
 }
 
 type VenueReservationRow = {
@@ -235,12 +235,19 @@ export async function createTicketCheckout(formData: FormData) {
 
   const { data: ticket, error: tErr } = await supabase
     .from("tickets")
-    .select("id, tier_name, price_cents, currency, status, sales_start, sales_end")
+    .select("id, tier_name, status, sales_start, sales_end")
     .eq("id", ticketId)
     .single();
 
   if (tErr || !ticket) redirect(`${redirectTo}?error=ticket`);
   if (ticket.status !== "available") redirect(`${redirectTo}?error=soldout`);
+  const now = Date.now();
+  if (
+    (ticket.sales_start && new Date(ticket.sales_start).getTime() > now) ||
+    (ticket.sales_end && new Date(ticket.sales_end).getTime() <= now)
+  ) {
+    redirect(`${redirectTo}?error=ticket-unavailable`);
+  }
 
   const { data: orderId, error: oErr } = await supabase.rpc("reserve_ticket_order", {
     p_ticket_id: ticketId,
@@ -248,6 +255,14 @@ export async function createTicketCheckout(formData: FormData) {
   });
 
   if (oErr || !orderId) redirect(`${redirectTo}?error=soldout`);
+
+  const { data: order } = await supabase
+    .from("ticket_orders")
+    .select("id, amount_cents, currency")
+    .eq("id", orderId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!order || order.amount_cents == null || !order.currency) redirect(`${redirectTo}?error=ticket`);
 
   const stripe = getStripe();
   if (!stripe) redirect(`${redirectTo}?error=stripe`);
@@ -259,8 +274,8 @@ export async function createTicketCheckout(formData: FormData) {
     line_items: [
       {
         price_data: {
-          currency: (ticket.currency ?? "eur").toLowerCase(),
-          unit_amount: ticket.price_cents,
+          currency: order.currency.toLowerCase(),
+          unit_amount: order.amount_cents / quantity,
           product_data: {
             name: `${ticket.tier_name} · NEYA event ticket`,
           },
@@ -277,7 +292,22 @@ export async function createTicketCheckout(formData: FormData) {
     },
   });
 
-  const { error: sessionError } = await supabase.from("ticket_orders").update({ stripe_checkout_session: session.id }).eq("id", orderId);
+  let sessionError: unknown = null;
+  try {
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    const admin = createAdminClient();
+    const { error: attemptError } = await admin.from("ticket_payment_attempts").insert({
+      ticket_order_id: order.id,
+      provider: "stripe",
+      checkout_session_id: session.id,
+      amount_cents: order.amount_cents,
+      currency: order.currency,
+    });
+    const { error } = await admin.from("ticket_orders").update({ stripe_checkout_session: session.id }).eq("id", orderId);
+    sessionError = attemptError ?? error;
+  } catch (err) {
+    sessionError = err;
+  }
   if (sessionError || !session.url) {
     // The reservation remains protected until Stripe expires it; release it immediately on setup failure.
     const { createAdminClient } = await import("@/lib/supabase/admin");
@@ -286,4 +316,29 @@ export async function createTicketCheckout(formData: FormData) {
   }
 
   redirect(session.url);
+}
+
+/** Releases a pending order when the buyer returns from Stripe without paying. */
+export async function releaseTicketReservation(orderId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user || !orderId) return;
+
+  const { data: order } = await supabase
+    .from("ticket_orders")
+    .select("id, payment_status")
+    .eq("id", orderId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!order || order.payment_status !== "pending") return;
+
+  try {
+    await (await import("@/lib/supabase/admin")).createAdminClient().rpc("release_ticket_order", {
+      p_order_id: order.id,
+    });
+  } catch {
+    // Stripe's expiry webhook remains a safe fallback when server configuration is incomplete.
+  }
 }
