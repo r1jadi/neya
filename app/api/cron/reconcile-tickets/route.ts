@@ -1,6 +1,6 @@
-import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isCronSecretConfigured, isValidCronRequest } from "@/lib/cron-auth";
 import { reconcileRaiAcceptTicketPayments } from "@/lib/raiaccept/reconcile";
 
 /**
@@ -11,21 +11,11 @@ import { reconcileRaiAcceptTicketPayments } from "@/lib/raiaccept/reconcile";
  * secret, so it is never publicly callable.
  */
 
-function secretMatches(token: string): boolean {
-  const expected = process.env.CRON_SECRET;
-  if (!expected) return false;
-  const a = createHash("sha256").update(token).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
-}
-
 export async function GET(req: Request) {
-  if (!process.env.CRON_SECRET) {
+  if (!isCronSecretConfigured()) {
     return NextResponse.json({ error: "CRON_SECRET is not configured" }, { status: 503 });
   }
-  const authorization = req.headers.get("authorization") ?? "";
-  const token = authorization.startsWith("Bearer ") ? authorization.slice("Bearer ".length) : "";
-  if (!token || !secretMatches(token)) {
+  if (!isValidCronRequest(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
