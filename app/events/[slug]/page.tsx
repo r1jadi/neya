@@ -50,14 +50,24 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   if (!event) notFound();
 
   let saved = false;
+  let purchasedTickets = 0;
   if (user && isUuid(event.id)) {
-    const { data: s } = await supabase
-      .from("saved_events")
-      .select("event_id")
-      .eq("user_id", user.id)
-      .eq("event_id", event.id)
-      .maybeSingle();
-    saved = Boolean(s);
+    const [s, orders] = await Promise.all([
+      supabase
+        .from("saved_events")
+        .select("event_id")
+        .eq("user_id", user.id)
+        .eq("event_id", event.id)
+        .maybeSingle(),
+      supabase
+        .from("ticket_orders")
+        .select("id, tickets(event_id)", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("tickets.event_id", event.id)
+        .eq("payment_status", "paid"),
+    ]);
+    saved = Boolean(s.data);
+    purchasedTickets = orders.count ?? 0;
   }
 
   const jsonLd = eventJsonLd(event, meta?.ticketTypes);
@@ -74,6 +84,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             event={event}
             meta={meta}
             saved={saved}
+            purchasedTickets={purchasedTickets}
             showSave={Boolean(user)}
             flash={{
               guestlist: sp.guestlist,

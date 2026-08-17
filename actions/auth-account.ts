@@ -21,7 +21,19 @@ export async function signUpWithEmail(formData: FormData) {
       data: { full_name: displayName || email.split("@")[0] },
     },
   });
-  if (error) redirect(`/register?error=${encodeURIComponent(error.message)}`);
+  if (error) {
+    // Map provider errors to stable codes so the UI can show friendly copy
+    // instead of raw Supabase messages.
+    const message = error.message.toLowerCase();
+    const code = message.includes("already registered")
+      ? "exists"
+      : message.includes("password")
+        ? "password"
+        : message.includes("invalid email")
+          ? "email"
+          : "generic";
+    redirect(`/register?error=${code}`);
+  }
   redirect("/register?checkEmail=1");
 }
 

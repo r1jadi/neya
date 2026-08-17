@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 export function UpdatePasswordForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
   const supabase = useMemo(() => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -25,6 +26,7 @@ export function UpdatePasswordForm() {
       setError("Sign-in is temporarily unavailable. Please try again later.");
       return;
     }
+    setPending(true);
     const fd = new FormData(e.currentTarget);
     const p1 = String(fd.get("password") ?? "");
     const p2 = String(fd.get("confirm") ?? "");
@@ -37,6 +39,7 @@ export function UpdatePasswordForm() {
       return;
     }
     const { error: err } = await supabase.auth.updateUser({ password: p1 });
+    setPending(false);
     if (err) {
       setError(err.message);
       return;
@@ -62,7 +65,9 @@ export function UpdatePasswordForm() {
           {error ? <p className="text-sm text-red-300">{error}</p> : null}
           <Input name="password" type="password" placeholder="New password" required minLength={6} autoComplete="new-password" />
           <Input name="confirm" type="password" placeholder="Confirm password" required minLength={6} autoComplete="new-password" />
-          <Button type="submit">Update password</Button>
+          <Button type="submit" disabled={pending}>
+            {pending ? "Updating…" : "Update password"}
+          </Button>
         </form>
       )}
     </>

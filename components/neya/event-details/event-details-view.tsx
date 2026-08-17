@@ -31,6 +31,7 @@ export type EventDetailsViewProps = {
   meta: EventBookingMeta | null;
   saved?: boolean;
   showSave?: boolean;
+  purchasedTickets?: number;
   flash?: EventDetailsFlash;
 };
 
@@ -103,7 +104,7 @@ function safeExternalUrl(value: string): string | null {
   }
 }
 
-export function EventDetailsView({ event, meta, saved, showSave, flash }: EventDetailsViewProps) {
+export function EventDetailsView({ event, meta, saved, showSave, purchasedTickets, flash }: EventDetailsViewProps) {
   const description = getEventDescription(event);
   const capacityLabel = formatCapacity(event.capacity);
   const ticketLabel = formatTicketPrice(event);
@@ -250,6 +251,7 @@ export function EventDetailsView({ event, meta, saved, showSave, flash }: EventD
                 meta={meta}
                 saved={saved}
                 showSave={showSave}
+                purchasedTickets={purchasedTickets}
                 layout="sidebar"
               />
             </div>

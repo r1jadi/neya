@@ -18,7 +18,10 @@ import { venueJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
 import { CheckInWidget } from "@/components/neya/check-in-widget";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ checkin?: string }>;
+};
 
 function externalUrl(value: string | undefined): string | null {
   if (!value) return null;
@@ -44,8 +47,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function VenuePage({ params }: Props) {
+export default async function VenuePage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const q = await searchParams;
   const supabase = await createClient();
   const [venue, venueMeta] = await Promise.all([
     getVenueBySlug(slug),
@@ -90,6 +94,21 @@ export default async function VenuePage({ params }: Props) {
           </div>
         </div>
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
+          {q.checkin === "1" ? (
+            <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
+              You&apos;re checked in — see you tonight ✦
+            </p>
+          ) : null}
+          {q.checkin === "err" ? (
+            <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+              We couldn&apos;t record your check-in. Please try again.
+            </p>
+          ) : null}
+          {q.checkin === "rate" ? (
+            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+              You&apos;ve checked in recently — take a breath and try again in a bit.
+            </p>
+          ) : null}
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
             {venueMeta && isUuid(venueMeta.venueUuid) ? (
               <CheckInWidget
@@ -157,6 +176,17 @@ export default async function VenuePage({ params }: Props) {
               {venue.address ? (
                 <p className="flex items-start gap-3 text-sm text-white/65"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" />{venue.address}</p>
               ) : null}
+              {mapQuery ? (
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-fit items-center gap-2 rounded-xl border border-sky-400/30 bg-sky-500/10 px-3 py-2 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20"
+                >
+                  <MapPin className="h-4 w-4" />
+                  Get directions
+                </a>
+              ) : null}
               {venue.capacity != null ? (
                 <p className="flex items-center gap-3 text-sm text-white/65"><Users className="h-4 w-4 shrink-0 text-sky-300" />Capacity {venue.capacity.toLocaleString()}</p>
               ) : null}
@@ -194,7 +224,9 @@ export default async function VenuePage({ params }: Props) {
                 ))}
               </div>
             ) : (
-              <p className="mt-4 text-sm text-white/50">No events listed yet.</p>
+              <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">
+                No events listed here yet — check back soon, or browse the rest of the city tonight.
+              </p>
             )}
           </div>
         </div>

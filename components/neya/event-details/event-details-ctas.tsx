@@ -21,6 +21,7 @@ interface EventDetailsCtasProps {
   meta: EventBookingMeta | null;
   saved?: boolean;
   showSave?: boolean;
+  purchasedTickets?: number;
   layout?: "sidebar" | "sticky";
   className?: string;
 }
@@ -30,6 +31,7 @@ export function EventDetailsCtas({
   meta,
   saved,
   showSave,
+  purchasedTickets = 0,
   layout = "sidebar",
   className,
 }: EventDetailsCtasProps) {
@@ -80,8 +82,22 @@ export function EventDetailsCtas({
       </p>
     );
 
+  const purchasedBanner =
+    purchasedTickets > 0 ? (
+      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3">
+        <p className="text-sm font-semibold text-emerald-100">
+          ✓ You&apos;re in — {purchasedTickets} ticket{purchasedTickets === 1 ? "" : "s"} for this night
+        </p>
+        <Link href="/dashboard" className="mt-1 inline-block text-xs text-sky-300 hover:underline">
+          View your tickets on the dashboard
+        </Link>
+      </div>
+    ) : null;
+
   const ticketBlock = showTicket ? (
-    hasStripeTicket || (hasTicketPrice && meta?.hasTicketRows) ? (
+    <>
+      {purchasedBanner}
+      {hasStripeTicket || (hasTicketPrice && meta?.hasTicketRows) ? (
       <div className="space-y-3">
         {meta?.ticketTypes.map((ticket) => (
           <TicketCard key={ticket.id} eventTitle={event.title} tier={ticket.name} priceEur={ticket.priceCents / 100} currency={ticket.currency} description={ticket.description} quantityAvailable={ticket.quantityAvailable} status={ticket.status} endsAt={ticket.salesEnd ?? undefined} ticketId={ticket.id} />
@@ -102,7 +118,8 @@ export function EventDetailsCtas({
         <p className="mt-1 text-2xl font-bold text-white">€{event.ticket_from_eur}</p>
         <p className="mt-1 text-xs text-white/50">Available at the door or via the venue</p>
       </div>
-    ) : null
+    ) : null}
+    </>
   ) : (
     <p className="rounded-xl border border-dashed border-white/10 px-3 py-2.5 text-center text-xs text-white/40">
       Free entry · no ticket required

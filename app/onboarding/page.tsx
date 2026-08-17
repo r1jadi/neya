@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { completeOnboarding } from "@/actions/auth-account";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
@@ -80,9 +80,9 @@ export default async function OnboardingPage() {
               className="mt-2 max-w-[120px]"
             />
           </div>
-          <Button type="submit" className="w-full">
+          <SubmitButton className="w-full" pendingText="Saving…">
             Save &amp; continue
-          </Button>
+          </SubmitButton>
         </form>
       </main>
       <SiteFooter />

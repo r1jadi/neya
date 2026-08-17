@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/events", label: "Tonight" },
@@ -29,7 +31,20 @@ export function SiteHeaderClient({
   isPremium?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const authed = Boolean(userEmail);
+
+  /**
+   * Route-based active matching: a nav item is active only when the current
+   * pathname is exactly its route or a nested child of it (e.g. /events/xyz
+   * activates the /events item). Anchor links (/#map, /#business) are in-page
+   * jumps, not routes, so they never match a pathname — the home page keeps
+   * no nav item active.
+   */
+  function isActive(href: string) {
+    if (href.startsWith("/#")) return false;
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   const authedLinks = (
     <>
@@ -87,7 +102,13 @@ export function SiteHeaderClient({
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm font-medium text-white/70 transition hover:text-white"
+              aria-current={isActive(l.href) ? "page" : undefined}
+              className={cn(
+                "text-sm font-medium transition",
+                isActive(l.href)
+                  ? "text-white underline decoration-sky-400/70 decoration-2 underline-offset-8"
+                  : "text-white/70 hover:text-white",
+              )}
             >
               {l.label}
             </Link>
@@ -104,6 +125,7 @@ export function SiteHeaderClient({
           className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -121,7 +143,13 @@ export function SiteHeaderClient({
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
+                  aria-current={isActive(l.href) ? "page" : undefined}
+                  className={cn(
+                    "rounded-lg px-3 py-2 text-sm font-medium transition",
+                    isActive(l.href)
+                      ? "bg-white/5 text-white"
+                      : "text-white/80 hover:bg-white/5",
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   {l.label}

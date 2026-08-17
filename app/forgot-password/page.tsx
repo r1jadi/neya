@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { requestPasswordReset } from "@/actions/auth-account";
 import { SITE } from "@/lib/constants";
 
@@ -26,9 +26,13 @@ export default async function ForgotPasswordPage({ searchParams }: Props) {
           <p className="mt-6 text-sm text-emerald-200/90">If that email exists, you&apos;ll get a message shortly.</p>
         ) : (
           <form action={requestPasswordReset} className="mt-6 grid gap-3">
-            {q.error ? <p className="text-sm text-red-300">{q.error}</p> : null}
+            {q.error ? (
+              <p role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+                {q.error === "invalid" ? "Enter your email address to continue." : "Something went wrong. Please try again."}
+              </p>
+            ) : null}
             <Input name="email" type="email" placeholder="Email" required autoComplete="email" />
-            <Button type="submit">Send reset link</Button>
+            <SubmitButton className="w-full" pendingText="Sending…">Send reset link</SubmitButton>
           </form>
         )}
         <p className="mt-6 text-center text-sm text-white/50">

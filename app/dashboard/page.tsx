@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { TicketCode } from "@/components/neya/ticket-code";
 import { getUserPurchasedGuides } from "@/services/guides";
 import { guestlistStatusLabel } from "@/lib/guestlist/labels";
 import { paymentMethodLabel, paymentStatusLabel, reservationStatusLabel } from "@/lib/reservations/labels";
@@ -85,10 +86,12 @@ export default async function DashboardPage() {
                 </li>
               ))
             ) : (
-              <li className="text-sm text-white/45">
+              <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
+                No guides yet —{" "}
                 <Link href="/guides" className="text-sky-300 hover:underline">
-                  Browse Kosovo travel guides
+                  explore Kosovo travel guides
                 </Link>
+                {" "}before your next night out.
               </li>
             )}
           </ul>
@@ -113,7 +116,12 @@ export default async function DashboardPage() {
                 );
               })
             ) : (
-              <li className="text-sm text-white/45">Save events from the feed or event page.</li>
+              <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
+                Nothing saved yet — tap the bookmark on any event to keep it here.{" "}
+                <Link href="/events" className="text-sky-300 hover:underline">
+                  Browse tonight
+                </Link>
+              </li>
             )}
           </ul>
         </section>
@@ -160,7 +168,12 @@ export default async function DashboardPage() {
                 );
               })
             ) : (
-              <li className="text-sm text-white/45">No guestlist requests yet.</li>
+              <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
+                No guestlist requests yet — join one from any event page.{" "}
+                <Link href="/events" className="text-sky-300 hover:underline">
+                  Browse events
+                </Link>
+              </li>
             )}
           </ul>
         </section>
@@ -169,16 +182,18 @@ export default async function DashboardPage() {
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Table holds</h2>
           <ul className="mt-3 space-y-2">
             {reservations?.length ? (
-              reservations.map((r) => (
-                <li
-                  key={r.id}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
-                >
-                  <span className="font-medium text-white">
-                    {(r.venues as { name?: string } | null)?.name ?? "Venue"}
-                  </span>{" "}
-                  · {r.party_size} guests ·{" "}
-                  <span className="text-sky-200/90">{reservationStatusLabel(r.status)}</span>
+              reservations.map((r) => (                  <li
+                    key={r.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-medium text-white">
+                        {(r.venues as { name?: string } | null)?.name ?? "Venue"}
+                      </span>
+                      <span className="text-xs text-white/40">{new Date(r.created_at).toLocaleDateString()}</span>
+                    </div>
+                    {r.party_size} guests ·{" "}
+                    <span className="text-sky-200/90">{reservationStatusLabel(r.status)}</span>
                   <span className="text-white/45">
                     {" "}
                     · {paymentMethodLabel(r.payment_method)} · {paymentStatusLabel(r.payment_status)}
@@ -189,7 +204,12 @@ export default async function DashboardPage() {
                 </li>
               ))
             ) : (
-              <li className="text-sm text-white/45">No reservations yet.</li>
+              <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
+                No table holds yet — reserve a table for tonight.{" "}
+                <Link href="/events" className="text-sky-300 hover:underline">
+                  Browse events
+                </Link>
+              </li>
             )}
           </ul>
         </section>
@@ -201,26 +221,38 @@ export default async function DashboardPage() {
               orders.map((o) => {
                 const t = o.tickets as { tier_name?: string; events?: { title?: string; slug?: string } | null } | null;
                 const ev = t?.events;
+                const paid = o.payment_status === "paid";
                 return (
                   <li
                     key={o.id}
                     className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80"
                   >
-                    <span className="font-medium text-white">{ev?.title ?? "Event"}</span> · {t?.tier_name ?? "Ticket"}{" "}
-                    · <span className="text-sky-200/90">{o.payment_status}</span>
-                    {o.payment_status === "paid" && o.qr_payload ? (
-                      <span className="mt-2 block font-mono text-xs text-white/50">QR: {o.qr_payload}</span>
-                    ) : null}
-                    {ev?.slug ? (
-                      <Link href={`/events/${ev.slug}`} className="ml-2 text-xs text-sky-300 hover:underline">
-                        Event page
-                      </Link>
-                    ) : null}
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-medium text-white">{ev?.title ?? "Event"}</span>
+                      <span className="text-xs text-white/40">{new Date(o.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <p className="mt-1">
+                      {t?.tier_name ?? "Ticket"} ·{" "}
+                      <span className={paid ? "text-emerald-300/90" : "text-sky-200/90"}>
+                        {o.payment_status === "paid" ? "Paid" : o.payment_status}
+                      </span>
+                      {ev?.slug ? (
+                        <Link href={`/events/${ev.slug}`} className="ml-2 text-xs text-sky-300 hover:underline">
+                          Event page
+                        </Link>
+                      ) : null}
+                    </p>
+                    {paid && o.qr_payload ? <TicketCode payload={o.qr_payload} /> : null}
                   </li>
                 );
               })
             ) : (
-              <li className="text-sm text-white/45">No ticket orders yet.</li>
+              <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
+                No tickets yet — grab one for tonight.{" "}
+                <Link href="/events" className="text-sky-300 hover:underline">
+                  Browse events
+                </Link>
+              </li>
             )}
           </ul>
         </section>

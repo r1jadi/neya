@@ -2,6 +2,7 @@
 
 import { checkInAtVenue } from "@/actions/checkin";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import {
   Dialog,
   DialogContent,
@@ -53,7 +54,7 @@ export function CheckInWidget({ venueId, venueSlug, publicCount }: CheckInWidget
               </select>
             </label>
             <DialogFooter>
-              <Button type="submit">Confirm</Button>
+              <SubmitButton pendingText="Checking in…">Confirm check-in</SubmitButton>
             </DialogFooter>
           </form>
         </DialogContent>

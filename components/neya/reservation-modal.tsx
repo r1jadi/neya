@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { createReservation } from "@/actions/bookings";
 import {
   formatReservationPrice,
@@ -69,6 +70,22 @@ function PaymentOption({
         <span className="mt-0.5 block text-xs text-white/50">{description}</span>
       </span>
     </button>
+  );
+}
+
+function ReservationFormActions({ submitLabel, onCancel }: { submitLabel: string; onCancel: () => void }) {
+  return (
+    <DialogFooter className="gap-2 pt-1 sm:gap-0">
+      <Button variant="secondary" type="button" onClick={onCancel}>
+        Cancel
+      </Button>
+      <SubmitButton
+        className="bg-gradient-to-r from-sky-400 to-fuchsia-500 text-zinc-950 hover:opacity-95"
+        pendingText="Submitting…"
+      >
+        {submitLabel}
+      </SubmitButton>
+    </DialogFooter>
   );
 }
 
@@ -176,21 +193,20 @@ export function ReservationModal({
             <input type="hidden" name="payment_method" value={defaultMethod} />
           ) : null}
 
-          <Input name="phone" placeholder="Phone" type="tel" autoComplete="tel" required />
-          <Input name="party_size" type="number" placeholder="Guests" defaultValue={2} min={1} max={20} required />
-          <Input name="notes" placeholder="Notes (optional)" maxLength={500} />
+          <div>
+            <label htmlFor="res-phone" className="mb-1 block text-xs text-white/45">Phone</label>
+            <Input id="res-phone" name="phone" placeholder="+383 44 …" type="tel" autoComplete="tel" required />
+          </div>
+          <div>
+            <label htmlFor="res-party" className="mb-1 block text-xs text-white/45">Guests</label>
+            <Input id="res-party" name="party_size" type="number" defaultValue={2} min={1} max={20} required />
+          </div>
+          <div>
+            <label htmlFor="res-notes" className="mb-1 block text-xs text-white/45">Notes (optional)</label>
+            <Input id="res-notes" name="notes" placeholder="Birthday, arrival time…" maxLength={500} />
+          </div>
 
-          <DialogFooter className="gap-2 pt-1 sm:gap-0">
-            <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-gradient-to-r from-sky-400 to-fuchsia-500 text-zinc-950 hover:opacity-95"
-            >
-              {submitLabel}
-            </Button>
-          </DialogFooter>
+          <ReservationFormActions submitLabel={submitLabel} onCancel={() => setOpen(false)} />
         </form>
       </DialogContent>
     </Dialog>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EmptyState } from "@/components/neya/empty-state";
-import { EventCard } from "@/components/neya/event-card";
+import { EventFeed } from "@/components/neya/event-feed";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
@@ -68,11 +68,7 @@ export default async function EventsPage({ searchParams }: Props) {
             </p>
           ) : null}
           {events.length ? (
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {events.map((e) => (
-                <EventCard key={e.id} event={e} saved={savedEventIds.includes(e.id)} />
-              ))}
-            </div>
+            <EventFeed events={events} savedEventIds={savedEventIds} />
           ) : (
             <EmptyState
               className="mt-10"

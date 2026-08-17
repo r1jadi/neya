@@ -4,12 +4,17 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function toggleSaveEvent(formData: FormData) {
+export async function toggleSaveEvent(formData: FormData): Promise<{ saved: boolean }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) {
+    // Guests are sent to sign-in; the pending save is lost but the intent is
+    // preserved by landing on the event page right after login.
+    const slug = String(formData.get("event_slug") ?? "").trim();
+    redirect(`/login?next=${encodeURIComponent(slug ? `/events/${slug}` : "/events")}`);
+  }
 
   const eventId = String(formData.get("event_id") ?? "").trim();
   const slug = String(formData.get("event_slug") ?? "").trim();
@@ -31,5 +36,5 @@ export async function toggleSaveEvent(formData: FormData) {
   revalidatePath("/dashboard");
   if (slug) revalidatePath(`/events/${slug}`);
   revalidatePath("/");
-  redirect(slug ? `/events/${slug}` : "/dashboard");
+  return { saved: !existing };
 }

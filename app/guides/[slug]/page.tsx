@@ -10,6 +10,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { SITE } from "@/lib/constants";
 import { formatDuration, formatPrice } from "@/lib/guides/constants";
 import { createClient } from "@/lib/supabase/server";
@@ -163,9 +164,9 @@ export default async function GuideDetailPage({ params, searchParams }: Props) {
                 ) : (
                   <form action={purchaseGuide} className="mt-4">
                     <input type="hidden" name="slug" value={slug} />
-                    <Button type="submit" className="w-full">
+                    <SubmitButton className="w-full" pendingText={guide.price <= 0 ? "Unlocking…" : "Taking you to payment…"}>
                       {guide.price <= 0 ? "Get free guide" : "Purchase guide"}
-                    </Button>
+                    </SubmitButton>
                   </form>
                 )}
                 {!user ? (

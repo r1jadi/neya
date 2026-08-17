@@ -9,21 +9,24 @@ import { logUserActivity } from "@/lib/activity-log";
 const VIS = new Set(["public", "private", "friends"]);
 
 export async function checkInAtVenue(formData: FormData) {
+  const venueId = String(formData.get("venue_id") ?? "").trim();
+  const venueSlug = String(formData.get("venue_slug") ?? "").trim();
+  const backToVenue = (state: "rate" | "err") =>
+    redirect(venueSlug ? `/venues/${venueSlug}?checkin=${state}` : "/events?error=checkin");
+
   const rl = await rateLimit("checkin", 30, 3600);
-  if (!rl.success) redirect("/events?error=rate");
+  if (!rl.success) backToVenue("rate");
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect(`/login?next=${encodeURIComponent(venueSlug ? `/venues/${venueSlug}` : "/venues")}`);
 
-  const venueId = String(formData.get("venue_id") ?? "").trim();
   const visibilityRaw = String(formData.get("visibility") ?? "public").toLowerCase();
   const visibility = VIS.has(visibilityRaw) ? visibilityRaw : "public";
-  const venueSlug = String(formData.get("venue_slug") ?? "").trim();
 
-  if (!venueId) redirect("/events?error=checkin");
+  if (!venueId) backToVenue("err");
 
   const { error } = await supabase.from("checkins").insert({
     user_id: user.id,
@@ -31,7 +34,7 @@ export async function checkInAtVenue(formData: FormData) {
     visibility,
   });
 
-  if (error) redirect(venueSlug ? `/venues/${venueSlug}?checkin=err` : "/events?error=checkin");
+  if (error) backToVenue("err");
 
   await logUserActivity(supabase, user.id, "checked_in", "venue", venueId, { visibility });
 
