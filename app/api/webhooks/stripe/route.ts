@@ -6,6 +6,8 @@ import { getStripe } from "@/lib/stripe/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logSystemActivity } from "@/lib/activity-log";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
   if (!secret) {

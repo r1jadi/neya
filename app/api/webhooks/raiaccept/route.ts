@@ -25,6 +25,10 @@ import {
  * payloads.
  */
 
+// Verifies the order with the provider (GET /orders/{id}, up to 20s timeout)
+// before processing — needs the full 60s Hobby budget, not the 10s default.
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   const rawBody = await req.text().catch(() => "");
   if (!rawBody) {
