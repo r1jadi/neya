@@ -247,3 +247,31 @@ export interface ArtistLineupRef {
   genres: string[];
   profile_image?: string | null;
 }
+
+/** A venue's admin-written weekly highlight ("This Week" post). */
+export interface VenueHighlight {
+  id: string;
+  venue_id: string;
+  event_id?: string | null;
+  title: string;
+  content: string;
+  image_url?: string | null;
+  week_start: string; // YYYY-MM-DD
+  week_end: string; // YYYY-MM-DD
+  is_active: boolean;
+  created_at: string;
+  venue?: {
+    id: string;
+    slug: string;
+    name: string;
+    image_url?: string | null;
+    category?: string | null;
+    is_featured?: boolean | null;
+  } | null;
+  event?: {
+    id: string;
+    slug: string;
+    title: string;
+    starts_at?: string | null;
+  } | null;
+}

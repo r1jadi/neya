@@ -12,6 +12,7 @@ import { GuidesPanel } from "@/components/admin/guides-panel";
 import { getAdminDashboardData } from "@/services/admin";
 import { getAdminGuideDetail, getAdminGuides, getAdminIntercityRoutes } from "@/services/admin-guides";
 import { getAdminArtists, getEventArtistIds } from "@/services/artists";
+import { getAdminHighlights } from "@/services/venue-highlights";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 
 export const dynamic = "force-dynamic";
@@ -21,13 +22,14 @@ export const metadata: Metadata = {
   title: `Admin · ${SITE.name}`,
 };
 
-type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides" | "artists";
+type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
 
 const TABS: Tab[] = [
   "overview",
   "venues",
   "events",
   "artists",
+  "venue-highlights",
   "tickets",
   "guestlists",
   "reservations",
@@ -107,7 +109,12 @@ export default async function AdminPage({ searchParams }: Props) {
           <p className="mt-4 text-sm text-emerald-200/90">Guestlist request updated.</p>
         ) : null}
         {q.approved ? <p className="mt-4 text-sm text-emerald-200/90">Venue approved.</p> : null}
-        {q.ok ? <p className="mt-4 text-sm text-emerald-200/90">Saved.</p> : null}
+        {q.ok === "replaced" ? (
+          <p className="mt-4 text-sm text-emerald-200/90">
+            Published — the venue&apos;s previous highlight for that week was replaced.
+          </p>
+        ) : null}
+        {q.ok && q.ok !== "replaced" ? <p className="mt-4 text-sm text-emerald-200/90">Saved.</p> : null}
         {q.created ? (
           <p className="mt-4 text-sm text-emerald-200/90">
             Venue account created. Share credentials privately or send a password reset from the account row.
@@ -144,6 +151,7 @@ export default async function AdminPage({ searchParams }: Props) {
               reservations={data.reservations}
               artists={await getAdminArtists()}
               eventArtistIds={await getEventArtistIds(data.events.map((e) => e.id))}
+              highlights={await getAdminHighlights()}
               stats={data.stats}
             />
           )}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin } from "lucide-react";
+import { MapPin, Sparkles } from "lucide-react";
 import { VENUE_CATEGORIES, type Venue } from "@/types";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { Badge } from "@/components/ui/badge";
@@ -11,13 +11,15 @@ import { cn } from "@/lib/utils";
 
 interface VenueCardProps {
   venue: Venue;
+  /** Optional "This week" highlight title shown on the card. */
+  highlightTitle?: string;
   className?: string;
 }
 
 const categoryLabel = (category: Venue["category"]) =>
   category === "club" ? "Club" : VENUE_CATEGORIES.find((item) => item.id === category)?.label ?? "Other";
 
-export function VenueCard({ venue, className }: VenueCardProps) {
+export function VenueCard({ venue, highlightTitle, className }: VenueCardProps) {
   return (
     <motion.div
       whileHover={{ y: -3 }}
@@ -51,6 +53,12 @@ export function VenueCard({ venue, className }: VenueCardProps) {
             ) : null}
             <span>{"€".repeat(venue.price_level)}</span>
           </div>
+          {highlightTitle ? (
+            <p className="mt-1.5 line-clamp-1 text-xs font-medium text-amber-200/90">
+              <Sparkles className="mr-1 inline h-3 w-3" />
+              This week: {highlightTitle}
+            </p>
+          ) : null}
         </div>
       </div>
     </motion.div>

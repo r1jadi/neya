@@ -7,6 +7,7 @@ import { GlassCard } from "@/components/neya/glass-card";
 import { EventCard } from "@/components/neya/event-card";
 import { FomoTicker } from "@/components/neya/fomo-ticker";
 import { ForYouRail } from "@/features/landing/for-you-rail";
+import { VenueHighlightCard } from "@/components/neya/venue-highlight-card";
 import { LandingHero } from "./hero";
 import {
   djSets,
@@ -24,7 +25,7 @@ import {
   uniqueBySlug,
 } from "@/lib/event-filters";
 import type { ActivityFeedItem } from "@/services/activity";
-import type { Event, StoryItem, Venue } from "@/types";
+import type { Event, StoryItem, Venue, VenueHighlight } from "@/types";
 import { EmptyState } from "@/components/neya/empty-state";
 import { CalendarDays, MapPin, Quote } from "lucide-react";
 
@@ -38,6 +39,7 @@ interface LandingSectionsProps {
   activityItems: ActivityFeedItem[];
   savedEventIds: string[];
   spotlight?: Event | null;
+  highlights: VenueHighlight[];
 }
 
 export function LandingSections({
@@ -50,6 +52,7 @@ export function LandingSections({
   activityItems,
   savedEventIds,
   spotlight,
+  highlights,
 }: LandingSectionsProps) {
   const upcoming = upcomingEvents(events);
   const tonight = tonightEvents(events);
@@ -65,6 +68,10 @@ export function LandingSections({
   const tables = lastTablesLeft(upcoming);
   const weekend = thisWeekend(events);
   const rising = sortByAtmosphere(upcoming).slice(0, 10);
+
+  const highlightByVenue = new Map(
+    highlights.map((h) => [h.venue_id, h] as const),
+  );
 
   const mapMarkers = venues
     .filter((v) => v.lat != null && v.lng != null && !Number.isNaN(v.lat) && !Number.isNaN(v.lng))
@@ -110,6 +117,26 @@ export function LandingSections({
         <section className="mx-auto w-full min-w-0 max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
           <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">Stories</h2>
           <StoryViewer stories={stories} />
+        </section>
+      ) : null}
+
+      {highlights.length ? (
+        <section className="mx-auto w-full min-w-0 max-w-6xl space-y-4 px-4 pb-16 sm:px-6">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">
+                This week
+              </h2>
+              <p className="mt-1 text-sm text-white/55">
+                Venue updates — specials, lineups and nights worth planning around.
+              </p>
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {highlights.map((h) => (
+              <VenueHighlightCard key={h.id} highlight={h} />
+            ))}
+          </div>
         </section>
       ) : null}
 
@@ -220,7 +247,11 @@ export function LandingSections({
           {hasVenues ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {venues.map((v) => (
-                <VenueCard key={v.id} venue={v} />
+                <VenueCard
+                  key={v.id}
+                  venue={v}
+                  highlightTitle={highlightByVenue.get(v.id)?.title}
+                />
               ))}
             </div>
           ) : (

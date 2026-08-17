@@ -188,3 +188,18 @@ export function formatEventDateShort(startsAt: string): string {
     minute: "2-digit",
   });
 }
+
+/** Today's date as YYYY-MM-DD in the city timezone (for date-only comparisons). */
+export function todayYmdInTz(now = new Date(), tz = CITY_TZ): string {
+  return ymdInTz(now, tz);
+}
+
+/** Monday–Sunday of the current week as YYYY-MM-DD in the city timezone. */
+export function getThisWeekYmdRange(now = new Date(), tz = CITY_TZ): { startYmd: string; endYmd: string } {
+  const w = wallClockParts(now.getTime(), tz);
+  const dow = dayOfWeekInTz(now, tz); // 0 = Sunday … 6 = Saturday
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+  const mon = addCalendarDaysInTz(w.y, w.m, w.d, mondayOffset, tz);
+  const sun = addCalendarDaysInTz(mon.y, mon.m, mon.d, 6, tz);
+  return { startYmd: ymdFromParts(mon), endYmd: ymdFromParts(sun) };
+}

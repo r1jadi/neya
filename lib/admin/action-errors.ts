@@ -26,6 +26,10 @@ export function adminErrorMessage(code: string | undefined, detail?: string | nu
       return "Password must be at least 8 characters.";
     case "missing":
       return "Record not found.";
+    case "insert":
+      return d ? `Could not create the record: ${d}` : "Could not create the record.";
+    case "overlap":
+      return "This venue already has an active highlight for that week — the new one was not saved. Deactivate the conflicting highlight first.";
     case "invalid":
       return "Invalid request.";
     case "full":

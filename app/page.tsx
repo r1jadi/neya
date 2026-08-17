@@ -7,6 +7,7 @@ import { getFeaturedEvents } from "@/services/events";
 import { getStoriesForCity } from "@/services/stories";
 import { happeningNowEvents, tonightEvents, upcomingEvents } from "@/lib/event-filters";
 import { getVenues } from "@/services/venues";
+import { getActiveHighlightsForHome } from "@/services/venue-highlights";
 
 type Props = { searchParams: Promise<{ error?: string }> };
 
@@ -17,11 +18,12 @@ export default async function Home({ searchParams }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [events, venues, stories, activityItems] = await Promise.all([
+  const [events, venues, stories, activityItems, highlights] = await Promise.all([
     getFeaturedEvents(supabase),
     getVenues(),
     getStoriesForCity("prishtina"),
     getRecentActivity(24),
+    getActiveHighlightsForHome(6),
   ]);
 
   let musicGenres: string[] = [];
@@ -72,6 +74,7 @@ export default async function Home({ searchParams }: Props) {
         activityItems={activityItems}
         savedEventIds={savedEventIds}
         spotlight={spotlight}
+        highlights={highlights}
       />
       <SiteFooter />
     </div>

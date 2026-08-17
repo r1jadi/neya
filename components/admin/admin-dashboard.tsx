@@ -17,6 +17,11 @@ import {
 } from "@/actions/admin-crud";
 import { grantPremiumByUserId } from "@/actions/admin-events";
 import { deleteArtist, saveArtist } from "@/actions/artists";
+import {
+  deleteVenueHighlight,
+  saveVenueHighlight,
+  toggleVenueHighlight,
+} from "@/actions/venue-highlights";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { EventPosterGenerator, type PosterEventData } from "@/components/admin/event-poster-generator";
 import { PerformerFields } from "@/components/admin/performer-fields";
@@ -35,7 +40,7 @@ import type {
 import { VENUE_CATEGORIES } from "@/types";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 import type { VenueAccountRow } from "@/types/auth";
-import { formatEventWhen, utcIsoToDatetimeLocal } from "@/lib/event-dates";
+import { formatEventWhen, getThisWeekYmdRange, todayYmdInTz, utcIsoToDatetimeLocal } from "@/lib/event-dates";
 import {
   paymentMethodLabel,
   paymentStatusLabel,
@@ -43,9 +48,9 @@ import {
 } from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
 import { MUSIC_GENRES } from "@/types";
-import type { Artist } from "@/types";
+import type { Artist, VenueHighlight } from "@/types";
 
-type Tab = "overview" | "venues" | "events" | "artists" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
+type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
 
 interface AdminDashboardProps {
   initialTab: Tab;
@@ -59,6 +64,7 @@ interface AdminDashboardProps {
   reservations: AdminReservationRow[];
   artists: Artist[];
   eventArtistIds: Record<string, string[]>;
+  highlights: VenueHighlight[];
   stats: {
     venueCount: number;
     approvedVenues: number;
@@ -74,6 +80,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "venues", label: "Venues" },
   { id: "events", label: "Events" },
   { id: "artists", label: "Artists" },
+  { id: "venue-highlights", label: "Venue highlights" },
   { id: "tickets", label: "Tickets" },
   { id: "guestlists", label: "Guestlists" },
   { id: "reservations", label: "Reservations" },
@@ -106,11 +113,13 @@ export function AdminDashboard({
   reservations,
   artists,
   eventArtistIds,
+  highlights,
   stats,
 }: AdminDashboardProps) {
   const [editingVenue, setEditingVenue] = useState<AdminVenueRow | "new" | null>(null);
   const [editingEvent, setEditingEvent] = useState<AdminEventRow | "new" | null>(null);
   const [editingArtist, setEditingArtist] = useState<Artist | "new" | null>(null);
+  const [editingHighlight, setEditingHighlight] = useState<VenueHighlight | "new" | null>(null);
   const tab = initialTab;
 
   return (
@@ -357,6 +366,16 @@ export function AdminDashboard({
             {!artists.length ? <p className="p-6 text-sm text-white/45">No artists yet. Create one above.</p> : null}
           </div>
         </section>
+      ) : null}
+
+      {tab === "venue-highlights" ? (
+        <VenueHighlightsPanel
+          venues={venues}
+          events={events}
+          highlights={highlights}
+          editing={editingHighlight}
+          onEdit={setEditingHighlight}
+        />
       ) : null}
 
       {tab === "tickets" ? (
@@ -872,6 +891,233 @@ function ArtistForm({ artist, onClose }: { artist: Artist | null; onClose: () =>
         </label>
       </div>
       <Button type="submit">Save artist</Button>
+    </form>
+  );
+}
+
+function formatYmdShort(ymd: string): string {
+  return new Date(`${ymd}T12:00:00`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function highlightStatus(highlight: VenueHighlight, today: string): { label: string; tone: string } {
+  if (!highlight.is_active) return { label: "Inactive", tone: "text-white/40" };
+  if (highlight.week_start > today) return { label: "Upcoming", tone: "text-sky-200/90" };
+  if (highlight.week_end < today) return { label: "Expired", tone: "text-white/40" };
+  return { label: "Active now", tone: "text-emerald-200/90" };
+}
+
+function VenueHighlightsPanel({
+  venues,
+  events,
+  highlights,
+  editing,
+  onEdit,
+}: {
+  venues: AdminVenueRow[];
+  events: AdminEventRow[];
+  highlights: VenueHighlight[];
+  editing: VenueHighlight | "new" | null;
+  onEdit: (value: VenueHighlight | "new" | null) => void;
+}) {
+  const [today] = useState(() => todayYmdInTz());
+
+  return (
+    <section className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Venue highlights</h2>
+          <p className="mt-1 text-xs text-white/45">
+            Short weekly updates shown on venue pages and the homepage. One active highlight per venue
+            per week — publishing a new one replaces the previous.
+          </p>
+        </div>
+        <Button type="button" size="sm" onClick={() => onEdit("new")}>
+          Publish highlight
+        </Button>
+      </div>
+
+      {editing ? (
+        <HighlightForm
+          highlight={editing === "new" ? null : editing}
+          venues={venues}
+          events={events}
+          onClose={() => onEdit(null)}
+        />
+      ) : null}
+
+      <div className="overflow-x-auto rounded-xl border border-white/10">
+        <table className="w-full min-w-[720px] text-left text-sm">
+          <thead className="border-b border-white/10 bg-white/[0.03] text-xs uppercase text-white/45">
+            <tr>
+              <th className="px-4 py-3">Venue</th>
+              <th className="px-4 py-3">Title</th>
+              <th className="px-4 py-3">Week</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {highlights.map((h) => {
+              const status = highlightStatus(h, today);
+              return (
+                <tr key={h.id} className="border-b border-white/5">
+                  <td className="px-4 py-3 text-white/70">{h.venue?.name ?? "—"}</td>
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-white">{h.title}</p>
+                    {h.event ? (
+                      <p className="text-xs text-white/40">→ {h.event.title}</p>
+                    ) : null}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-white/50">
+                    {formatYmdShort(h.week_start)} – {formatYmdShort(h.week_end)}
+                  </td>
+                  <td className={cn("px-4 py-3 text-xs font-medium", status.tone)}>{status.label}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-2">
+                      <Button type="button" size="sm" variant="secondary" onClick={() => onEdit(h)}>
+                        Edit
+                      </Button>
+                      <form action={toggleVenueHighlight}>
+                        <input type="hidden" name="id" value={h.id} />
+                        <Button type="submit" size="sm" variant="ghost">
+                          {h.is_active ? "Deactivate" : "Activate"}
+                        </Button>
+                      </form>
+                      <form action={deleteVenueHighlight}>
+                        <input type="hidden" name="id" value={h.id} />
+                        <Button type="submit" size="sm" variant="ghost" className="text-red-300">
+                          Delete
+                        </Button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {!highlights.length ? (
+          <p className="p-6 text-sm text-white/45">
+            No highlights yet — publish this week&apos;s update for a venue above.
+          </p>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+function HighlightForm({
+  highlight,
+  venues,
+  events,
+  onClose,
+}: {
+  highlight: VenueHighlight | null;
+  venues: AdminVenueRow[];
+  events: AdminEventRow[];
+  onClose: () => void;
+}) {
+  const thisWeek = useState(() => getThisWeekYmdRange())[0];
+  const [venueId, setVenueId] = useState(highlight?.venue_id ?? "");
+  const [eventId, setEventId] = useState(highlight?.event_id ?? "");
+  const venueEvents = events.filter((e) => e.venue_id === venueId);
+
+  return (
+    <form action={saveVenueHighlight} className="space-y-4 rounded-xl border border-amber-500/30 bg-amber-950/10 p-6">
+      {highlight?.id ? <input type="hidden" name="id" value={highlight.id} /> : null}
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-white">
+          {highlight ? "Edit highlight" : "New weekly highlight"}
+        </h3>
+        <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+          Close
+        </Button>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <select
+          name="venue_id"
+          value={venueId}
+          required
+          onChange={(e) => {
+            setVenueId(e.target.value);
+            setEventId("");
+          }}
+          className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white sm:col-span-2"
+        >
+          <option value="">Select venue…</option>
+          {venues.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.name}
+              {!v.approved || v.rejected ? " (not live)" : ""}
+            </option>
+          ))}
+        </select>
+        <Input
+          name="title"
+          placeholder="Title — e.g. DJ Example this Friday"
+          defaultValue={highlight?.title ?? ""}
+          required
+          maxLength={120}
+          className="sm:col-span-2"
+        />
+        <textarea
+          name="content"
+          placeholder="Update — e.g. DJ Example takes over the booth this Friday from 22:00."
+          defaultValue={highlight?.content ?? ""}
+          required
+          rows={3}
+          maxLength={600}
+          className="sm:col-span-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+        />
+        <ImageUploadField
+          name="image_url"
+          label="Image (optional)"
+          defaultUrl={highlight?.image_url ?? ""}
+          folder="highlights"
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="mb-1 block text-xs text-white/45">Week starts</span>
+            <Input
+              name="week_start"
+              type="date"
+              defaultValue={highlight?.week_start ?? thisWeek.startYmd}
+              required
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-white/45">Week ends</span>
+            <Input
+              name="week_end"
+              type="date"
+              defaultValue={highlight?.week_end ?? thisWeek.endYmd}
+              required
+            />
+          </label>
+        </div>
+        <select
+          name="event_id"
+          value={eventId}
+          onChange={(e) => setEventId(e.target.value)}
+          className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white sm:col-span-2"
+        >
+          <option value="">No linked event</option>
+          {venueEvents.map((e) => (
+            <option key={e.id} value={e.id}>
+              {e.title}
+            </option>
+          ))}
+        </select>
+      </div>
+      <label className="flex items-center gap-2 text-sm text-white/80">
+        <input type="checkbox" name="is_active" defaultChecked={highlight?.is_active ?? true} />
+        Active (shown on the site this week)
+      </label>
+      <Button type="submit">{highlight ? "Save changes" : "Publish highlight"}</Button>
     </form>
   );
 }

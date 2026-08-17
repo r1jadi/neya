@@ -14,6 +14,7 @@ import { getPublicCheckinCount, getVenueMetaBySlug } from "@/services/booking-me
 import { getUpcomingEventsForVenue } from "@/services/events";
 import { getVenueBySlug } from "@/services/venues";
 import { getArtistsForEvents } from "@/services/artists";
+import { getActiveHighlightForVenue } from "@/services/venue-highlights";
 import { SITE } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { venueJsonLd } from "@/lib/seo/json-ld";
@@ -59,7 +60,10 @@ export default async function VenuePage({ params, searchParams }: Props) {
   ]);
   if (!venue) notFound();
 
-  const events = await getUpcomingEventsForVenue(venue.id, supabase);
+  const [events, highlight] = await Promise.all([
+    getUpcomingEventsForVenue(venue.id, supabase),
+    getActiveHighlightForVenue(venue.id),
+  ]);
   const lineupByEvent = await getArtistsForEvents(events.map((e) => e.id).filter(isUuid));
   const lineupArtists = [...new Map(
     Object.values(lineupByEvent).flat().map((artist) => [artist.id, artist]),
@@ -137,6 +141,38 @@ export default async function VenuePage({ params, searchParams }: Props) {
               )}
             </div>
           </div>
+          {highlight ? (
+            <section className="relative overflow-hidden rounded-2xl border border-amber-400/20 bg-gradient-to-br from-amber-950/25 via-zinc-950/60 to-fuchsia-950/20 p-5 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                {highlight.image_url ? (
+                  <Image
+                    src={highlight.image_url}
+                    alt=""
+                    width={192}
+                    height={128}
+                    className="h-28 w-full shrink-0 rounded-xl border border-white/10 object-cover sm:w-48"
+                  />
+                ) : null}
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300/90">This week</p>
+                  <h2 className="mt-1 text-xl font-semibold text-white">{highlight.title}</h2>
+                  <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-white/70">
+                    {highlight.content}
+                  </p>
+                  {highlight.event ? (
+                    <Link
+                      href={`/events/${highlight.event.slug}`}
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-sky-300 hover:text-sky-200 hover:underline"
+                    >
+                      View event
+                      <span aria-hidden>→</span>
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
+            </section>
+          ) : null}
+
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="space-y-8">
               <section>
