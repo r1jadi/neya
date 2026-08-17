@@ -191,6 +191,8 @@ export interface Event {
   category?: string;
   tags?: string[];
   is_free?: boolean;
+  /** Derived only from NEYA's own ticket tiers; absent when no internal tier exists. */
+  ticket_status?: "available" | "sold_out" | "closed";
 }
 
 export interface StoryItem {

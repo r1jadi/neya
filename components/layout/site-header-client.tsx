@@ -16,6 +16,7 @@ const links = [
   { href: "/guides", label: "Guides" },
   { href: "/#map", label: "Map" },
   { href: "/#business", label: "For venues" },
+  { href: "/submit-event", label: "Submit event" },
 ];
 
 export function SiteHeaderClient({

@@ -30,6 +30,14 @@ const eventSelect = `
         category,
         tags,
         is_free,
+        tickets (
+          status,
+          quantity_total,
+          quantity_sold,
+          quantity_reserved,
+          sales_start,
+          sales_end
+        ),
         venues (
           id,
           slug,
@@ -119,7 +127,7 @@ export async function getDiscoveryEvents(query: DiscoveryQuery = {}, client?: Su
   try {
     const supabase = clientOrPublic(client);
     if (!supabase) return [];
-    let request = supabase.from("events").select(eventSelect).eq("is_listed_public", true).eq("submission_status", "approved");
+    let request = supabase.from("events").select(eventSelect).eq("is_listed_public", true).in("submission_status", ["approved", "published"]);
     if (query.city) request = request.eq("city_slug", query.city);
     if (query.from) request = request.gte("starts_at", query.from);
     if (query.to) request = request.lt("starts_at", query.to);

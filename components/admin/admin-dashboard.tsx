@@ -15,7 +15,7 @@ import {
   saveVenue,
   updateReservationStatus,
 } from "@/actions/admin-crud";
-import { grantPremiumByUserId } from "@/actions/admin-events";
+import { grantPremiumByUserId, updateEventSubmissionStatus } from "@/actions/admin-events";
 import { deleteArtist, saveArtist } from "@/actions/artists";
 import {
   deleteVenueHighlight,
@@ -264,7 +264,7 @@ export function AdminDashboard({
                   <th className="px-4 py-3">Title</th>
                   <th className="px-4 py-3">Venue</th>
                   <th className="px-4 py-3">Starts</th>
-                  <th className="px-4 py-3">Visibility</th>
+                  <th className="px-4 py-3">Moderation</th>
                   <th className="px-4 py-3">Actions</th>
                 </tr>
               </thead>
@@ -274,10 +274,7 @@ export function AdminDashboard({
                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
-                    <td className="px-4 py-3 text-xs text-white/50">
-                      {ev.is_listed_public ? "Public" : "Hidden"}
-                      {ev.is_featured ? " · Featured" : ""}
-                    </td>
+                    <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_status" defaultValue={ev.submission_status ?? (ev.is_listed_public ? "published" : "approved")} className="rounded border border-white/10 bg-black/40 px-2 py-1 text-xs text-white"><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="pending_review">Pending review</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="published">Published</option><option value="archived">Archived</option></select><Button type="submit" size="sm" variant="ghost">Save</Button></form>{ev.organizer_email ? <span className="mt-1 block text-white/35">{ev.organizer_name ?? "Organizer"} · {ev.organizer_email}</span> : null}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
                         <Button type="button" size="sm" variant="secondary" onClick={() => setEditingEvent(ev)}>

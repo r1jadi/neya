@@ -50,6 +50,22 @@ export async function toggleEventListed(formData: FormData) {
   redirect("/admin?tab=events&ok=1");
 }
 
+export async function updateEventSubmissionStatus(formData: FormData) {
+  const adminUser = await requireAdminUser();
+  const eventId = String(formData.get("event_id") ?? "").trim();
+  const status = String(formData.get("submission_status") ?? "").trim();
+  if (!eventId || !["draft", "submitted", "pending_review", "approved", "rejected", "published", "archived"].includes(status)) redirect("/admin?tab=events&error=fields");
+  const now = new Date().toISOString();
+  const patch: Record<string, unknown> = { submission_status: status, updated_at: now };
+  if (["approved", "published", "rejected", "archived"].includes(status)) { patch.reviewed_at = now; patch.reviewed_by = adminUser.id; }
+  if (status === "published") patch.is_listed_public = true;
+  if (["draft", "submitted", "pending_review", "approved", "rejected", "archived"].includes(status)) patch.is_listed_public = false;
+  if (status === "archived") patch.archived_at = now;
+  const admin = createAdminClient(); const { error } = await admin.from("events").update(patch).eq("id", eventId);
+  if (error) redirect("/admin?tab=events&error=update");
+  revalidatePath("/"); revalidatePath("/events"); revalidatePath("/admin"); redirect("/admin?tab=events&ok=1");
+}
+
 export async function grantPremiumByUserId(formData: FormData) {
   await requireAdminUser();
   const userId = String(formData.get("user_id") ?? "").trim();

@@ -3,10 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Sparkles } from "lucide-react";
+import { CalendarDays, MapPin, Sparkles, Ticket } from "lucide-react";
 import type { Event } from "@/types";
-import { AtmosphereMeter } from "@/components/neya/atmosphere-meter";
-import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { SaveEventButton } from "@/components/neya/save-event-button";
 import { MyNightButton } from "@/components/my-night/my-night-button";
@@ -69,19 +67,9 @@ export function EventCard({ event, className, saved }: EventCardProps) {
         </div>
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           <LiveBadge live={happening && event.live_status} />
-          {event.is_featured ? (
-            <Badge variant="neon" className="backdrop-blur-md">
-              Featured
-            </Badge>
-          ) : null}
-          {event.venue?.is_trending ? (
-            <Badge variant="secondary" className="border-amber-400/30 text-amber-200 backdrop-blur-md">
-              Trending
-            </Badge>
-          ) : null}
-          {event.venue ? (
+          {event.category ? (
             <Badge variant="secondary" className="backdrop-blur-md">
-              {event.venue.category.replace(/_/g, " ")}
+              {event.category.replace(/_/g, " ")}
             </Badge>
           ) : null}
           <Badge variant="neon" className="backdrop-blur-md">
@@ -92,19 +80,13 @@ export function EventCard({ event, className, saved }: EventCardProps) {
       </div>
       <div className="space-y-3 p-4">
         <div>
-          <p className="text-xs uppercase tracking-widest text-white/45">{event.venue?.name ?? "Venue TBA"}</p>
+          {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.city_slug ? <p className="text-xs uppercase tracking-widest text-white/45">{event.city_slug.replace(/-/g, " ")}</p> : null}
           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
-          <p className="mt-1 text-xs text-sky-300/90">{whenLabel}</p>
+          <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
         </div>
         {event.fomo_line ? (
           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
         ) : null}
-        <CrowdIndicator
-          count={event.crowd_count}
-          live={happening}
-          scheduledLabel={whenLabel}
-        />
-        <AtmosphereMeter score={event.atmosphere_rating} />
         <div className="flex flex-wrap items-center gap-3 text-xs text-white/55">
           {event.distance_km != null ? (
             <span className="inline-flex items-center gap-1">
@@ -112,7 +94,9 @@ export function EventCard({ event, className, saved }: EventCardProps) {
               {event.distance_km} km
             </span>
           ) : null}
-          <span>{"€".repeat(event.price_level)}</span>
+          {event.is_free ? <span className="font-medium text-emerald-200">Free</span> : null}
+          {!event.is_free && event.ticket_from_eur != null ? <span>From €{event.ticket_from_eur.toLocaleString("en-GB", { maximumFractionDigits: 2 })}</span> : null}
+          {event.ticket_status ? <span className={event.ticket_status === "available" ? "inline-flex items-center gap-1 text-sky-200" : "inline-flex items-center gap-1 text-amber-200"}><Ticket className="h-3.5 w-3.5" />{event.ticket_status === "available" ? "Tickets available" : event.ticket_status === "sold_out" ? "Sold out" : "Ticket sales closed"}</span> : null}
           {event.reservation_spots_left != null ? (
             <span className="text-amber-200/90">
               {event.reservation_spots_left} tables left

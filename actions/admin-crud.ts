@@ -208,7 +208,7 @@ export async function saveEvent(formData: FormData) {
     allows_pay_at_venue: parseTriState(formData.get("allows_pay_at_venue")),
     is_featured: formData.get("is_featured") === "on",
     is_listed_public: formData.get("is_listed_public") !== "off",
-    submission_status: "approved",
+    submission_status: formData.get("is_listed_public") !== "off" ? "published" : "approved",
     is_hidden_premium: formData.get("is_hidden_premium") === "on",
     updated_at: new Date().toISOString(),
   };

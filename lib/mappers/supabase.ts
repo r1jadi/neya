@@ -128,6 +128,14 @@ export function mapEventRow(row: {
   category?: string | null;
   tags?: string[] | null;
   is_free?: boolean | null;
+  tickets?: Array<{
+    status?: "available" | "sold_out" | "closed" | null;
+    quantity_total?: number | null;
+    quantity_sold?: number | null;
+    quantity_reserved?: number | null;
+    sales_start?: string | null;
+    sales_end?: string | null;
+  }> | null;
   venues:
     | {
         id: string;
@@ -168,6 +176,13 @@ export function mapEventRow(row: {
     ? row.dj_lineup.map((d) => d.trim()).filter(Boolean)
     : undefined;
   const performers = mapPerformers(row.performers) ?? djLineup?.map((name) => ({ name }));
+  const now = Date.now();
+  const ticketStatuses = (row.tickets ?? []).map((ticket) => {
+    const salesOpen = (!ticket.sales_start || new Date(ticket.sales_start).getTime() <= now) && (!ticket.sales_end || new Date(ticket.sales_end).getTime() > now);
+    const stockAvailable = ticket.quantity_total == null || ticket.quantity_total > (ticket.quantity_sold ?? 0) + (ticket.quantity_reserved ?? 0);
+    return ticket.status === "available" && salesOpen && stockAvailable ? "available" : ticket.status === "closed" || !salesOpen ? "closed" : "sold_out";
+  });
+  const ticket_status = ticketStatuses.includes("available") ? "available" : ticketStatuses.includes("sold_out") ? "sold_out" : ticketStatuses.includes("closed") ? "closed" : undefined;
   return {
     id: row.id,
     slug: row.slug,
@@ -209,5 +224,6 @@ export function mapEventRow(row: {
     category: row.category ?? "nightlife",
     tags: Array.isArray(row.tags) ? row.tags.map((tag) => tag.trim()).filter(Boolean) : [],
     is_free: Boolean(row.is_free),
+    ticket_status,
   };
 }

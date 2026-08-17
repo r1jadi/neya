@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Compass } from "lucide-react";
 import { GuideCard } from "@/components/neya/guide-card";
 import { GuideFilters } from "@/components/neya/guides/guide-filters";
+import { EditorialEventGuides } from "@/components/neya/guides/editorial-event-guides";
 import { AiItineraryForm } from "@/components/neya/guides/ai-itinerary-form";
 import { EmptyState } from "@/components/neya/empty-state";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -12,6 +13,7 @@ import { SITE } from "@/lib/constants";
 import { filterGuides, parseGuideSearchParams } from "@/lib/guide-filters";
 import { createClient } from "@/lib/supabase/server";
 import { getPublishedGuides } from "@/services/guides";
+import { getDiscoveryEvents } from "@/services/events";
 
 export const metadata: Metadata = {
   title: `Travel Guides · ${SITE.name}`,
@@ -31,7 +33,9 @@ type Props = {
 export default async function GuidesPage({ searchParams }: Props) {
   const q = await searchParams;
   const supabase = await createClient();
-  const allGuides = await getPublishedGuides(supabase);
+  const [allGuides, events] = await Promise.all([getPublishedGuides(supabase), getDiscoveryEvents({ city: "prishtina" }, supabase)]);
+  const { data: { user } } = await supabase.auth.getUser();
+  const savedEventIds = user ? (await supabase.from("saved_events").select("event_id").eq("user_id", user.id).limit(400)).data?.map((row) => row.event_id) ?? [] : [];
   const filters = parseGuideSearchParams(q);
   const guides = filterGuides(allGuides, filters);
   const featured = guides.filter((g) => g.featured);
@@ -90,6 +94,8 @@ export default async function GuidesPage({ searchParams }: Props) {
           <section className="mt-16">
             <AiItineraryForm />
           </section>
+
+          <EditorialEventGuides events={events} savedEventIds={savedEventIds} nowIso={new Date().toISOString()} />
 
           <p className="mt-12 text-center text-sm text-white/45">
             <Link href="/" className="text-sky-300 hover:underline">
