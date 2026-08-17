@@ -6,6 +6,7 @@ import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SaveEventButton } from "@/components/neya/save-event-button";
 import { MyNightButton } from "@/components/my-night/my-night-button";
 import { TicketCard } from "@/components/neya/ticket-card";
+import { MobileTicketCheckout } from "@/components/neya/mobile-ticket-checkout";
 import { AddToCalendarButton } from "@/components/neya/add-to-calendar-button";
 import type { EventBookingMeta } from "@/services/booking-meta";
 import { formatReservationPrice } from "@/lib/reservations/config";
@@ -175,12 +176,7 @@ export function EventDetailsCtas({
             />
           ) : null}
           {hasTicketTypes && !meta?.ticketSoldOut ? (
-            <a
-              href="#tickets"
-              className="flex flex-1 items-center justify-center rounded-xl bg-violet-600 py-3 text-xs font-bold text-white"
-            >
-              Tickets
-            </a>
+            <MobileTicketCheckout event={event} meta={meta!} />
           ) : hasExternalTicket ? (
             <a
               href={event.ticket_url!}
