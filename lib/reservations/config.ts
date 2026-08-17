@@ -29,15 +29,18 @@ export function eurToCents(eur: number): number {
 }
 
 export function resolveReservationConfig(
-  venue: ReservationConfigSource,
+  venue: ReservationConfigSource | null | undefined,
   event?: ReservationConfigSource | null,
 ): ResolvedReservationConfig {
-  const priceEur = toEur(event?.reservation_price_eur ?? venue.reservation_price_eur ?? 0);
+  const venueSource = venue ?? {};
+  const priceEur = toEur(event?.reservation_price_eur ?? venueSource.reservation_price_eur ?? 0);
   const priceCents = eurToCents(priceEur);
   const requiresOnlinePayment =
-    event?.requires_online_payment ?? venue.requires_online_payment ?? false;
-  const allowsPayAtVenue = event?.allows_pay_at_venue ?? venue.allows_pay_at_venue ?? true;
-  const reservationsEnabled = venue.reservations_enabled !== false;
+    event?.requires_online_payment ?? venueSource.requires_online_payment ?? false;
+  const allowsPayAtVenue = event?.allows_pay_at_venue ?? venueSource.allows_pay_at_venue ?? true;
+  // The event can explicitly close reservations; otherwise follow the venue,
+  // and when there is no venue at all (venue-less event) default to enabled.
+  const reservationsEnabled = event?.reservations_enabled ?? (venueSource.reservations_enabled !== false);
   const isFree = priceCents === 0;
 
   const availableMethods: ReservationPaymentMethod[] = [];

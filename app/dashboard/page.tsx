@@ -28,7 +28,7 @@ export default async function DashboardPage() {
 
   const { data: reservations } = await supabase
     .from("reservations")
-    .select("id, status, party_size, created_at, deposit_cents, payment_method, payment_status, venues(name, slug)")
+    .select("id, status, party_size, created_at, deposit_cents, payment_method, payment_status, venues(name, slug), events(title, slug)")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -220,7 +220,9 @@ export default async function DashboardPage() {
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="font-medium text-white">
-                        {(r.venues as { name?: string } | null)?.name ?? "Venue"}
+                        {(r.venues as { name?: string } | null)?.name ??
+                          (r.events as { title?: string } | null)?.title ??
+                          "Venue"}
                       </span>
                       <span className="text-xs text-white/40">{new Date(r.created_at).toLocaleDateString()}</span>
                     </div>

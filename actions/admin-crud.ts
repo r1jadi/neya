@@ -198,6 +198,7 @@ export async function saveEvent(formData: FormData) {
     reservation_price_eur: formData.get("reservation_price_eur")
       ? Math.max(0, Number(formData.get("reservation_price_eur")) || 0)
       : null,
+    reservations_enabled: parseTriState(formData.get("reservations_enabled")),
     requires_online_payment: parseTriState(formData.get("requires_online_payment")),
     allows_pay_at_venue: parseTriState(formData.get("allows_pay_at_venue")),
     is_featured: formData.get("is_featured") === "on",

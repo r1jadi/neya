@@ -35,16 +35,28 @@ test("€0 stays free — zero is a value, not a missing price", () => {
   assert.equal(free.isFree, true);
 });
 
-test("venue-less event: reservations disabled but event price preserved", () => {
-  const config = resolveReservationConfig({ reservations_enabled: false }, { reservation_price_eur: 5 });
+test("venue-less event: reservations enabled by default, event price preserved", () => {
+  const config = resolveReservationConfig(null, { reservation_price_eur: 5 });
+  assert.equal(config.reservationsEnabled, true);
+  assert.equal(config.priceEur, 5);
+  assert.equal(config.priceCents, 500);
+});
+
+test("venue-less event with no price is free and open", () => {
+  const config = resolveReservationConfig(null, {});
+  assert.equal(config.reservationsEnabled, true);
+  assert.equal(config.isFree, true);
+});
+
+test("venue-less event can explicitly close reservations", () => {
+  const config = resolveReservationConfig(null, { reservation_price_eur: 5, reservations_enabled: false });
   assert.equal(config.reservationsEnabled, false);
   assert.equal(config.priceEur, 5);
 });
 
-test("venue-less event with no price is free and closed", () => {
-  const config = resolveReservationConfig({ reservations_enabled: false }, {});
+test("event reservations_enabled=false closes reservations even with a venue", () => {
+  const config = resolveReservationConfig(baseVenue, { reservations_enabled: false });
   assert.equal(config.reservationsEnabled, false);
-  assert.equal(config.isFree, true);
 });
 
 test("reservations disabled flag on venue closes reservations", () => {

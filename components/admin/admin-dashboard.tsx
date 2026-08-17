@@ -710,8 +710,15 @@ function EventForm({
       </div>
       <div className="rounded-xl border border-white/10 bg-black/20 p-4">
         <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Reservation overrides</p>
-        <p className="mt-1 text-xs text-white/40">Leave inherit to use venue defaults.</p>
+        <p className="mt-1 text-xs text-white/40">
+          {event?.venue_id ? "Leave inherit to use venue defaults." : "No venue — event settings are used directly (reservations default to on)."}
+        </p>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <TriStateSelect
+            name="reservations_enabled"
+            label="Reservations open"
+            value={event?.reservations_enabled}
+          />
           <Input
             name="reservation_price_eur"
             type="number"

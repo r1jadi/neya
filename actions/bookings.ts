@@ -9,6 +9,7 @@ import { getPublicSiteUrl } from "@/lib/env";
 import { logUserActivity } from "@/lib/activity-log";
 import { resolveReservationConfig, type ReservationPaymentMethod } from "@/lib/reservations/config";
 import { safeInternalPath } from "@/lib/redirect";
+import { isUuid } from "@/lib/utils";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getRaiAcceptClient, RaiAcceptError, type RaiAcceptOrderPayload } from "@/lib/raiaccept/server";
 
@@ -33,30 +34,42 @@ type EventReservationRow = {
   reservation_price_eur: number | null;
   requires_online_payment: boolean | null;
   allows_pay_at_venue: boolean | null;
+  reservations_enabled: boolean | null;
+  title?: string | null;
 };
 
-async function loadReservationConfig(venueId: string, eventId: string | null) {
+async function loadReservationConfig(venueId: string | null, eventId: string | null) {
   const supabase = await createClient();
-  const { data: venue, error: vErr } = await supabase
-    .from("venues")
-    .select("id, name, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue")
-    .eq("id", venueId)
-    .maybeSingle();
 
-  if (vErr || !venue) return null;
+  let venue: VenueReservationRow | null = null;
+  if (venueId) {
+    const { data, error: vErr } = await supabase
+      .from("venues")
+      .select("id, name, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue")
+      .eq("id", venueId)
+      .maybeSingle();
+    if (vErr || !data) return null;
+    venue = data as VenueReservationRow;
+  }
 
   let event: EventReservationRow | null = null;
   if (eventId) {
     const { data: ev } = await supabase
       .from("events")
-      .select("reservation_price_eur, requires_online_payment, allows_pay_at_venue")
+      .select(
+        "reservation_price_eur, requires_online_payment, allows_pay_at_venue, reservations_enabled, title",
+      )
       .eq("id", eventId)
       .maybeSingle();
-    event = ev;
+    event = ev as EventReservationRow | null;
   }
 
-  const config = resolveReservationConfig(venue as VenueReservationRow, event);
-  return { supabase, venue: venue as VenueReservationRow, config };
+  // Venue-less events still support reservations — the event itself carries
+  // the reservation config (price + payment overrides + reservations_enabled).
+  if (!venue && !event) return null;
+
+  const config = resolveReservationConfig(venue, event);
+  return { supabase, venue, event, config };
 }
 
 export async function createReservation(formData: FormData) {
@@ -67,7 +80,8 @@ export async function createReservation(formData: FormData) {
   const redirectTo = safeRedirectPath(String(formData.get("redirect") ?? "/events"));
   if (!user) redirect(loginNext(redirectTo));
 
-  const venueId = String(formData.get("venue_id") ?? "");
+  const venueIdRaw = String(formData.get("venue_id") ?? "").trim();
+  const venueId = venueIdRaw && isUuid(venueIdRaw) ? venueIdRaw : null;
   const eventIdRaw = formData.get("event_id");
   const eventId = eventIdRaw && String(eventIdRaw).length > 0 ? String(eventIdRaw) : null;
   const partySize = Math.min(20, Math.max(1, parseInt(String(formData.get("party_size") ?? "2"), 10) || 2));
@@ -75,11 +89,12 @@ export async function createReservation(formData: FormData) {
   const phone = String(formData.get("phone") ?? "").slice(0, 40);
   const paymentMethodRaw = String(formData.get("payment_method") ?? "").trim();
 
-  if (!venueId) redirect(`${redirectTo}?error=missing-venue`);
+  // A reservation needs at least a venue or an event to attach to.
+  if (!venueId && !eventId) redirect(`${redirectTo}?error=missing-venue`);
 
   const loaded = await loadReservationConfig(venueId, eventId);
   if (!loaded) redirect(`${redirectTo}?error=reservation`);
-  const { venue, config } = loaded;
+  const { venue, event, config } = loaded;
 
   if (!config.reservationsEnabled) redirect(`${redirectTo}?error=reservations-closed`);
 
@@ -193,6 +208,7 @@ export async function createReservation(formData: FormData) {
   const origin = getPublicSiteUrl();
   const priceLabel =
     config.priceEur % 1 === 0 ? `€${config.priceEur.toFixed(0)}` : `€${config.priceEur.toFixed(2)}`;
+  const bookingLabel = venue?.name ?? event?.title?.trim() ?? "NEYA table reservation";
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
@@ -203,7 +219,7 @@ export async function createReservation(formData: FormData) {
           currency: "eur",
           unit_amount: config.priceCents,
           product_data: {
-            name: `Table reservation · ${venue.name}`,
+            name: `Table reservation · ${bookingLabel}`,
             description: `${priceLabel} deposit — ${partySize} guests.`,
           },
         },

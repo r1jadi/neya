@@ -43,7 +43,7 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
   const { data: ev, error: evErr } = await sb
     .from("events")
     .select(
-      `id, venue_id, reservation_price_eur, requires_online_payment, allows_pay_at_venue, venues(${VENUE_RESERVATION_SELECT})`,
+      `id, venue_id, reservation_price_eur, requires_online_payment, allows_pay_at_venue, reservations_enabled, venues(${VENUE_RESERVATION_SELECT})`,
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -52,13 +52,14 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
   const venueRaw = ev.venues as ReservationVenueRow | ReservationVenueRow[] | null;
   const venue = Array.isArray(venueRaw) ? venueRaw[0] : venueRaw;
 
-  // Events can exist without a venue (venue is optional). Reservations need a
-  // venue, so a venue-less event gets reservations disabled — but tickets must
-  // still load, so the meta must NEVER be dropped for a missing venue.
-  const reservation = resolveReservationConfig(venue ?? { reservations_enabled: false }, {
+  // Events can exist without a venue (venue is optional), and venue-less
+  // events support reservations too (the event itself carries the config).
+  // The meta must NEVER be dropped for a missing venue — tickets always load.
+  const reservation = resolveReservationConfig(venue, {
     reservation_price_eur: ev.reservation_price_eur,
     requires_online_payment: ev.requires_online_payment,
     allows_pay_at_venue: ev.allows_pay_at_venue,
+    reservations_enabled: ev.reservations_enabled,
   });
 
   const guestlistMeta = await getEventGuestlistMeta(ev.id);

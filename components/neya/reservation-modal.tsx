@@ -24,7 +24,8 @@ import { cn } from "@/lib/utils";
 
 interface ReservationModalProps {
   venueName: string;
-  venueId: string;
+  /** Optional — venue-less events reserve against the event itself. */
+  venueId?: string | null;
   eventId?: string | null;
   eventSlug?: string;
   config: ResolvedReservationConfig;
@@ -161,7 +162,7 @@ export function ReservationModal({
         <ReservationFeeSummary config={config} priceLabel={priceLabel} />
 
         <form action={createReservation} className="grid gap-3 py-1">
-          <input type="hidden" name="venue_id" value={venueId} />
+          {venueId ? <input type="hidden" name="venue_id" value={venueId} /> : null}
           {eventId ? <input type="hidden" name="event_id" value={eventId} /> : null}
           <input type="hidden" name="redirect" value={redirectPath} />
           {!isFree && config.showPaymentSelector ? (

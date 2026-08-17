@@ -47,7 +47,7 @@ export function EventDetailsCtas({
   const reserveButton = meta && canReserve ? (
     <ReservationModal
       venueName={event.venue?.name ?? "Venue"}
-      venueId={meta.venueUuid!}
+      venueId={meta.venueUuid ?? undefined}
       eventId={meta.eventUuid}
       eventSlug={event.slug}
       config={meta.reservation}
@@ -60,10 +60,6 @@ export function EventDetailsCtas({
         </button>
       }
     />
-  ) : meta && !meta.venueUuid ? (
-    <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50">
-      Reservations aren&apos;t available for this event yet — no venue linked.
-    </p>
   ) : meta ? (
     <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50">
       Table reservations are closed for this venue.
@@ -160,7 +156,7 @@ export function EventDetailsCtas({
           {meta && canReserve ? (
             <ReservationModal
               venueName={event.venue?.name ?? "Venue"}
-              venueId={meta.venueUuid!}
+              venueId={meta.venueUuid ?? undefined}
               eventId={meta.eventUuid}
               eventSlug={event.slug}
               config={meta.reservation}
