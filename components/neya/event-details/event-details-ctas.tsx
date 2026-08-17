@@ -6,6 +6,7 @@ import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SaveEventButton } from "@/components/neya/save-event-button";
 import { MyNightButton } from "@/components/my-night/my-night-button";
 import { TicketCard } from "@/components/neya/ticket-card";
+import { AddToCalendarButton } from "@/components/neya/add-to-calendar-button";
 import type { EventBookingMeta } from "@/services/booking-meta";
 import { formatReservationPrice } from "@/lib/reservations/config";
 import type { Event } from "@/types";
@@ -216,6 +217,7 @@ export function EventDetailsCtas({
       {showSave && isUuid(event.id) ? (
         <SaveEventButton eventId={event.id} eventSlug={event.slug} initialSaved={Boolean(saved)} className="w-full" />
       ) : null}
+      <AddToCalendarButton event={event} className="w-full" />
       <div id="tickets">{ticketBlock}</div>
       {reserveButton}
       {guestlistButton}
