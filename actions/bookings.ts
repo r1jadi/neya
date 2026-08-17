@@ -309,6 +309,19 @@ export async function createTicketCheckout(formData: FormData) {
 
   const origin = getPublicSiteUrl();
   const orderParam = encodeURIComponent(order.id);
+  // Distribute the invoice amount across items in whole cents so the item
+  // prices always sum to the invoice amount (e.g. €25 / 3 tickets must not
+  // become 3 × €8.33 = €24.99, which providers reject as a mismatch).
+  const unitCents = Math.floor(order.amount_cents / order.quantity);
+  const remainderCents = order.amount_cents - unitCents * order.quantity;
+  const itemDescription = String(ticket.tier_name ?? "NEYA event ticket").slice(0, 100);
+  const items: NonNullable<RaiAcceptOrderPayload["invoice"]["items"]> =
+    remainderCents > 0 && order.quantity > 1
+      ? [
+          { description: itemDescription, numberOfItems: order.quantity - 1, price: amountToRaiAccept(unitCents) },
+          { description: itemDescription, numberOfItems: 1, price: amountToRaiAccept(unitCents + remainderCents) },
+        ]
+      : [{ description: itemDescription, numberOfItems: order.quantity, price: amountToRaiAccept(unitCents) }];
   const payload: RaiAcceptOrderPayload = {
     consumer: await buildRaiAcceptConsumer(user),
     invoice: {
@@ -318,13 +331,7 @@ export async function createTicketCheckout(formData: FormData) {
         ticket as { tier_name: string; events?: { title?: string | null } | null },
       ),
       merchantOrderReference: order.merchant_order_reference,
-      items: [
-        {
-          description: String(ticket.tier_name ?? "NEYA event ticket").slice(0, 100),
-          numberOfItems: order.quantity,
-          price: amountToRaiAccept(order.amount_cents / order.quantity),
-        },
-      ],
+      items,
     },
     paymentMethodPreference: "CARD",
     urls: {

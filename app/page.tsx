@@ -8,7 +8,10 @@ import { getStoriesForCity } from "@/services/stories";
 import { happeningNowEvents, tonightEvents, upcomingEvents } from "@/lib/event-filters";
 import { getVenues } from "@/services/venues";
 
-export default async function Home() {
+type Props = { searchParams: Promise<{ error?: string }> };
+
+export default async function Home({ searchParams }: Props) {
+  const q = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -54,6 +57,11 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen w-full min-w-0 flex-col">
       <SiteHeader />
+      {q.error === "payment" ? (
+        <p className="mx-auto mt-6 w-full max-w-6xl rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          We couldn&apos;t start the payment — please try again from the event page.
+        </p>
+      ) : null}
       <LandingSections
         events={events}
         venues={venues}

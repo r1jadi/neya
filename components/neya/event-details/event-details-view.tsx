@@ -53,6 +53,11 @@ function FlashMessages({ flash }: { flash?: EventDetailsFlash }) {
           Could not save your vote. Make sure you are logged in and try again.
         </p>
       ) : null}
+      {flash.error === "payment" ? (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          We couldn&apos;t start the payment — please try again in a moment.
+        </p>
+      ) : null}
       {flash.reservation === "confirmed" ? (
         <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
           Table reservation confirmed.

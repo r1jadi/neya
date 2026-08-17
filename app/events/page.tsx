@@ -52,6 +52,11 @@ export default async function EventsPage({ searchParams }: Props) {
               Stripe is not configured or checkout failed. Check server env keys.
             </p>
           ) : null}
+          {q.error === "payment" ? (
+            <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+              We couldn&apos;t start the payment — please try again in a moment.
+            </p>
+          ) : null}
           {q.guestlist === "applied" ? (
             <p className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
               Guestlist request sent.
