@@ -8,6 +8,7 @@ import { EventCard } from "@/components/neya/event-card";
 import { FomoTicker } from "@/components/neya/fomo-ticker";
 import { ForYouRail } from "@/features/landing/for-you-rail";
 import { VenueHighlightCard } from "@/components/neya/venue-highlight-card";
+import { MyNightEntry } from "@/components/my-night/my-night-entry";
 import { LandingHero } from "./hero";
 import {
   djSets,
@@ -101,6 +102,8 @@ export function LandingSections({
           <FomoTicker lines={fomoLines} />
         </section>
       ) : null}
+
+      <MyNightEntry />
 
       {musicGenres.length || venueInterests.length ? (
         <section className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-10 sm:px-6">

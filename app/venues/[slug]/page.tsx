@@ -20,6 +20,7 @@ import { createClient } from "@/lib/supabase/server";
 import { venueJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
 import { CheckInWidget } from "@/components/neya/check-in-widget";
+import { MyNightButton } from "@/components/my-night/my-night-button";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -128,6 +129,25 @@ export default async function VenuePage({ params, searchParams }: Props) {
               />
             ) : null}
             <div className="flex flex-wrap gap-4">
+              {isUuid(venue.id) ? (
+                <MyNightButton
+                  variant="default"
+                  className="border-sky-400/25 bg-sky-500/10 text-sky-100 hover:border-sky-400/40 hover:bg-sky-500/20"
+                  stop={{
+                    stopId: "",
+                    kind: "venue",
+                    refId: venue.id,
+                    title: venue.name,
+                    subtitle: venue.address,
+                    time: null,
+                    image: venue.image_url,
+                    slug: venue.slug,
+                    lat: venue.lat ?? null,
+                    lng: venue.lng ?? null,
+                    available: true,
+                  }}
+                />
+              ) : null}
               {venueMeta && venueMeta.reservation.reservationsEnabled ? (
                 <ReservationModal
                   venueName={venue.name}

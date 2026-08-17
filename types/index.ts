@@ -275,3 +275,31 @@ export interface VenueHighlight {
     starts_at?: string | null;
   } | null;
 }
+
+/** A My Night stop is either a venue or an event. */
+export type MyNightStopKind = "venue" | "event";
+
+/** A fully resolved My Night stop for display (server or card snapshot). */
+export interface NightStopDisplay {
+  /** night_plan_stops.id — empty for guest/local stops until persisted. */
+  stopId: string;
+  kind: MyNightStopKind;
+  refId: string;
+  title: string;
+  subtitle?: string | null;
+  /** Event start time (ISO) — null for plain venue stops. */
+  time?: string | null;
+  image?: string | null;
+  /** Link target slug (event or venue). */
+  slug?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+  available: boolean;
+}
+
+/** A My Night plan with resolved stops. */
+export interface MyNightPlan {
+  planId: string;
+  title: string;
+  stops: NightStopDisplay[];
+}

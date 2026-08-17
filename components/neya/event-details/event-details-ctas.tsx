@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GuestlistModal } from "@/components/neya/guestlist-modal";
 import { ReservationModal } from "@/components/neya/reservation-modal";
 import { SaveEventButton } from "@/components/neya/save-event-button";
+import { MyNightButton } from "@/components/my-night/my-night-button";
 import { TicketCard } from "@/components/neya/ticket-card";
 import type { EventBookingMeta } from "@/services/booking-meta";
 import type { Event } from "@/types";
@@ -192,6 +193,25 @@ export function EventDetailsCtas({
 
   return (
     <div className={cn("space-y-3", className)}>
+      {isUuid(event.id) ? (
+        <MyNightButton
+          variant="default"
+          className="w-full border-sky-400/25 bg-sky-500/10 text-sky-100 hover:border-sky-400/40 hover:bg-sky-500/20"
+          stop={{
+            stopId: "",
+            kind: "event",
+            refId: event.id,
+            title: event.title,
+            subtitle: event.venue?.name ?? "Venue TBA",
+            time: event.starts_at,
+            image: event.image_url,
+            slug: event.slug,
+            lat: event.venue?.lat ?? null,
+            lng: event.venue?.lng ?? null,
+            available: true,
+          }}
+        />
+      ) : null}
       {showSave && isUuid(event.id) ? (
         <SaveEventButton eventId={event.id} eventSlug={event.slug} initialSaved={Boolean(saved)} className="w-full" />
       ) : null}

@@ -9,6 +9,7 @@ import { AtmosphereMeter } from "@/components/neya/atmosphere-meter";
 import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { SaveEventButton } from "@/components/neya/save-event-button";
+import { MyNightButton } from "@/components/my-night/my-night-button";
 import { Badge } from "@/components/ui/badge";
 import { formatEventWhen, isHappeningNow } from "@/lib/event-dates";
 import { cn, isUuid } from "@/lib/utils";
@@ -46,7 +47,24 @@ export function EventCard({ event, className, saved }: EventCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
         <div className="absolute right-3 top-3 z-20 flex items-center gap-2">
           {isUuid(event.id) ? (
-            <SaveEventButton eventId={event.id} eventSlug={event.slug} initialSaved={Boolean(saved)} />
+            <>
+              <MyNightButton
+                stop={{
+                  stopId: "",
+                  kind: "event",
+                  refId: event.id,
+                  title: event.title,
+                  subtitle: event.venue?.name ?? "Venue TBA",
+                  time: event.starts_at,
+                  image: event.image_url,
+                  slug: event.slug,
+                  lat: event.venue?.lat ?? null,
+                  lng: event.venue?.lng ?? null,
+                  available: true,
+                }}
+              />
+              <SaveEventButton eventId={event.id} eventSlug={event.slug} initialSaved={Boolean(saved)} />
+            </>
           ) : null}
         </div>
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">

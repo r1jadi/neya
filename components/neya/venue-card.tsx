@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { MapPin, Sparkles } from "lucide-react";
 import { VENUE_CATEGORIES, type Venue } from "@/types";
 import { LiveBadge } from "@/components/neya/live-badge";
+import { MyNightButton } from "@/components/my-night/my-night-button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +38,23 @@ export function VenueCard({ venue, highlightTitle, className }: VenueCardProps) 
         <div className="absolute left-3 top-3 flex gap-2">
           <Badge variant="secondary">{categoryLabel(venue.category)}</Badge>
           <LiveBadge live={venue.is_live} />
+        </div>
+        <div className="absolute right-3 top-3 z-20">
+          <MyNightButton
+            stop={{
+              stopId: "",
+              kind: "venue",
+              refId: venue.id,
+              title: venue.name,
+              subtitle: venue.address,
+              time: null,
+              image: venue.image_url,
+              slug: venue.slug,
+              lat: venue.lat ?? null,
+              lng: venue.lng ?? null,
+              available: true,
+            }}
+          />
         </div>
         <div className="absolute bottom-3 left-3 right-3">
           <h3 className="text-base font-semibold text-white">{venue.name}</h3>
