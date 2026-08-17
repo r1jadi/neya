@@ -56,10 +56,23 @@ export default async function DashboardPage() {
 
   const { data: saved } = await supabase
     .from("saved_events")
-    .select("event_id, created_at, events(slug, title)")
+    .select("event_id, created_at, events(slug, title, starts_at)")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(20);
+
+  const { data: savedVenues } = await supabase
+    .from("saved_venues")
+    .select("venue_id, created_at, venues(slug, name, city_slug)")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+  type SavedEventRow = { event_id: string; created_at: string; events: { starts_at?: string } | { starts_at?: string }[] | null };
+  const savedEventRow = (item: SavedEventRow) => { const raw = item.events; return Array.isArray(raw) ? raw[0] : raw; };
+  const nowMs = new Date().getTime();
+  const upcomingSaved = (saved ?? []).filter((item) => {
+    const event = savedEventRow(item); return Boolean(event?.starts_at && new Date(event.starts_at).getTime() >= nowMs);
+  }).sort((a, b) => new Date(savedEventRow(a)?.starts_at ?? 0).getTime() - new Date(savedEventRow(b)?.starts_at ?? 0).getTime());
 
   const [purchasedGuides, followedArtists] = await Promise.all([
     getUserPurchasedGuides(user.id, supabase),
@@ -130,17 +143,20 @@ export default async function DashboardPage() {
         </section>
 
         <section className="mt-10">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Saved events</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Upcoming saved events</h2>
           <ul className="mt-3 space-y-2">
-            {saved?.length ? (
-              saved.map((s) => {
-                const ev = s.events as { slug?: string; title?: string } | null;
+            {upcomingSaved.length ? (
+              upcomingSaved.map((s) => {
+                const ev = s.events as { slug?: string; title?: string; starts_at?: string } | null;
                 return (
                   <li key={s.event_id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm">
                     {ev?.slug ? (
-                      <Link href={`/events/${ev.slug}`} className="font-medium text-white hover:underline">
-                        {ev?.title ?? "Event"}
-                      </Link>
+                      <>
+                        <Link href={`/events/${ev.slug}`} className="font-medium text-white hover:underline">
+                          {ev?.title ?? "Event"}
+                        </Link>
+                        {ev?.starts_at ? <span className="ml-2 text-xs text-white/45">{new Date(ev.starts_at).toLocaleString()}</span> : null}
+                      </>
                     ) : (
                       <span className="text-white/50">Event unavailable</span>
                     )}
@@ -149,7 +165,7 @@ export default async function DashboardPage() {
               })
             ) : (
               <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
-                Nothing saved yet — tap the bookmark on any event to keep it here.{" "}
+                No upcoming saved events — tap the bookmark on any event to keep it here.{" "}
                 <Link href="/events" className="text-sky-300 hover:underline">
                   Browse tonight
                 </Link>
@@ -157,6 +173,8 @@ export default async function DashboardPage() {
             )}
           </ul>
         </section>
+
+        <section className="mt-10"><h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Saved venues</h2><ul className="mt-3 space-y-2">{savedVenues?.length ? savedVenues.map((item) => { const venue = item.venues as { slug?: string; name?: string; city_slug?: string } | null; return <li key={item.venue_id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm">{venue?.slug ? <Link href={`/venues/${venue.slug}`} className="font-medium text-white hover:underline">{venue.name ?? "Venue"}</Link> : <span className="text-white/50">Venue unavailable</span>}{venue?.city_slug ? <span className="ml-2 text-xs capitalize text-white/45">{venue.city_slug.replace(/-/g, " ")}</span> : null}</li>; }) : <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">No saved venues yet — save a venue to keep its upcoming nights close.</li>}</ul></section>
 
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Guestlists</h2>

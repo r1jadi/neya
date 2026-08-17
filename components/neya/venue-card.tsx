@@ -7,6 +7,7 @@ import { MapPin, Sparkles } from "lucide-react";
 import { VENUE_CATEGORIES, type Venue } from "@/types";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { MyNightButton } from "@/components/my-night/my-night-button";
+import { SaveVenueButton } from "@/components/neya/save-venue-button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -15,12 +16,13 @@ interface VenueCardProps {
   /** Optional "This week" highlight title shown on the card. */
   highlightTitle?: string;
   className?: string;
+  saved?: boolean;
 }
 
 const categoryLabel = (category: Venue["category"]) =>
   category === "club" ? "Club" : VENUE_CATEGORIES.find((item) => item.id === category)?.label ?? "Other";
 
-export function VenueCard({ venue, highlightTitle, className }: VenueCardProps) {
+export function VenueCard({ venue, highlightTitle, className, saved }: VenueCardProps) {
   return (
     <motion.div
       whileHover={{ y: -3 }}
@@ -39,7 +41,7 @@ export function VenueCard({ venue, highlightTitle, className }: VenueCardProps) 
           <Badge variant="secondary">{categoryLabel(venue.category)}</Badge>
           <LiveBadge live={venue.is_live} />
         </div>
-        <div className="absolute right-3 top-3 z-20">
+        <div className="absolute right-3 top-3 z-20 flex gap-2">
           <MyNightButton
             stop={{
               stopId: "",
@@ -55,6 +57,7 @@ export function VenueCard({ venue, highlightTitle, className }: VenueCardProps) 
               available: true,
             }}
           />
+          <SaveVenueButton venueId={venue.id} venueSlug={venue.slug} initialSaved={saved} />
         </div>
         <div className="absolute bottom-3 left-3 right-3">
           <h3 className="text-base font-semibold text-white">{venue.name}</h3>

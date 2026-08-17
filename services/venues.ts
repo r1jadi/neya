@@ -9,19 +9,20 @@ export async function getVenues(): Promise<Venue[]> {
   return getVenuesForCity("prishtina");
 }
 
-export async function getVenuesForCity(citySlug: string): Promise<Venue[]> {
+export async function getVenuesForCity(citySlug?: string): Promise<Venue[]> {
   try {
     const supabase = getPublicSupabase();
     if (!supabase) return [];
 
-    const { data, error } = await supabase
+    let request = supabase
       .from("venues")
       .select(venueSelect)
-      .eq("city_slug", citySlug)
       .eq("approved", true)
       .eq("rejected", false)
       .order("is_trending", { ascending: false })
       .order("name", { ascending: true });
+    if (citySlug) request = request.eq("city_slug", citySlug);
+    const { data, error } = await request;
 
     if (error) {
       console.error("[neya] getVenues", error.message);

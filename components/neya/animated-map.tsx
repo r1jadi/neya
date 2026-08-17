@@ -11,16 +11,19 @@ export interface MapMarker {
   slug: string;
   title: string;
   is_live?: boolean;
+  kind?: "event" | "venue";
+  href?: string;
 }
 
 interface AnimatedMapProps {
   className?: string;
   center?: [number, number];
   markers?: MapMarker[];
+  onBoundsChange?: (bounds: { west: number; south: number; east: number; north: number }) => void;
 }
 
 /** Dark nightlife map — requires NEXT_PUBLIC_MAPBOX_TOKEN */
-export function AnimatedMap({ className, center = [21.1655, 42.6629], markers = [] }: AnimatedMapProps) {
+export function AnimatedMap({ className, center = [21.1655, 42.6629], markers = [], onBoundsChange }: AnimatedMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
@@ -40,6 +43,9 @@ export function AnimatedMap({ className, center = [21.1655, 42.6629], markers = 
       antialias: true,
     });
     map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "top-right");
+    const reportBounds = () => { const bounds = map.getBounds(); if (bounds) onBoundsChange?.({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() }); };
+    map.on("moveend", reportBounds);
+    map.on("load", reportBounds);
     mapRef.current = map;
 
     const pulse = window.setInterval(() => {
@@ -53,7 +59,7 @@ export function AnimatedMap({ className, center = [21.1655, 42.6629], markers = 
       map.remove();
       mapRef.current = null;
     };
-  }, [center]);
+  }, [center, onBoundsChange]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -65,11 +71,13 @@ export function AnimatedMap({ className, center = [21.1655, 42.6629], markers = 
       for (const p of markers) {
         if (p.lat == null || p.lng == null || Number.isNaN(p.lat) || Number.isNaN(p.lng)) continue;
         const color = p.is_live ? "#f472b6" : "#38bdf8";
+        const href = p.href ?? (p.kind === "event" ? `/events/${encodeURIComponent(p.slug)}` : `/venues/${encodeURIComponent(p.slug)}`);
+        const title = p.title.replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]!);
         const mk = new mapboxgl.Marker({ color })
           .setLngLat([p.lng, p.lat])
           .setPopup(
             new mapboxgl.Popup({ offset: 14 }).setHTML(
-              `<a href="/venues/${p.slug}" style="color:#e2e8f0;font-weight:600">${p.title}</a>`,
+              `<a href="${href}" style="color:#e2e8f0;font-weight:600">${title}</a>`,
             ),
           )
           .addTo(map);
