@@ -61,6 +61,51 @@ function FlashMessages({ flash }: { flash?: EventDetailsFlash }) {
           We couldn&apos;t start the payment — please try again in a moment.
         </p>
       ) : null}
+      {flash.error === "soldout" ? (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          That ticket just sold out — try another tier or check the door.
+        </p>
+      ) : null}
+      {flash.error === "ticket" ? (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          We couldn&apos;t start the ticket purchase — please try again.
+        </p>
+      ) : null}
+      {flash.error === "ticket-unavailable" ? (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          Ticket sales for this event haven&apos;t opened or have ended.
+        </p>
+      ) : null}
+      {flash.error === "in-progress" ? (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          You already have a purchase in progress for this ticket — finish or cancel it before buying again.
+        </p>
+      ) : null}
+      {flash.error === "reservation" ? (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          We couldn&apos;t create your reservation — please try again.
+        </p>
+      ) : null}
+      {flash.error === "reservations-closed" ? (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          Reservations are closed for this event.
+        </p>
+      ) : null}
+      {flash.error === "missing-venue" ? (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          Reservations aren&apos;t available for this event yet — no venue linked.
+        </p>
+      ) : null}
+      {flash.error === "payment-method" ? (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          Choose a payment method and try again.
+        </p>
+      ) : null}
+      {flash.error === "stripe" ? (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          Payments are temporarily unavailable — try again shortly.
+        </p>
+      ) : null}
       {flash.reservation === "confirmed" ? (
         <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
           Table reservation confirmed.
@@ -109,7 +154,16 @@ function safeExternalUrl(value: string): string | null {
 export function EventDetailsView({ event, meta, artists = [], saved, showSave, purchasedTickets, flash }: EventDetailsViewProps) {
   const description = getEventDescription(event);
   const capacityLabel = formatCapacity(event.capacity);
-  const ticketLabel = formatTicketPrice(event);
+  const cheapestTicketCents =
+    meta?.ticketTypes.length && meta.ticketTypes.some((t) => t.status === "available")
+      ? Math.min(...meta.ticketTypes.filter((t) => t.status === "available").map((t) => t.priceCents))
+      : null;
+  const ticketLabel =
+    cheapestTicketCents != null
+      ? `From €${(cheapestTicketCents % 100 === 0 ? (cheapestTicketCents / 100).toFixed(0) : (cheapestTicketCents / 100).toFixed(2))}`
+      : meta?.ticketTypes.length
+        ? (meta.ticketSoldOut ? "Sold out" : formatTicketPrice(event) ?? "Tickets")
+        : formatTicketPrice(event);
   const locationLabel = getVenueLocationLabel(event);
   const whenShort = getEventWhenLabel(event);
   const whenFull = formatEventTimeRange(event.starts_at, event.ends_at);

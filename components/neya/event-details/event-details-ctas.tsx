@@ -7,6 +7,7 @@ import { SaveEventButton } from "@/components/neya/save-event-button";
 import { MyNightButton } from "@/components/my-night/my-night-button";
 import { TicketCard } from "@/components/neya/ticket-card";
 import type { EventBookingMeta } from "@/services/booking-meta";
+import { formatReservationPrice } from "@/lib/reservations/config";
 import type { Event } from "@/types";
 import { cn, isUuid } from "@/lib/utils";
 
@@ -46,7 +47,7 @@ export function EventDetailsCtas({
   const reserveButton = meta && canReserve ? (
     <ReservationModal
       venueName={event.venue?.name ?? "Venue"}
-      venueId={meta.venueUuid}
+      venueId={meta.venueUuid!}
       eventId={meta.eventUuid}
       eventSlug={event.slug}
       config={meta.reservation}
@@ -55,10 +56,14 @@ export function EventDetailsCtas({
           type="button"
           className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-500 py-3 text-sm font-bold text-zinc-950 transition hover:opacity-95"
         >
-          Reserve table
+          {meta.reservation.isFree ? "Reserve free table" : `Reserve table · ${formatReservationPrice(meta.reservation.priceEur)}`}
         </button>
       }
     />
+  ) : meta && !meta.venueUuid ? (
+    <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50">
+      Reservations aren&apos;t available for this event yet — no venue linked.
+    </p>
   ) : meta ? (
     <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white/50">
       Table reservations are closed for this venue.
@@ -155,7 +160,7 @@ export function EventDetailsCtas({
           {meta && canReserve ? (
             <ReservationModal
               venueName={event.venue?.name ?? "Venue"}
-              venueId={meta.venueUuid}
+              venueId={meta.venueUuid!}
               eventId={meta.eventUuid}
               eventSlug={event.slug}
               config={meta.reservation}

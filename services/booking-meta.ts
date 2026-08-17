@@ -8,7 +8,7 @@ import type { GuestlistAvailability, GuestlistConfig } from "@/types/guestlist";
 
 export type EventBookingMeta = {
   eventUuid: string;
-  venueUuid: string;
+  venueUuid: string | null;
   guestlist: GuestlistConfig | null;
   guestlistAvailability: GuestlistAvailability | null;
   /** @deprecated Use guestlist.id */
@@ -51,9 +51,11 @@ export async function getEventBookingMetaBySlug(slug: string): Promise<EventBook
 
   const venueRaw = ev.venues as ReservationVenueRow | ReservationVenueRow[] | null;
   const venue = Array.isArray(venueRaw) ? venueRaw[0] : venueRaw;
-  if (!venue) return null;
 
-  const reservation = resolveReservationConfig(venue, {
+  // Events can exist without a venue (venue is optional). Reservations need a
+  // venue, so a venue-less event gets reservations disabled — but tickets must
+  // still load, so the meta must NEVER be dropped for a missing venue.
+  const reservation = resolveReservationConfig(venue ?? { reservations_enabled: false }, {
     reservation_price_eur: ev.reservation_price_eur,
     requires_online_payment: ev.requires_online_payment,
     allows_pay_at_venue: ev.allows_pay_at_venue,
