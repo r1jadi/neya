@@ -106,7 +106,8 @@ export async function POST(req: Request) {
       if (orderId) {
         const { data: completed, error: completionError } = await admin.rpc("complete_ticket_order", {
           p_order_id: orderId,
-          p_session_id: session.id,
+          p_provider: "stripe",
+          p_provider_reference: session.id,
           p_qr_payload: `neya:${orderId}:${randomUUID()}`,
         });
         if (completionError || !completed) {

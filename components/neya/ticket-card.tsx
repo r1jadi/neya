@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useFormStatus } from "react-dom";
 import { createTicketCheckout } from "@/actions/bookings";
 
 interface TicketCardProps {
@@ -20,6 +21,15 @@ interface TicketCardProps {
   soldOut?: boolean;
   ticketId?: string | null;
   className?: string;
+}
+
+function BuyButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending} className="w-full">
+      {pending ? "Preparing checkout…" : "Buy ticket"}
+    </Button>
+  );
 }
 
 export function TicketCard({ eventTitle, tier, priceEur, description, currency = "EUR", quantityAvailable, status, endsAt, soldOut, ticketId, className }: TicketCardProps) {
@@ -39,7 +49,7 @@ export function TicketCard({ eventTitle, tier, priceEur, description, currency =
           {description ? <p className="text-sm text-white/65">{description}</p> : null}
           {quantityAvailable != null && !unavailable ? <p className="text-xs text-amber-200/90">{quantityAvailable} remaining</p> : null}
           {endsAt ? <p className="inline-flex items-center gap-2 text-xs text-amber-200/90"><Timer className="h-3.5 w-3.5" />Sales end {new Date(endsAt).toLocaleDateString()}</p> : null}
-          {canBuy ? <form action={createTicketCheckout}><input type="hidden" name="ticket_id" value={ticketId!} /><input type="hidden" name="redirect" value={typeof window === "undefined" ? "/events" : window.location.pathname} /><label className="mb-3 flex items-center justify-between gap-3 text-sm text-white/70">Quantity<select name="quantity" defaultValue="1" className="rounded-lg border border-white/10 bg-black/50 px-2 py-1 text-white">{Array.from({ length: maxQuantity }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><Button type="submit" className="w-full">Buy with Stripe</Button></form> : ticketId && unavailable ? <p className="text-center text-xs text-white/50">{status === "closed" ? "Ticket sales are closed." : "Sold out online — check door policy."}</p> : null}
+          {canBuy ? <form action={createTicketCheckout}><input type="hidden" name="ticket_id" value={ticketId!} /><input type="hidden" name="redirect" value={typeof window === "undefined" ? "/events" : window.location.pathname} /><label className="mb-3 flex items-center justify-between gap-3 text-sm text-white/70">Quantity<select name="quantity" defaultValue="1" className="rounded-lg border border-white/10 bg-black/50 px-2 py-1 text-white">{Array.from({ length: maxQuantity }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><BuyButton /></form> : ticketId && unavailable ? <p className="text-center text-xs text-white/50">{status === "closed" ? "Ticket sales are closed." : "Sold out online — check door policy."}</p> : null}
         </CardContent>
       </Card>
     </motion.div>
