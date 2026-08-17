@@ -143,6 +143,7 @@ export default async function AdminPage({ searchParams }: Props) {
               initialTab={tab}
               hideNav
               venueAccounts={data.venueAccounts}
+              eventSources={data.eventSources}
               venues={data.venues}
               events={data.events}
               tickets={data.tickets}

@@ -14,6 +14,7 @@ import { isUuid } from "@/lib/utils";
 import { getEventBookingMetaBySlug } from "@/services/booking-meta";
 import { getArtistsForEvent } from "@/services/artists";
 import { getEventBySlug } from "@/services/events";
+import { getEventSources } from "@/services/event-sources";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -50,9 +51,10 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const event = await getEventBySlug(slug, supabase);
   if (!event) notFound();
 
-  const [meta, artists] = await Promise.all([
+  const [meta, artists, sources] = await Promise.all([
     getEventBookingMetaBySlug(slug),
     getArtistsForEvent(isUuid(event.id) ? event.id : ""),
+    getEventSources(event.id, supabase),
   ]);
 
   let saved = false;
@@ -90,6 +92,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             event={event}
             meta={meta}
             artists={artists}
+            sources={sources}
             saved={saved}
             purchasedTickets={purchasedTickets}
             showSave={Boolean(user)}

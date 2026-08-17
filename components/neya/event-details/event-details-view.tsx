@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, Disc3, MapPin, Ticket, Users } from "lucide-react";
+import { Calendar, CheckCircle2, Disc3, ExternalLink, MapPin, Ticket, Users } from "lucide-react";
 import { AtmosphereMeter } from "@/components/neya/atmosphere-meter";
 import { CrowdIndicator } from "@/components/neya/crowd-indicator";
 import { LiveAtmospherePanel } from "@/components/neya/live-atmosphere-panel";
@@ -23,6 +23,7 @@ import {
   getVenueLocationLabel,
 } from "@/lib/event-display";
 import type { EventBookingMeta } from "@/services/booking-meta";
+import type { EventSource } from "@/services/event-sources";
 import type { ArtistLineupRef, Event } from "@/types";
 import { isUuid } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ export type EventDetailsViewProps = {
   showSave?: boolean;
   purchasedTickets?: number;
   flash?: EventDetailsFlash;
+  sources?: EventSource[];
 };
 
 function FlashMessages({ flash }: { flash?: EventDetailsFlash }) {
@@ -151,7 +153,7 @@ function safeExternalUrl(value: string): string | null {
   }
 }
 
-export function EventDetailsView({ event, meta, artists = [], saved, showSave, purchasedTickets, flash }: EventDetailsViewProps) {
+export function EventDetailsView({ event, meta, artists = [], sources = [], saved, showSave, purchasedTickets, flash }: EventDetailsViewProps) {
   const description = getEventDescription(event);
   const capacityLabel = formatCapacity(event.capacity);
   const cheapestTicketCents =
@@ -222,6 +224,8 @@ export function EventDetailsView({ event, meta, artists = [], saved, showSave, p
                 </div>
               )}
             </section>
+
+            {sources.length ? <section><h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Sources</h2><p className="mt-2 text-sm text-white/50">Links supplied for this event. A checked label means NEYA reviewed that source; other links are shown without a trust claim.</p><ul className="mt-3 space-y-2">{sources.map((source) => <li key={source.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3"><a href={source.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-sky-300 hover:underline">{source.label ?? source.source_type.replace(/_/g, " ")}<ExternalLink className="h-3.5 w-3.5" /></a>{source.is_verified ? <span className="inline-flex items-center gap-1 text-xs text-emerald-200"><CheckCircle2 className="h-3.5 w-3.5" />Reviewed by NEYA</span> : <span className="text-xs text-white/40">Source link</span>}</li>)}</ul></section> : null}
 
             <section>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Lineup</h2>

@@ -39,15 +39,22 @@ export async function submitPublicEvent(formData: FormData): Promise<Result> {
       imageUrl = admin.storage.from("neya-media").getPublicUrl(path).data.publicUrl;
     }
     const socialLinks = Object.fromEntries(["instagram", "facebook", "website"].flatMap((key) => { const url = String(formData.get(`social_${key}`) ?? "").trim().slice(0, 2000); return url && validUrl(url) ? [[key, url]] : []; }));
-    const { error } = await admin.from("events").insert({
+    const { data: event, error } = await admin.from("events").insert({
       slug: `${slugify(title)}-${crypto.randomUUID().slice(0, 6)}`, title, description: String(formData.get("description") ?? "").trim().slice(0, 4000) || null,
       starts_at: startsAt, ends_at: endsAt, city_slug: city, category, genre, venue_name: String(formData.get("venue_name") ?? "").trim().slice(0, 160) || null,
       organizer_name: String(formData.get("organizer_name") ?? "").trim().slice(0, 160) || null, organizer_email: organizerEmail, organizer_phone: String(formData.get("organizer_phone") ?? "").trim().slice(0, 40) || null,
       performers: String(formData.get("lineup") ?? "").split(",").map((name) => name.trim()).filter(Boolean).slice(0, 30).map((name) => ({ name: name.slice(0, 160) })),
       dj_lineup: String(formData.get("lineup") ?? "").split(",").map((name) => name.trim().slice(0, 160)).filter(Boolean).slice(0, 30), ticket_from_eur: formData.get("ticket_from_eur") ? Math.max(0, Number(formData.get("ticket_from_eur")) || 0) : null,
       ticket_url: ticketUrl || null, source_url: sourceUrl || null, social_links: socialLinks, image_url: imageUrl || null, is_free: formData.get("is_free") === "on", is_listed_public: false, submission_status: "pending_review", submitted_at: new Date().toISOString(), crowd_count: 0, atmosphere_rating: 0, live_status: false,
-    });
+    }).select("id").single();
     if (error) { console.error("[neya] public event submission", error.message); return { ok: false, error: "We couldn't submit this event. Please try again." }; }
+    const sources = [
+      sourceUrl ? { source_type: "official_website", label: "Submitted official source", url: sourceUrl } : null,
+      ticketUrl ? { source_type: "ticketing_provider", label: "Ticketing link", url: ticketUrl } : null,
+      socialLinks.instagram ? { source_type: "official_instagram", label: "Submitted Instagram", url: socialLinks.instagram } : null,
+      socialLinks.website ? { source_type: "official_website", label: "Submitted website", url: socialLinks.website } : null,
+    ].filter(Boolean);
+    if (event?.id && sources.length) await admin.from("event_sources").insert(sources.map((source) => ({ ...source!, event_id: event.id })));
     return { ok: true };
   } catch (error) { console.error("[neya] public event submission", error); return { ok: false, error: "Submission is temporarily unavailable." }; }
 }

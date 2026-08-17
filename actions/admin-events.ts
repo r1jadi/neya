@@ -66,6 +66,14 @@ export async function updateEventSubmissionStatus(formData: FormData) {
   revalidatePath("/"); revalidatePath("/events"); revalidatePath("/admin"); redirect("/admin?tab=events&ok=1");
 }
 
+export async function verifyEventSource(formData: FormData) {
+  const adminUser = await requireAdminUser(); const sourceId = String(formData.get("source_id") ?? ""); const verified = String(formData.get("verified") ?? "") === "true";
+  const note = String(formData.get("verification_note") ?? "").trim().slice(0, 1000);
+  if (!sourceId || (verified && note.length < 3)) redirect("/admin?tab=events&error=fields"); const admin = createAdminClient();
+  const { error } = await admin.from("event_sources").update({ is_verified: verified, verification_note: verified ? note : null, verified_at: verified ? new Date().toISOString() : null, verified_by: verified ? adminUser.id : null }).eq("id", sourceId);
+  if (error) redirect("/admin?tab=events&error=update"); revalidatePath("/admin"); redirect("/admin?tab=events&ok=1");
+}
+
 export async function grantPremiumByUserId(formData: FormData) {
   await requireAdminUser();
   const userId = String(formData.get("user_id") ?? "").trim();
