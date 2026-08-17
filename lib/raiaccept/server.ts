@@ -47,7 +47,24 @@ export type RaiAcceptOrderPayload = {
   };
 };
 
-export type RaiAcceptErrorPhase = "auth" | "create_order" | "create_checkout" | "get_order";
+export type RaiAcceptErrorPhase =
+  | "auth"
+  | "create_order"
+  | "create_checkout"
+  | "get_order"
+  | "get_transactions"
+  | "refund"
+  | "get_transaction";
+
+/** Integer cents → RaiAccept decimal amount (2500 → 25). */
+export function centsToRaiAcceptAmount(amountCents: number): number {
+  if (!Number.isSafeInteger(amountCents) || amountCents < 0) {
+    throw new RaiAcceptError("Invalid RaiAccept amount", { phase: "refund" });
+  }
+  // Dividing an integer-cent value is deliberate: callers keep all monetary
+  // accounting in cents and serialize the decimal only at the provider edge.
+  return amountCents / 100;
+}
 
 export class RaiAcceptError extends Error {
   readonly phase: RaiAcceptErrorPhase;
@@ -346,6 +363,135 @@ export class RaiAcceptClient {
 
     return (await res.json().catch(() => ({}))) as RaiAcceptOrderDetails;
   }
+
+  /**
+   * Retrieve all transactions for a RaiAccept order (documented endpoint,
+   * POST with no body). Used by reconciliation to mirror the webhook's
+   * PURCHASE/SUCCESS verification when no webhook notification exists.
+   */
+  async getTransactions(orderIdentification: string): Promise<RaiAcceptTransaction[]> {
+    await this.ensureAccessToken();
+    const apiBaseUrl = this.config().apiBaseUrl;
+
+    let res: Response;
+    try {
+      res = await fetch(`${apiBaseUrl}/orders/${encodeURIComponent(orderIdentification)}/transactions`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
+    } catch {
+      throw new RaiAcceptError("RaiAccept transactions retrieval failed", {
+        phase: "get_transactions",
+        uncertain: true,
+        orderIdentification,
+      });
+    }
+
+    if (!res.ok) {
+      const summary = await safeErrorBody(res);
+      throw new RaiAcceptError("RaiAccept transactions retrieval was rejected", {
+        phase: "get_transactions",
+        httpStatus: res.status,
+        providerCode: summary.code,
+        providerMessage: summary.message ?? summary.fieldErrors[0],
+        uncertain: res.status >= 500,
+        orderIdentification,
+      });
+    }
+
+    const data = (await res.json().catch(() => null)) as unknown;
+    if (Array.isArray(data)) return data as RaiAcceptTransaction[];
+    if (typeof data === "object" && data !== null) return [data as RaiAcceptTransaction];
+    return [];
+  }
+
+  /**
+   * Issue a partial or full refund against a RaiAccept purchase transaction
+   * (documented endpoint). Returns the RaiAccept refund transaction ID. A
+   * refund is considered completed only after getTransaction confirms the
+   * REFUND transaction as SUCCESS/0000 — never from this response alone.
+   */
+  async refundTransaction(
+    orderIdentification: string,
+    purchaseTransactionId: string,
+    amountCents: number,
+    currency: string,
+  ): Promise<{ transactionId: string }> {
+    if (!orderIdentification || !purchaseTransactionId || !Number.isSafeInteger(amountCents) || amountCents < 1) {
+      throw new RaiAcceptError("Invalid RaiAccept refund request", { phase: "refund" });
+    }
+    if (!/^[A-Z]{3}$/.test(currency)) {
+      throw new RaiAcceptError("Invalid RaiAccept refund currency", { phase: "refund" });
+    }
+    const data = await this.authorizedJson(
+      `/orders/${encodeURIComponent(orderIdentification)}/transactions/${encodeURIComponent(purchaseTransactionId)}/refund`,
+      { amount: centsToRaiAcceptAmount(amountCents), currency },
+      "refund",
+      orderIdentification,
+    );
+    const transactionId = typeof data.transactionId === "string" ? data.transactionId : null;
+    if (!transactionId) {
+      throw new RaiAcceptError("RaiAccept refund response did not include a transactionId", {
+        phase: "refund",
+        uncertain: true,
+        orderIdentification,
+      });
+    }
+    return { transactionId };
+  }
+
+  /**
+   * Retrieve the details/status of a single RaiAccept transaction — the
+   * authenticated response used to verify that a refund actually succeeded
+   * (transactionType REFUND, status SUCCESS, statusCode 0000).
+   */
+  async getTransaction(
+    orderIdentification: string,
+    transactionId: string,
+  ): Promise<RaiAcceptTransactionDetails> {
+    await this.ensureAccessToken();
+    const apiBaseUrl = this.config().apiBaseUrl;
+
+    let res: Response;
+    try {
+      res = await fetch(
+        `${apiBaseUrl}/orders/${encodeURIComponent(orderIdentification)}/transactions/${encodeURIComponent(transactionId)}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${this.accessToken}` },
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        },
+      );
+    } catch {
+      throw new RaiAcceptError("RaiAccept transaction retrieval failed", {
+        phase: "get_transaction",
+        uncertain: true,
+        orderIdentification,
+      });
+    }
+
+    if (!res.ok) {
+      const summary = await safeErrorBody(res);
+      throw new RaiAcceptError("RaiAccept transaction retrieval was rejected", {
+        phase: "get_transaction",
+        httpStatus: res.status,
+        providerCode: summary.code,
+        providerMessage: summary.message ?? summary.fieldErrors[0],
+        uncertain: res.status >= 500,
+        orderIdentification,
+      });
+    }
+
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    // RaiAccept environments have returned this resource both wrapped in a
+    // `transaction` object and as the transaction itself. Normalize only the
+    // documented, non-sensitive transaction fields for the caller.
+    if (typeof data.transactionId === "string") {
+      return { transaction: data as RaiAcceptTransactionDetails["transaction"] };
+    }
+    return data as RaiAcceptTransactionDetails;
+  }
 }
 
 /** A fresh client per server operation (fresh login + access token). */
@@ -372,5 +518,33 @@ export type RaiAcceptOrderDetails = {
     amount?: number;
     currency?: string;
     merchantOrderReference?: string;
+  };
+};
+
+/** A RaiAccept transaction as returned by the Retrieve all transactions endpoint. */
+export type RaiAcceptTransaction = {
+  transactionId?: string;
+  transactionAmount?: number;
+  transactionCurrency?: string;
+  transactionType?: string;
+  status?: string;
+  statusCode?: string;
+  statusMessage?: string;
+};
+
+/** A single transaction as returned by the Retrieve transaction status endpoint. */
+export type RaiAcceptTransactionDetails = {
+  transaction?: {
+    transactionId?: string;
+    transactionAmount?: number;
+    transactionCurrency?: string;
+    isProduction?: boolean;
+    transactionType?: string;
+    paymentMethod?: string;
+    status?: string;
+    statusCode?: string;
+    statusMessage?: string;
+    createdOn?: string;
+    updatedOn?: string;
   };
 };
