@@ -297,7 +297,15 @@ export async function createTicketCheckout(formData: FormData) {
   }
 
   // Label the order with its provider; the amount snapshot stays immutable.
-  await admin.from("ticket_orders").update({ payment_provider: "raiaccept" }).eq("id", order.id);
+  // No provider call has happened yet, so a failure here can safely release.
+  const { error: providerLabelError } = await admin
+    .from("ticket_orders")
+    .update({ payment_provider: "raiaccept" })
+    .eq("id", order.id);
+  if (providerLabelError) {
+    await releaseTicketReservationFor(order.id);
+    redirect(`${redirectTo}?error=payment`);
+  }
 
   const origin = getPublicSiteUrl();
   const orderParam = encodeURIComponent(order.id);
@@ -331,20 +339,39 @@ export async function createTicketCheckout(formData: FormData) {
   let paymentRedirectURL: string | null = null;
   try {
     // Create the RaiAccept order and persist its orderIdentification before
-    // opening the checkout session.
+    // opening the checkout session. The provider order may already exist at
+    // this point, so a persist failure must never release inventory — the
+    // catch below keeps the order recoverable for the webhook/reconciliation.
     const { orderIdentification } = await rai.createOrder(payload);
-    await admin
+    const { error: persistOrderError } = await admin
       .from("ticket_payment_attempts")
       .update({ provider_order_id: orderIdentification, updated_at: new Date().toISOString() })
       .eq("id", attempt.id);
-    await admin.from("ticket_orders").update({ payment_status: "processing" }).eq("id", order.id);
+    if (persistOrderError) {
+      throw new RaiAcceptError("Failed to persist RaiAccept orderIdentification", {
+        phase: "create_order",
+        uncertain: true,
+        orderIdentification,
+      });
+    }
+    const { error: processingError } = await admin
+      .from("ticket_orders")
+      .update({ payment_status: "processing" })
+      .eq("id", order.id);
+    if (processingError) {
+      throw new RaiAcceptError("Failed to mark ticket order processing", {
+        phase: "create_order",
+        uncertain: true,
+        orderIdentification,
+      });
+    }
 
     // Create the payment form session with the same order parameters.
     const { sessionId, paymentRedirectURL: redirectUrl } = await rai.createCheckout(
       orderIdentification,
       payload,
     );
-    await admin
+    const { error: sessionError } = await admin
       .from("ticket_payment_attempts")
       .update({
         checkout_session_id: sessionId,
@@ -354,6 +381,16 @@ export async function createTicketCheckout(formData: FormData) {
         updated_at: new Date().toISOString(),
       })
       .eq("id", attempt.id);
+    if (sessionError) {
+      // The checkout session exists and the customer can still pay; the
+      // webhook matches via provider_order_id, so log and continue.
+      console.error("[neya] failed to persist RaiAccept checkout session", {
+        orderId: order.id,
+        merchantOrderReference: order.merchant_order_reference,
+        orderIdentification,
+        error: sessionError.message,
+      });
+    }
     paymentRedirectURL = redirectUrl;
   } catch (err) {
     await recordRaiAcceptCheckoutFailure(admin, attempt.id, order, err);

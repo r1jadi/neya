@@ -260,11 +260,14 @@ async function processNotification(
       phase,
       httpStatus,
     });
-    if (!uncertain && httpStatus != null && httpStatus < 500) {
-      // Definitive provider rejection (e.g. unknown order) — record, no retry.
-      await markEvent(admin, eventId, "not_found", `getOrder rejected (${httpStatus})`);
+    if (!uncertain && httpStatus === 404) {
+      // The RaiAccept order does not exist — definitive, record, no retry.
+      await markEvent(admin, eventId, "not_found", "RaiAccept order not found (404)");
       return "ok";
     }
+    // Other 4xx (401/403/400) are config/request problems, not "order not
+    // found" — retry so the event stays visible to reconciliation.
+    // Transient failures (network / 5xx) also retry.
     // Transient failure (network / 5xx) — leave unprocessed so RaiAccept retries.
     await admin
       .from("ticket_payment_webhook_events")

@@ -21,8 +21,9 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
 
   // successUrl is a frontend redirect only — it is NOT proof of payment.
   // For tickets, reflect the authoritative NEYA order state instead of
-  // claiming the payment succeeded.
-  let ticketPaid: boolean | null = null;
+  // claiming the payment succeeded. The provider webhook (not this page) is
+  // what moves the order to paid/failed/cancelled.
+  let ticketStatus: string | null = null;
   if (ticketOrderId) {
     const supabase = await createClient();
     const { data: order } = await supabase
@@ -30,24 +31,30 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
       .select("payment_status")
       .eq("id", ticketOrderId)
       .maybeSingle();
-    ticketPaid = order?.payment_status === "paid";
+    ticketStatus = order?.payment_status ?? null;
   }
+  const ticketPaid = ticketStatus === "paid";
+  const ticketFailed = ticketStatus === "failed" || ticketStatus === "cancelled";
 
   const title = isReservation
     ? "You're locked in"
-    : ticketPaid === true
+    : ticketPaid
       ? "You're locked in"
-      : ticketOrderId
-        ? "Payment received — confirming your tickets"
-        : "Payment complete";
+      : ticketFailed
+        ? "Payment didn't complete"
+        : ticketOrderId
+          ? "Payment received — confirming your tickets"
+          : "Payment complete";
 
   const body = isReservation
     ? "Your table deposit is confirmed. Check your email for the Stripe receipt."
-    : ticketPaid === true
+    : ticketPaid
       ? "Your tickets are confirmed — your QR code is ready on your NEYA profile."
-      : ticketOrderId
-        ? "We received your payment and are confirming it with the payment provider. Your tickets will appear on your NEYA profile as soon as confirmation completes — no action needed."
-        : "Thanks — your payment was received.";
+      : ticketFailed
+        ? "Your payment didn't complete, so no tickets were issued. If any charge went through, it is confirmed automatically on your NEYA profile."
+        : ticketOrderId
+          ? "We received your payment and are confirming it with the payment provider. Your tickets will appear on your NEYA profile as soon as confirmation completes — no action needed."
+          : "Thanks — your payment was received.";
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">

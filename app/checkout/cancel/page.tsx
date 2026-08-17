@@ -19,8 +19,11 @@ export default async function CheckoutCancelPage({ searchParams }: Props) {
       <SiteHeader />
       <ReleaseTicketReservation orderId={ticketOrderId} />
       <main className="mx-auto flex max-w-md flex-1 flex-col items-center justify-center px-4 py-16 text-center">
-        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">No charge</h1>
-        <p className="mt-3 text-sm text-white/60">Checkout was cancelled. Nothing was billed.</p>
+        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Checkout cancelled</h1>
+        <p className="mt-3 text-sm text-white/60">
+          Checkout was cancelled. If any charge went through, your tickets are confirmed
+          automatically on your NEYA profile.
+        </p>
         <Button asChild className="mt-8" variant="secondary">
           <Link href="/events">Back to events</Link>
         </Button>

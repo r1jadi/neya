@@ -16,6 +16,9 @@ import "server-only";
 const PROD_AUTH_BASE_URL = "https://auth.raiaccept.com";
 const PROD_API_BASE_URL = "https://trapi.raiaccept.com";
 
+/** Abort provider requests after this long so hangs map to the retry/recoverable path. */
+const REQUEST_TIMEOUT_MS = 20_000;
+
 export type RaiAcceptOrderPayload = {
   consumer?: {
     firstName?: string;
@@ -164,6 +167,7 @@ export class RaiAcceptClient {
       res = await fetch(`${cfg.authBaseUrl}/auth/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         body: JSON.stringify({
           username: cfg.username,
           password: cfg.password,
@@ -231,6 +235,7 @@ export class RaiAcceptClient {
           Authorization: `Bearer ${this.accessToken}`,
           "Content-Type": "application/json",
         },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         body: JSON.stringify(body),
       });
     } catch {
@@ -317,6 +322,7 @@ export class RaiAcceptClient {
       res = await fetch(`${apiBaseUrl}/orders/${encodeURIComponent(orderIdentification)}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${this.accessToken}` },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
     } catch {
       throw new RaiAcceptError("RaiAccept order retrieval failed", {

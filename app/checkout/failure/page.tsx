@@ -22,7 +22,8 @@ export default async function CheckoutFailurePage({ searchParams }: Props) {
           Payment didn&apos;t go through
         </h1>
         <p className="mt-3 text-sm text-white/60">
-          No charge was made. You can try again from the event page, or use another card.
+          You can try again from the event page, or use another card. If any charge went
+          through, your tickets are confirmed automatically on your NEYA profile.
         </p>
         <Button asChild className="mt-8">
           <Link href="/events">Back to events</Link>
