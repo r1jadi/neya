@@ -16,6 +16,7 @@ import {
   updateReservationStatus,
 } from "@/actions/admin-crud";
 import { grantPremiumByUserId } from "@/actions/admin-events";
+import { deleteArtist, saveArtist } from "@/actions/artists";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { EventPosterGenerator, type PosterEventData } from "@/components/admin/event-poster-generator";
 import { PerformerFields } from "@/components/admin/performer-fields";
@@ -42,8 +43,9 @@ import {
 } from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
 import { MUSIC_GENRES } from "@/types";
+import type { Artist } from "@/types";
 
-type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
+type Tab = "overview" | "venues" | "events" | "artists" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
 
 interface AdminDashboardProps {
   initialTab: Tab;
@@ -55,6 +57,8 @@ interface AdminDashboardProps {
   guestlists: AdminGuestlistRow[];
   guestlistRequests: GuestlistRequestWithEvent[];
   reservations: AdminReservationRow[];
+  artists: Artist[];
+  eventArtistIds: Record<string, string[]>;
   stats: {
     venueCount: number;
     approvedVenues: number;
@@ -69,6 +73,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "venues", label: "Venues" },
   { id: "events", label: "Events" },
+  { id: "artists", label: "Artists" },
   { id: "tickets", label: "Tickets" },
   { id: "guestlists", label: "Guestlists" },
   { id: "reservations", label: "Reservations" },
@@ -99,10 +104,13 @@ export function AdminDashboard({
   guestlists,
   guestlistRequests,
   reservations,
+  artists,
+  eventArtistIds,
   stats,
 }: AdminDashboardProps) {
   const [editingVenue, setEditingVenue] = useState<AdminVenueRow | "new" | null>(null);
   const [editingEvent, setEditingEvent] = useState<AdminEventRow | "new" | null>(null);
+  const [editingArtist, setEditingArtist] = useState<Artist | "new" | null>(null);
   const tab = initialTab;
 
   return (
@@ -231,6 +239,10 @@ export function AdminDashboard({
             <EventForm
               event={editingEvent === "new" ? null : editingEvent}
               venues={venues.filter((v) => v.approved)}
+              artists={artists}
+              initialArtistIds={
+                editingEvent === "new" ? [] : (eventArtistIds[editingEvent.id] ?? [])
+              }
               onClose={() => setEditingEvent(null)}
             />
           ) : null}
@@ -277,6 +289,72 @@ export function AdminDashboard({
               </tbody>
             </table>
             {!events.length ? <p className="p-6 text-sm text-white/45">No events yet.</p> : null}
+          </div>
+        </section>
+      ) : null}
+
+      {tab === "artists" ? (
+        <section className="space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold text-white">Artists</h2>
+            <Button type="button" size="sm" onClick={() => setEditingArtist("new")}>
+              Create artist
+            </Button>
+          </div>
+
+          {editingArtist ? (
+            <ArtistForm
+              artist={editingArtist === "new" ? null : editingArtist}
+              onClose={() => setEditingArtist(null)}
+            />
+          ) : null}
+
+          <div className="overflow-x-auto rounded-xl border border-white/10">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead className="border-b border-white/10 bg-white/[0.03] text-xs uppercase text-white/45">
+                <tr>
+                  <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">Genres</th>
+                  <th className="px-4 py-3">Flags</th>
+                  <th className="px-4 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {artists.map((a) => (
+                  <tr key={a.id} className="border-b border-white/5">
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-white">{a.name}</p>
+                      <p className="text-xs text-white/40">{a.slug}</p>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-white/50">
+                      {a.genres.length ? a.genres.join(", ") : "—"}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-white/50">
+                      {a.is_active ? "Active" : "Inactive"}
+                      {a.is_verified ? " · Verified" : ""}
+                      {a.is_featured ? " · Featured" : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-2">
+                        <Button type="button" size="sm" variant="secondary" onClick={() => setEditingArtist(a)}>
+                          Edit
+                        </Button>
+                        <Button asChild size="sm" variant="ghost">
+                          <Link href={`/artists/${a.slug}`}>View</Link>
+                        </Button>
+                        <form action={deleteArtist}>
+                          <input type="hidden" name="id" value={a.id} />
+                          <Button type="submit" size="sm" variant="ghost" className="text-red-300">
+                            Delete
+                          </Button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {!artists.length ? <p className="p-6 text-sm text-white/45">No artists yet. Create one above.</p> : null}
           </div>
         </section>
       ) : null}
@@ -518,10 +596,14 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
 function EventForm({
   event,
   venues,
+  artists,
+  initialArtistIds,
   onClose,
 }: {
   event: AdminEventRow | null;
   venues: AdminVenueRow[];
+  artists: Artist[];
+  initialArtistIds: string[];
   onClose: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -596,6 +678,7 @@ function EventForm({
         </select>
         <Input name="capacity" type="number" placeholder="Capacity" defaultValue={event?.capacity ?? ""} />
         <PerformerFields initialPerformers={performers} />
+        <ArtistPicker artists={artists} initialIds={initialArtistIds} className="sm:col-span-2" />
         <Input name="ticket_from_eur" type="number" step="0.01" placeholder="From price (EUR)" defaultValue={event?.ticket_from_eur ?? ""} />
         <ImageUploadField name="image_url" label="Poster / cover" defaultUrl={event?.image_url ?? ""} folder="events" />
         <textarea
@@ -650,6 +733,145 @@ function EventForm({
           getEventData={getPosterEventData}
         />
       </div>
+    </form>
+  );
+}
+
+function ArtistPicker({
+  artists,
+  initialIds,
+  className,
+}: {
+  artists: Artist[];
+  initialIds: string[];
+  className?: string;
+}) {
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(() => new Set(initialIds));
+
+  const visible = artists.filter((a) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      a.name.toLowerCase().includes(q) ||
+      a.genres.some((g) => g.toLowerCase().includes(q))
+    );
+  });
+
+  function toggle(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  return (
+    <div className={cn("rounded-xl border border-white/10 bg-black/20 p-4", className)}>
+      <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
+        Artists / lineup
+      </p>
+      <p className="mt-1 text-xs text-white/40">
+        {selected.size} selected — links these artists&apos; profiles to the event.
+      </p>
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search artists…"
+        aria-label="Search artists"
+        className="mt-3"
+      />
+      <input type="hidden" name="artist_ids" value={[...selected].join(",")} />
+      {visible.length ? (
+        <ul className="mt-3 max-h-56 space-y-1 overflow-y-auto pr-1">
+          {visible.map((a) => {
+            const checked = selected.has(a.id);
+            return (
+              <li key={a.id}>
+                <label
+                  className={cn(
+                    "flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2 text-sm transition",
+                    checked
+                      ? "border-sky-400/40 bg-sky-500/10 text-white"
+                      : "border-white/10 bg-white/[0.02] text-white/70 hover:border-white/25",
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggle(a.id)}
+                    className="h-4 w-4 accent-sky-400"
+                  />
+                  <span className="min-w-0 flex-1 truncate">
+                    {a.name}
+                    {!a.is_active ? <span className="ml-1 text-xs text-white/40">(inactive)</span> : null}
+                  </span>
+                  {a.genres.length ? (
+                    <span className="truncate text-xs text-white/40">{a.genres.slice(0, 2).join(" · ")}</span>
+                  ) : null}
+                </label>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="mt-3 text-sm text-white/40">
+          {artists.length ? "No artists match your search." : "No artists yet — create them in the Artists tab."}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function ArtistForm({ artist, onClose }: { artist: Artist | null; onClose: () => void }) {
+  const genres = artist?.genres?.join(", ") ?? "";
+
+  return (
+    <form action={saveArtist} className="space-y-4 rounded-xl border border-fuchsia-500/30 bg-fuchsia-950/10 p-6">
+      {artist?.id ? <input type="hidden" name="id" value={artist.id} /> : null}
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-white">{artist ? "Edit artist" : "New artist"}</h3>
+        <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+          Close
+        </Button>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Input name="name" placeholder="Artist / DJ name" defaultValue={artist?.name ?? ""} required className="sm:col-span-2" />
+        <textarea
+          name="short_bio"
+          placeholder="Short bio / tagline (shows on cards)"
+          defaultValue={artist?.short_bio ?? ""}
+          rows={2}
+          className="sm:col-span-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+        />
+        <textarea
+          name="bio"
+          placeholder="Full bio"
+          defaultValue={artist?.bio ?? ""}
+          rows={4}
+          className="sm:col-span-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+        />
+        <Input name="genres" placeholder="Genres (comma-separated), e.g. house, techno" defaultValue={genres} className="sm:col-span-2" />
+        <ImageUploadField name="profile_image" label="Profile image" defaultUrl={artist?.profile_image ?? ""} folder="artists" />
+        <ImageUploadField name="cover_image" label="Cover image" defaultUrl={artist?.cover_image ?? ""} folder="artists" />
+        <Input name="instagram_url" type="url" placeholder="Instagram URL" defaultValue={artist?.instagram_url ?? ""} />
+        <Input name="spotify_url" type="url" placeholder="Spotify URL" defaultValue={artist?.spotify_url ?? ""} />
+        <Input name="soundcloud_url" type="url" placeholder="SoundCloud URL" defaultValue={artist?.soundcloud_url ?? ""} />
+        <Input name="website_url" type="url" placeholder="Website URL" defaultValue={artist?.website_url ?? ""} />
+      </div>
+      <div className="flex flex-wrap gap-4 text-sm text-white/80">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" name="is_verified" defaultChecked={artist?.is_verified ?? false} /> Verified
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" name="is_featured" defaultChecked={artist?.is_featured ?? false} /> Featured
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" name="is_active" defaultChecked={artist?.is_active ?? true} /> Active (visible on site)
+        </label>
+      </div>
+      <Button type="submit">Save artist</Button>
     </form>
   );
 }

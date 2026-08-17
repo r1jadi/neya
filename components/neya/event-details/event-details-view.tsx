@@ -23,12 +23,14 @@ import {
   getVenueLocationLabel,
 } from "@/lib/event-display";
 import type { EventBookingMeta } from "@/services/booking-meta";
-import type { Event } from "@/types";
+import type { ArtistLineupRef, Event } from "@/types";
 import { isUuid } from "@/lib/utils";
 
 export type EventDetailsViewProps = {
   event: Event;
   meta: EventBookingMeta | null;
+  /** Artists linked via the directory (rendered as profile links). */
+  artists?: ArtistLineupRef[];
   saved?: boolean;
   showSave?: boolean;
   purchasedTickets?: number;
@@ -104,7 +106,7 @@ function safeExternalUrl(value: string): string | null {
   }
 }
 
-export function EventDetailsView({ event, meta, saved, showSave, purchasedTickets, flash }: EventDetailsViewProps) {
+export function EventDetailsView({ event, meta, artists = [], saved, showSave, purchasedTickets, flash }: EventDetailsViewProps) {
   const description = getEventDescription(event);
   const capacityLabel = formatCapacity(event.capacity);
   const ticketLabel = formatTicketPrice(event);
@@ -169,9 +171,22 @@ export function EventDetailsView({ event, meta, saved, showSave, purchasedTicket
 
             <section>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Lineup</h2>
-              {event.performers?.length ? (
+              {artists.length || event.performers?.length ? (
                 <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-                  {event.performers.map((performer) => {
+                  {artists.map((artist) => (
+                    <li key={`artist-${artist.id}`} className="flex items-center gap-3 rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-3">
+                      {artist.profile_image ? (
+                        <Image src={artist.profile_image} alt="" width={48} height={48} className="h-12 w-12 rounded-xl object-cover" />
+                      ) : null}
+                      <div className="min-w-0">
+                        <Link href={`/artists/${artist.slug}`} className="font-medium text-fuchsia-100 hover:text-white hover:underline">
+                          {artist.name}
+                        </Link>
+                        {artist.genres.length ? <p className="mt-0.5 text-xs text-white/50">{artist.genres.join(" · ")}</p> : null}
+                      </div>
+                    </li>
+                  ))}
+                  {event.performers?.map((performer) => {
                     const links = Object.entries(performer.social_links ?? {})
                       .map(([label, value]) => [label, safeExternalUrl(value)] as const)
                       .filter((entry): entry is [string, string] => entry[1] !== null);

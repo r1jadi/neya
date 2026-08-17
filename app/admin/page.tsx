@@ -11,6 +11,7 @@ import { AdminTabNav } from "@/components/admin/admin-tab-nav";
 import { GuidesPanel } from "@/components/admin/guides-panel";
 import { getAdminDashboardData } from "@/services/admin";
 import { getAdminGuideDetail, getAdminGuides, getAdminIntercityRoutes } from "@/services/admin-guides";
+import { getAdminArtists, getEventArtistIds } from "@/services/artists";
 import { adminErrorMessage } from "@/lib/admin/action-errors";
 
 export const dynamic = "force-dynamic";
@@ -20,12 +21,13 @@ export const metadata: Metadata = {
   title: `Admin · ${SITE.name}`,
 };
 
-type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
+type Tab = "overview" | "venues" | "events" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides" | "artists";
 
 const TABS: Tab[] = [
   "overview",
   "venues",
   "events",
+  "artists",
   "tickets",
   "guestlists",
   "reservations",
@@ -140,6 +142,8 @@ export default async function AdminPage({ searchParams }: Props) {
               guestlists={data.guestlists}
               guestlistRequests={data.guestlistRequests}
               reservations={data.reservations}
+              artists={await getAdminArtists()}
+              eventArtistIds={await getEventArtistIds(data.events.map((e) => e.id))}
               stats={data.stats}
             />
           )}

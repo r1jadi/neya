@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { ExternalLink, Globe, Mail, MapPin, Music2, Phone, Users } from "lucide-react";
@@ -12,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { getPublicCheckinCount, getVenueMetaBySlug } from "@/services/booking-meta";
 import { getUpcomingEventsForVenue } from "@/services/events";
 import { getVenueBySlug } from "@/services/venues";
+import { getArtistsForEvents } from "@/services/artists";
 import { SITE } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { venueJsonLd } from "@/lib/seo/json-ld";
@@ -58,6 +60,10 @@ export default async function VenuePage({ params, searchParams }: Props) {
   if (!venue) notFound();
 
   const events = await getUpcomingEventsForVenue(venue.id, supabase);
+  const lineupByEvent = await getArtistsForEvents(events.map((e) => e.id).filter(isUuid));
+  const lineupArtists = [...new Map(
+    Object.values(lineupByEvent).flat().map((artist) => [artist.id, artist]),
+  ).values()].slice(0, 12);
   const jsonLd = venueJsonLd(venue);
   const gallery = venue.gallery_urls?.filter((url) => url !== venue.image_url) ?? [];
   const mapQuery = venue.lat != null && venue.lng != null ? `${venue.lat},${venue.lng}` : venue.address;
@@ -215,6 +221,32 @@ export default async function VenuePage({ params, searchParams }: Props) {
               ) : null}
             </aside>
           </div>
+          {lineupArtists.length ? (
+            <section>
+              <h2 className="text-lg font-semibold text-white">Who&apos;s playing</h2>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {lineupArtists.map((artist) => (
+                  <Link
+                    key={artist.id}
+                    href={`/artists/${artist.slug}`}
+                    className="group flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] py-2 pl-2 pr-4 transition hover:border-fuchsia-400/30 hover:bg-fuchsia-500/5"
+                  >
+                    {artist.profile_image ? (
+                      <Image src={artist.profile_image} alt="" width={40} height={40} className="h-10 w-10 rounded-xl object-cover" />
+                    ) : null}
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium text-white group-hover:text-fuchsia-100">
+                        {artist.name}
+                      </span>
+                      {artist.genres.length ? (
+                        <span className="block text-xs text-white/45">{artist.genres.slice(0, 2).join(" · ")}</span>
+                      ) : null}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
           <div>
             <h2 className="text-lg font-semibold text-white">Upcoming here</h2>
             {events.length ? (

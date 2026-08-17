@@ -8,6 +8,7 @@ import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 import type { EventPerformer } from "@/types";
 import { isVenueCategory, MUSIC_GENRES } from "@/types";
+import { isUuid } from "@/lib/utils";
 
 function parseJsonArray(raw: string | null): string[] {
   if (!raw?.trim()) return [];
@@ -205,13 +206,34 @@ export async function saveEvent(formData: FormData) {
     updated_at: new Date().toISOString(),
   };
 
+  let eventId = id;
   if (id) {
     const { error } = await admin.from("events").update(payload).eq("id", id);
     if (error) adminRedirect("tab=events&error=update");
   } else {
     const slug = slugify(title);
-    const { error } = await admin.from("events").insert({ ...payload, slug });
+    const { data: inserted, error } = await admin
+      .from("events")
+      .insert({ ...payload, slug })
+      .select("id")
+      .single();
     if (error) adminRedirect("tab=events&error=insert");
+    eventId = inserted?.id ?? "";
+  }
+
+  // Sync the artist lineup (many-to-many). Empty selection clears the lineup.
+  if (eventId && isUuid(eventId)) {
+    const artistIds = String(formData.get("artist_ids") ?? "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter((value) => isUuid(value))
+      .slice(0, 20);
+    const { error: clearError } = await admin.from("event_artists").delete().eq("event_id", eventId);
+    if (!clearError && artistIds.length) {
+      await admin
+        .from("event_artists")
+        .insert(artistIds.map((artist_id) => ({ event_id: eventId, artist_id })));
+    }
   }
 
   revalidatePath("/");

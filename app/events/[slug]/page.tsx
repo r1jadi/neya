@@ -12,6 +12,7 @@ import { getEventDescription } from "@/lib/event-display";
 import { eventJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
 import { getEventBookingMetaBySlug } from "@/services/booking-meta";
+import { getArtistsForEvent } from "@/services/artists";
 import { getEventBySlug } from "@/services/events";
 
 type Props = {
@@ -46,8 +47,13 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [event, meta] = await Promise.all([getEventBySlug(slug, supabase), getEventBookingMetaBySlug(slug)]);
+  const event = await getEventBySlug(slug, supabase);
   if (!event) notFound();
+
+  const [meta, artists] = await Promise.all([
+    getEventBookingMetaBySlug(slug),
+    getArtistsForEvent(isUuid(event.id) ? event.id : ""),
+  ]);
 
   let saved = false;
   let purchasedTickets = 0;
@@ -83,6 +89,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
           <EventDetailsView
             event={event}
             meta={meta}
+            artists={artists}
             saved={saved}
             purchasedTickets={purchasedTickets}
             showSave={Boolean(user)}

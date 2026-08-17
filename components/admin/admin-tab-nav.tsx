@@ -7,6 +7,7 @@ export type AdminTab =
   | "overview"
   | "venues"
   | "events"
+  | "artists"
   | "tickets"
   | "guestlists"
   | "reservations"
@@ -18,6 +19,7 @@ const TABS: { id: AdminTab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "venues", label: "Venues" },
   { id: "events", label: "Events" },
+  { id: "artists", label: "Artists" },
   { id: "tickets", label: "Tickets" },
   { id: "guestlists", label: "Guestlists" },
   { id: "reservations", label: "Reservations" },

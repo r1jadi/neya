@@ -196,3 +196,54 @@ export interface StoryItem {
   thumbnail_url: string;
   label: string;
 }
+
+/** A DJ/artist in the directory. */
+export interface Artist {
+  id: string;
+  slug: string;
+  name: string;
+  bio?: string | null;
+  short_bio?: string | null;
+  profile_image?: string | null;
+  cover_image?: string | null;
+  genres: string[];
+  instagram_url?: string | null;
+  spotify_url?: string | null;
+  soundcloud_url?: string | null;
+  website_url?: string | null;
+  is_verified: boolean;
+  is_featured: boolean;
+  is_active?: boolean;
+  follower_count?: number;
+  /** Next upcoming gig, when one exists (for “playing soon” indicators). */
+  next_gig?: {
+    id: string;
+    slug: string;
+    title: string;
+    starts_at: string;
+    venue_name?: string | null;
+  } | null;
+  /** Upcoming gigs for the profile page. */
+  upcoming_gigs?: ArtistGig[];
+}
+
+/** A single upcoming gig on an artist profile. */
+export interface ArtistGig {
+  id: string;
+  slug: string;
+  title: string;
+  starts_at: string;
+  ends_at?: string | null;
+  image_url?: string | null;
+  genre?: string | null;
+  venue: { id: string; slug: string; name: string } | null;
+}
+
+/** Minimal artist reference for event/venue lineups. */
+export interface ArtistLineupRef {
+  id: string;
+  slug: string;
+  name: string;
+  genres: string[];
+  profile_image?: string | null;
+}

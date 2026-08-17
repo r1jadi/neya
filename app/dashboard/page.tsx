@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
 import { TicketCode } from "@/components/neya/ticket-code";
 import { getUserPurchasedGuides } from "@/services/guides";
+import { getFollowedArtists } from "@/services/artists";
 import { guestlistStatusLabel } from "@/lib/guestlist/labels";
 import { paymentMethodLabel, paymentStatusLabel, reservationStatusLabel } from "@/lib/reservations/labels";
 
@@ -60,7 +61,10 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
-  const purchasedGuides = await getUserPurchasedGuides(user.id, supabase);
+  const [purchasedGuides, followedArtists] = await Promise.all([
+    getUserPurchasedGuides(user.id, supabase),
+    getFollowedArtists(user.id),
+  ]);
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
@@ -92,6 +96,34 @@ export default async function DashboardPage() {
                   explore Kosovo travel guides
                 </Link>
                 {" "}before your next night out.
+              </li>
+            )}
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Artists you follow</h2>
+          <ul className="mt-3 space-y-2">
+            {followedArtists.length ? (
+              followedArtists.map((artist) => (
+                <li
+                  key={artist.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm"
+                >
+                  <Link href={`/artists/${artist.slug}`} className="font-medium text-white hover:underline">
+                    {artist.name}
+                  </Link>
+                  {artist.genres.length ? (
+                    <span className="text-xs text-white/45">{artist.genres.slice(0, 3).join(" · ")}</span>
+                  ) : null}
+                </li>
+              ))
+            ) : (
+              <li className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-white/45">
+                No artists followed yet — follow the DJs you like and their gigs land here.{" "}
+                <Link href="/artists" className="text-sky-300 hover:underline">
+                  Browse artists
+                </Link>
               </li>
             )}
           </ul>

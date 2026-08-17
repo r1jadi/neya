@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/events", label: "Tonight" },
+  { href: "/artists", label: "Artists" },
   { href: "/guides", label: "Guides" },
   { href: "/#map", label: "Map" },
   { href: "/#business", label: "For venues" },
