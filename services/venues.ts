@@ -6,6 +6,10 @@ const venueSelect =
   "id, slug, name, city_slug, category, address, lat, lng, image_url, price_level, atmosphere_score, crowd_count, is_live, is_featured, is_trending, description, gallery_urls, music_genres, social_links, website_url, contact_email, contact_phone, capacity";
 
 export async function getVenues(): Promise<Venue[]> {
+  return getVenuesForCity("prishtina");
+}
+
+export async function getVenuesForCity(citySlug: string): Promise<Venue[]> {
   try {
     const supabase = getPublicSupabase();
     if (!supabase) return [];
@@ -13,7 +17,7 @@ export async function getVenues(): Promise<Venue[]> {
     const { data, error } = await supabase
       .from("venues")
       .select(venueSelect)
-      .eq("city_slug", "prishtina")
+      .eq("city_slug", citySlug)
       .eq("approved", true)
       .eq("rejected", false)
       .order("is_trending", { ascending: false })

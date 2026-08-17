@@ -14,10 +14,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const admin = createAdminClient();
-    const [{ data: events }, { data: venues }, { data: guides }] = await Promise.all([
+    const [{ data: events }, { data: venues }, { data: guides }, { data: cities }] = await Promise.all([
       admin.from("events").select("slug, updated_at").eq("is_listed_public", true).limit(500),
       admin.from("venues").select("slug, updated_at").eq("approved", true).eq("rejected", false).limit(500),
       admin.from("guides").select("slug, updated_at").eq("published", true).limit(500),
+      admin.from("cities").select("slug, country_slug, region_slug, updated_at").eq("is_active", true).limit(200),
     ]);
 
     const eventRoutes =
@@ -44,7 +45,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       })) ?? [];
 
-    return [...staticRoutes, ...eventRoutes, ...venueRoutes, ...guideRoutes];
+    const cityRoutes = cities?.map((city) => (
+      { url: `${base}/cities/${city.slug}`, lastModified: city.updated_at ? new Date(city.updated_at) : new Date(), changeFrequency: "daily" as const, priority: 0.8 }
+    )) ?? [];
+    const countryRoutes = [...new Map((cities ?? []).map((city) => [city.country_slug, city])).values()].map((city) => ({ url: `${base}/countries/${city.country_slug}`, lastModified: city.updated_at ? new Date(city.updated_at) : new Date(), changeFrequency: "weekly" as const, priority: 0.65 }));
+    const regionRoutes = [...new Map((cities ?? []).map((city) => [city.region_slug, city])).values()].map((city) => ({ url: `${base}/regions/${city.region_slug}`, lastModified: city.updated_at ? new Date(city.updated_at) : new Date(), changeFrequency: "weekly" as const, priority: 0.6 }));
+
+    return [...staticRoutes, ...eventRoutes, ...venueRoutes, ...guideRoutes, ...cityRoutes, ...countryRoutes, ...regionRoutes];
   } catch {
     return staticRoutes;
   }
