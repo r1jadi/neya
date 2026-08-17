@@ -8,7 +8,7 @@ Nightlife and events discovery for **Prishtina** — clubs, rooftops, live music
 - Tailwind CSS v4, Framer Motion, TanStack Query, Zustand  
 - Supabase (Auth, DB, Storage, Realtime) — see `supabase/migrations/`  
 - Mapbox (`NEXT_PUBLIC_MAPBOX_TOKEN`)  
-- Stripe (webhook verifies when `STRIPE_WEBHOOK_SECRET` is set), Resend stub, **PostHog** (client provider)
+- RaiAccept (server-side payment integration), Resend stub, **PostHog** (client provider)
 
 ## Supabase (first-time checklist)
 
@@ -45,8 +45,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only admin operations (never expose) |
 | `NEXT_PUBLIC_MAPBOX_TOKEN` | Mapbox GL access token |
-| `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature |
+| `RAIACCEPT_USERNAME` / `RAIACCEPT_PASSWORD` | RaiAccept server-side credentials |
 | `RESEND_API_KEY` | Transactional email |
 | `NEYA_ADMIN_EMAILS` | Comma-separated emails allowed to use `/admin` (server only) |
 | `NEXT_PUBLIC_POSTHOG_KEY` / `NEXT_PUBLIC_POSTHOG_HOST` | Product analytics |
@@ -58,7 +57,7 @@ Open [http://localhost:3000](http://localhost:3000).
 3. Add **Environment variables** (Production + Preview) matching `.env.example`.
 4. **Domain:** Project → Settings → Domains → add `neya.app` (or your domain) and follow DNS instructions.
 5. **Supabase:** SQL migrations + optional seed (see **Supabase (first-time checklist)** above); enable Auth providers; redirect URLs must include `/auth/callback`.
-6. **Stripe:** Dashboard → Developers → Webhooks → endpoint `https://<your-domain>/api/webhooks/stripe`. After you add the signing secret to `STRIPE_WEBHOOK_SECRET`, the app verifies signatures; until then the endpoint returns `501` so Stripe does not treat unverified calls as success.
+6. **RaiAccept:** Configure the server-only RaiAccept credentials and register `https://<your-domain>/api/webhooks/raiaccept` as the payment notification URL.
 7. **Mapbox:** Account → access token → `NEXT_PUBLIC_MAPBOX_TOKEN`.
 8. **Resend:** Verify sending domain; set `RESEND_API_KEY`.
 9. **PostHog:** Create project; set `NEXT_PUBLIC_POSTHOG_KEY` and host.
@@ -77,7 +76,7 @@ Redeploy after changing env vars.
 
 - **Register** (`/register`), **forgot password** (`/forgot-password`), **set new password** (`/update-password` — link target from Supabase reset email).
 - **Onboarding** (`/onboarding`) saves genre prefs; **Dashboard** (`/dashboard`) lists reservations and ticket orders.
-- **Stripe**: table deposit + ticket purchase via Checkout; **`POST /api/webhooks/stripe`** confirms `checkout.session.completed` (needs `STRIPE_WEBHOOK_SECRET` + `SUPABASE_SERVICE_ROLE_KEY`).
+- **RaiAccept**: ticket purchases and table deposits are created server-side; **`POST /api/webhooks/raiaccept`** verifies final provider status before fulfillment.
 - **Admin** (`/admin`): approve venues pending review — set **`NEYA_ADMIN_EMAILS`** (comma-separated) on the server to your login email(s).
 
 ## License

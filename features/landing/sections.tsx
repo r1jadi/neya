@@ -400,7 +400,7 @@ export function LandingSections({
             {
               step: "02",
               title: "Hold your spot",
-              body: "Tables, guestlists, tickets. Deposits and QR flows via Stripe.",
+              body: "Tables, guestlists, tickets. Secure deposits and QR flows via RaiAccept.",
             },
             {
               step: "03",

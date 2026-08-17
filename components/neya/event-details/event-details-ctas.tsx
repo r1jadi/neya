@@ -40,9 +40,9 @@ export function EventDetailsCtas({
   className,
 }: EventDetailsCtasProps) {
   const hasTicketPrice = event.ticket_from_eur != null && event.ticket_from_eur > 0;
-  const hasStripeTicket = Boolean(meta?.ticketTypes.length);
+  const hasTicketTypes = Boolean(meta?.ticketTypes.length);
   const hasExternalTicket = Boolean(event.ticket_url);
-  const showTicket = hasTicketPrice || hasStripeTicket || hasExternalTicket;
+  const showTicket = hasTicketPrice || hasTicketTypes || hasExternalTicket;
 
   const canReserve = meta?.reservation.reservationsEnabled ?? false;
 
@@ -101,7 +101,7 @@ export function EventDetailsCtas({
   const ticketBlock = showTicket ? (
     <>
       {purchasedBanner}
-      {hasStripeTicket || (hasTicketPrice && meta?.hasTicketRows) ? (
+      {hasTicketTypes || (hasTicketPrice && meta?.hasTicketRows) ? (
       <div className="space-y-3">
         {meta?.ticketTypes.map((ticket) => (
           <TicketCard key={ticket.id} eventId={event.id} eventTitle={event.title} tier={ticket.name} priceEur={ticket.priceCents / 100} currency={ticket.currency} description={ticket.description} quantityAvailable={ticket.quantityAvailable} status={ticket.status} endsAt={ticket.salesEnd ?? undefined} ticketId={ticket.id} />
@@ -174,13 +174,13 @@ export function EventDetailsCtas({
               }
             />
           ) : null}
-          {hasStripeTicket && !meta?.ticketSoldOut ? (
-            <Link
-              href={`/events/${event.slug}#tickets`}
+          {hasTicketTypes && !meta?.ticketSoldOut ? (
+            <a
+              href="#tickets"
               className="flex flex-1 items-center justify-center rounded-xl bg-violet-600 py-3 text-xs font-bold text-white"
             >
               Tickets
-            </Link>
+            </a>
           ) : hasExternalTicket ? (
             <a
               href={event.ticket_url!}

@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { getStripe } from "@/lib/stripe/server";
 import { getPublicSiteUrl } from "@/lib/env";
 import { logUserActivity } from "@/lib/activity-log";
 import { resolveReservationConfig, type ReservationPaymentMethod } from "@/lib/reservations/config";
@@ -202,42 +201,65 @@ export async function createReservation(formData: FormData) {
     redirect(`${redirectTo}?reservation=confirmed`);
   }
 
-  const stripe = getStripe();
-  if (!stripe) redirect(`${redirectTo}?error=stripe`);
-
   const origin = getPublicSiteUrl();
   const priceLabel =
     config.priceEur % 1 === 0 ? `€${config.priceEur.toFixed(0)}` : `€${config.priceEur.toFixed(2)}`;
   const bookingLabel = venue?.name ?? event?.title?.trim() ?? "NEYA table reservation";
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    customer_email: user.email ?? undefined,
-    line_items: [
-      {
-        price_data: {
-          currency: "eur",
-          unit_amount: config.priceCents,
-          product_data: {
-            name: `Table reservation · ${bookingLabel}`,
-            description: `${priceLabel} deposit — ${partySize} guests.`,
-          },
-        },
-        quantity: 1,
-      },
-    ],
-    success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&type=reservation`,
-    cancel_url: `${origin}/checkout/cancel?type=reservation`,
-    metadata: {
-      neya_type: "reservation",
-      reservation_id: resv.id,
+  const merchantOrderReference = `NEYA-RES-${resv.id}`;
+  const admin = createAdminClient();
+  const { data: attempt, error: attemptError } = await admin
+    .from("reservation_payment_attempts")
+    .insert({ reservation_id: resv.id, provider: "raiaccept", status: "pending", amount_cents: config.priceCents, currency: "EUR" })
+    .select("id")
+    .single();
+  if (attemptError || !attempt) redirect(`${redirectTo}?error=payment`);
+
+  const { error: referenceError } = await admin
+    .from("reservations")
+    .update({ payment_provider: "raiaccept", merchant_order_reference: merchantOrderReference })
+    .eq("id", resv.id);
+  if (referenceError) {
+    await admin.from("reservation_payment_attempts").update({ status: "failed" }).eq("id", attempt.id);
+    redirect(`${redirectTo}?error=payment`);
+  }
+
+  const payload: RaiAcceptOrderPayload = {
+    consumer: await buildRaiAcceptConsumer(user),
+    invoice: {
+      amount: amountToRaiAccept(config.priceCents),
+      currency: "EUR",
+      description: `Table reservation · ${bookingLabel}`.slice(0, 200),
+      merchantOrderReference,
+      items: [{ description: `${priceLabel} deposit — ${partySize} guests.`.slice(0, 100), numberOfItems: 1, price: amountToRaiAccept(config.priceCents) }],
     },
-  });
+    paymentMethodPreference: "CARD",
+    urls: {
+      successUrl: `${origin}/checkout/success?type=reservation&reservation_id=${encodeURIComponent(resv.id)}`,
+      cancelUrl: `${origin}/checkout/cancel?reservation_id=${encodeURIComponent(resv.id)}`,
+      failUrl: `${origin}/checkout/failure?reservation_id=${encodeURIComponent(resv.id)}`,
+      notificationUrl: `${origin}/api/webhooks/raiaccept`,
+    },
+  };
 
-  await supabase.from("reservations").update({ stripe_checkout_session: session.id }).eq("id", resv.id);
-
-  if (!session.url) redirect(`${redirectTo}?error=stripe`);
-  redirect(session.url);
+  let paymentRedirectURL: string | null = null;
+  try {
+    const rai = getRaiAcceptClient();
+    const { orderIdentification } = await rai.createOrder(payload);
+    await admin.from("reservation_payment_attempts").update({ provider_order_id: orderIdentification, updated_at: new Date().toISOString() }).eq("id", attempt.id);
+    const { sessionId, paymentRedirectURL: redirectUrl } = await rai.createCheckout(orderIdentification, payload);
+    await admin.from("reservation_payment_attempts").update({ checkout_session_id: sessionId, status: "processing", updated_at: new Date().toISOString() }).eq("id", attempt.id);
+    paymentRedirectURL = redirectUrl;
+  } catch (err) {
+    const phase = err instanceof RaiAcceptError ? err.phase : "unknown";
+    const code = err instanceof RaiAcceptError ? err.providerCode : null;
+    console.error("[neya] RaiAccept reservation checkout failed", { reservationId: resv.id, phase, code });
+    await admin.from("reservation_payment_attempts").update({ status: "failed", provider_status_code: code ?? phase, updated_at: new Date().toISOString() }).eq("id", attempt.id);
+    await admin.from("reservations").update({ payment_status: "failed" }).eq("id", resv.id).eq("payment_status", "pending");
+    redirect(`${redirectTo}?error=payment`);
+  }
+  if (!paymentRedirectURL) redirect(`${redirectTo}?error=payment`);
+  redirect(paymentRedirectURL);
 }
 
 export async function createTicketCheckout(formData: FormData) {
@@ -520,9 +542,8 @@ async function buildRaiAcceptConsumer(user: {
   return consumer;
 }
 
-/** Releases a pending Stripe order when the buyer returns from checkout without paying.
- *  RaiAccept orders are never released from a frontend redirect (cancelUrl/failUrl are
- *  not proof of payment); they are reconciled server-side by the webhook/reconciliation. */
+/** RaiAccept orders are never released from a frontend redirect: provider verification
+ * remains authoritative for payment status. */
 export async function releaseTicketReservation(orderId: string) {
   const supabase = await createClient();
   const {
@@ -537,13 +558,5 @@ export async function releaseTicketReservation(orderId: string) {
     .eq("user_id", user.id)
     .maybeSingle();
   if (!order || order.payment_status !== "pending") return;
-  if (order.payment_provider !== "stripe") return;
-
-  try {
-    await createAdminClient().rpc("release_ticket_order", {
-      p_order_id: order.id,
-    });
-  } catch {
-    // Stripe's expiry webhook remains a safe fallback when server configuration is incomplete.
-  }
+  if (order.payment_provider !== "raiaccept") return;
 }

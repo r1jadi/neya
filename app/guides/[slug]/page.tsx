@@ -96,7 +96,7 @@ export default async function GuideDetailPage({ params, searchParams }: Props) {
               Purchase cancelled.
             </p>
           ) : null}
-          {q.error === "stripe" ? (
+          {q.error === "payment" ? (
             <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
               Payment unavailable. Try again later.
             </p>

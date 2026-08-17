@@ -4,8 +4,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getStripe } from "@/lib/stripe/server";
-import { getPublicSiteUrl } from "@/lib/env";
 
 function loginNext(path: string) {
   return `/login?next=${encodeURIComponent(path)}`;
@@ -82,85 +80,9 @@ export async function purchaseGuide(formData: FormData) {
     redirect(`/guides/${slug}/view`);
   }
 
-  const stripe = getStripe();
-  if (!stripe) redirect(`${redirectTo}?error=stripe`);
-
-  let purchaseId = existingPurchase?.id;
-  if (!purchaseId) {
-    const { data: purchase, error: insertErr } = await admin
-      .from("guide_purchases")
-      .insert({
-        guide_id: guide.id,
-        user_id: user.id,
-        status: "pending",
-      })
-      .select("id")
-      .single();
-
-    if (insertErr || !purchase) {
-      console.error("[neya] purchaseGuide insert", insertErr);
-      redirect(`${redirectTo}?error=purchase`);
-    }
-    purchaseId = purchase.id;
-  } else if (existingPurchase && existingPurchase.status !== "pending") {
-    const { error: resetErr } = await admin
-      .from("guide_purchases")
-      .update({ status: "pending", stripe_checkout_session: null })
-      .eq("id", purchaseId)
-      .eq("user_id", user.id);
-
-    if (resetErr) {
-      console.error("[neya] purchaseGuide reset pending", resetErr);
-      redirect(`${redirectTo}?error=purchase`);
-    }
-  }
-
-  const siteUrl = getPublicSiteUrl();
-  let session;
-  try {
-    session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      customer_email: user.email ?? undefined,
-      line_items: [
-        {
-          price_data: {
-            currency: (guide.currency ?? "EUR").toLowerCase(),
-            unit_amount: Math.round(price * 100),
-            product_data: {
-              name: guide.title,
-              description: `NEYA Travel Guide — ${guide.title}`,
-            },
-          },
-          quantity: 1,
-        },
-      ],
-      metadata: {
-        neya_type: "guide",
-        guide_id: guide.id,
-        guide_purchase_id: purchaseId,
-        user_id: user.id,
-      },
-      success_url: `${siteUrl}/guides/${slug}/view?purchased=1`,
-      cancel_url: `${siteUrl}/guides/${slug}?cancelled=1`,
-    });
-  } catch (err) {
-    console.error("[neya] purchaseGuide stripe session create", err);
-    redirect(`${redirectTo}?error=stripe`);
-  }
-
-  const { error: sessionUpdateErr } = await admin
-    .from("guide_purchases")
-    .update({ stripe_checkout_session: session.id })
-    .eq("id", purchaseId)
-    .eq("user_id", user.id);
-
-  if (sessionUpdateErr) {
-    console.error("[neya] purchaseGuide stripe session update", sessionUpdateErr);
-    redirect(`${redirectTo}?error=purchase`);
-  }
-
-  if (!session.url) redirect(`${redirectTo}?error=stripe`);
-  redirect(session.url);
+  // Paid guides had no RaiAccept fulfillment path. Do not start an unverified
+  // payment; free guides remain available until that path is implemented.
+  redirect(`${redirectTo}?error=payment`);
 }
 
 export async function activateGuidePurchase(purchaseId: string, userId: string) {

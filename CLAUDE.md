@@ -16,7 +16,7 @@ Tone: FOMO, urgency, premium dark UI, live energy (crowds, atmosphere, scarcity)
 | State / data | **Zustand**, **TanStack Query** |
 | Backend | **Supabase** (client + SSR helpers in `lib/supabase/`, SQL in `supabase/migrations/`) |
 | Maps | **Mapbox** (`AnimatedMap`; needs `NEXT_PUBLIC_MAPBOX_TOKEN`) |
-| Payments | **Stripe** (`lib/stripe/server.ts`, webhook stub `app/api/webhooks/stripe/route.ts`) |
+| Payments | **RaiAccept** (`lib/raiaccept/`, webhook `app/api/webhooks/raiaccept/route.ts`) |
 | Email | **Resend** stub (`lib/email/resend.ts`) |
 | Analytics | **PostHog** — add provider when keys exist (env vars documented) |
 
@@ -38,7 +38,7 @@ Tone: FOMO, urgency, premium dark UI, live energy (crowds, atmosphere, scarcity)
 
 1. **Current:** scaffold, landing, listings, venue/event pages, SEO skeleton, DB schema, auth UI shell.
 2. Reservations, guestlists, realtime atmosphere, Mapbox polish.
-3. Stripe flows, ticketing, business dashboard, analytics.
+3. RaiAccept flows, ticketing, business dashboard, analytics.
 4. AI recommendations, premium tier, social graph, scale.
 
 ## Conventions

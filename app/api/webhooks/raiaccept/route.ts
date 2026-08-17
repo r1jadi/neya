@@ -7,6 +7,7 @@ import {
   type Notification,
   type RaiAcceptWebhookPayload,
 } from "@/lib/raiaccept/webhook";
+import { processReservationNotification } from "@/lib/raiaccept/reservation-webhook";
 
 /**
  * RaiAccept notification webhook for ticket payments.
@@ -63,6 +64,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "server not configured" }, { status: 500 });
   }
 
+  if (notification.merchantOrderReference.startsWith("NEYA-RES-")) {
+    return handleReservationNotification(admin, body, rawBody, notification);
+  }
+
   // Record the notification. Unique indexes on (provider, payload_hash) and
   // (provider, transaction_id, type, status, status_code) make receipt
   // idempotent; different states of the same transaction still pass through.
@@ -109,6 +114,44 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "temporary processing failure" }, { status: 500 });
   }
   return NextResponse.json({ received: true, result: outcome });
+}
+
+async function handleReservationNotification(
+  admin: ReturnType<typeof createAdminClient>,
+  body: RaiAcceptWebhookPayload,
+  rawBody: string,
+  notification: Notification,
+) {
+  const payloadHash = createHash("sha256").update(rawBody).digest("hex");
+  const { data: inserted, error } = await admin
+    .from("reservation_payment_webhook_events")
+    .insert({
+      provider: "raiaccept",
+      provider_transaction_id: notification.transactionId,
+      provider_order_id: notification.orderIdentification,
+      payload_hash: payloadHash,
+      payload: body as unknown as Record<string, unknown>,
+    })
+    .select("id, processed_at")
+    .maybeSingle();
+  if (error || !inserted) {
+    const { data: existing } = await admin
+      .from("reservation_payment_webhook_events")
+      .select("id, processed_at")
+      .eq("provider", "raiaccept")
+      .eq("payload_hash", payloadHash)
+      .maybeSingle();
+    if (!existing) return NextResponse.json({ error: "could not record webhook event" }, { status: 500 });
+    if (existing.processed_at) return NextResponse.json({ received: true, duplicate: true });
+    const result = await processReservationNotification(admin, existing.id, notification);
+    return result === "retry"
+      ? NextResponse.json({ error: "temporary processing failure" }, { status: 500 })
+      : NextResponse.json({ received: true, result });
+  }
+  const result = await processReservationNotification(admin, inserted.id, notification);
+  return result === "retry"
+    ? NextResponse.json({ error: "temporary processing failure" }, { status: 500 })
+    : NextResponse.json({ received: true, result });
 }
 
 /** Locate a previously stored duplicate event (by payload hash, then state). */

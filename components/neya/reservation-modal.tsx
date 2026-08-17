@@ -133,12 +133,12 @@ export function ReservationModal({
   const description = isFree
     ? "Free table reservation — no payment required. The venue will confirm your request."
     : config.requiresOnlinePayment && !config.allowsPayAtVenue
-      ? `${priceLabel} deposit required online via Stripe.`
+      ? `${priceLabel} deposit required online via RaiAccept.`
       : config.showPaymentSelector
         ? `Reservation fee: ${priceLabel}. Choose how you'd like to pay.`
         : paymentMethod === "pay_at_venue"
           ? `${priceLabel} due at the venue. Your table is held once the venue confirms.`
-          : `${priceLabel} deposit via Stripe Checkout.`;
+          : `${priceLabel} deposit via RaiAccept.`;
 
   if (!config.reservationsEnabled) {
     return (
@@ -171,8 +171,8 @@ export function ReservationModal({
               {config.availableMethods.includes("online") ? (
                 <PaymentOption
                   id="online"
-                  label="Pay online"
-                  description={`Secure Stripe checkout · ${priceLabel}`}
+                  label="RaiAccept"
+                  description={`Secure RaiAccept payment · ${priceLabel}`}
                   icon={CreditCard}
                   selected={paymentMethod === "online"}
                   onSelect={setPaymentMethod}

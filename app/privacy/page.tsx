@@ -26,11 +26,11 @@ const sections: LegalSection[] = [
   },
   {
     title: "5. Payments and bookings",
-    body: <p>For paid tickets, guides, and online reservation deposits, payments are processed by Stripe. NEYA does not store full payment-card numbers. We receive and retain transaction information needed to confirm a purchase, prevent fraud, provide support, maintain accounting records, and handle refunds or disputes. Venues may receive booking details needed to honour table reservations and guestlist requests, including your name, contact details, party size, and notes you provide.</p>,
+    body: <p>For paid tickets and online reservation deposits, payments are processed by RaiAccept. NEYA does not store full payment-card numbers. We receive and retain transaction information needed to confirm a purchase, prevent fraud, provide support, maintain accounting records, and handle refunds or disputes. Venues may receive booking details needed to honour table reservations and guestlist requests, including your name, contact details, party size, and notes you provide.</p>,
   },
   {
     title: "6. How we use and share information",
-    body: <><p>We use information to operate and improve NEYA, deliver bookings and purchases, personalise discovery, moderate content, secure our services, respond to requests, enforce our terms, and comply with legal obligations.</p><p>We share data with service providers acting on our behalf, including Supabase (authentication, database, and storage), Stripe (payments), Resend (transactional email), Vercel and PostHog (analytics and hosting), Mapbox and Google Maps (maps), and Cloudinary where venue or event media is hosted. We may also disclose information where required by law, to protect rights and safety, or in connection with a merger, financing, acquisition, or sale of assets.</p><p>We do not sell personal information for money.</p></>,
+    body: <><p>We use information to operate and improve NEYA, deliver bookings and purchases, personalise discovery, moderate content, secure our services, respond to requests, enforce our terms, and comply with legal obligations.</p><p>We share data with service providers acting on our behalf, including Supabase (authentication, database, and storage), RaiAccept (payments), Resend (transactional email), Vercel and PostHog (analytics and hosting), Mapbox and Google Maps (maps), and Cloudinary where venue or event media is hosted. We may also disclose information where required by law, to protect rights and safety, or in connection with a merger, financing, acquisition, or sale of assets.</p><p>We do not sell personal information for money.</p></>,
   },
   {
     title: "7. Your rights and choices",

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: Promise<{ session_id?: string; type?: string; ticket_order_id?: string }>;
+  searchParams: Promise<{ type?: string; ticket_order_id?: string; reservation_id?: string }>;
 };
 
 export default async function CheckoutSuccessPage({ searchParams }: Props) {
@@ -47,7 +47,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           : "Payment complete";
 
   const body = isReservation
-    ? "Your table deposit is confirmed. Check your email for the Stripe receipt."
+    ? "We received your payment and are confirming your reservation with RaiAccept. Your reservation will update automatically once confirmation completes."
     : ticketPaid
       ? "Your tickets are confirmed — your QR code is ready on your NEYA profile."
       : ticketFailed
