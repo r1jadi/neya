@@ -28,7 +28,10 @@ import {
 import type { ActivityFeedItem } from "@/services/activity";
 import type { Event, StoryItem, Venue, VenueHighlight } from "@/types";
 import { EmptyState } from "@/components/neya/empty-state";
-import { CalendarDays, MapPin, Quote } from "lucide-react";
+import { EVENT_CATEGORIES } from "@/lib/discovery";
+import type { City } from "@/services/cities";
+import Link from "next/link";
+import { ArrowRight, CalendarDays, Compass, MapPin, Quote, Sparkles } from "lucide-react";
 
 interface LandingSectionsProps {
   events: Event[];
@@ -41,6 +44,7 @@ interface LandingSectionsProps {
   savedEventIds: string[];
   spotlight?: Event | null;
   highlights: VenueHighlight[];
+  cities: City[];
 }
 
 export function LandingSections({
@@ -54,12 +58,12 @@ export function LandingSections({
   savedEventIds,
   spotlight,
   highlights,
+  cities,
 }: LandingSectionsProps) {
   const upcoming = upcomingEvents(events);
   const tonight = tonightEvents(events);
   const trendingTonight = sortByCrowd(tonight).slice(0, 14);
   const trendingUpcoming = sortByCrowd(upcoming).slice(0, 14);
-  const popular = sortByCrowd(upcoming).slice(0, 12);
   const nearby = nearbyFirst(upcoming).slice(0, 12);
   const live = liveNow(events);
   const rooftops = rooftopEvents(upcoming);
@@ -74,7 +78,7 @@ export function LandingSections({
     highlights.map((h) => [h.venue_id, h] as const),
   );
 
-  const mapMarkers = venues
+  const venueMarkers = venues
     .filter((v) => v.lat != null && v.lng != null && !Number.isNaN(v.lat) && !Number.isNaN(v.lng))
     .map((v) => ({
       lng: v.lng as number,
@@ -82,7 +86,29 @@ export function LandingSections({
       slug: v.slug,
       title: v.name,
       is_live: v.is_live,
+      kind: "venue" as const,
     }));
+  const eventMarkers = upcoming
+    .filter((event) => event.venue?.lat != null && event.venue?.lng != null)
+    .slice(0, 80)
+    .map((event) => ({
+      lng: event.venue!.lng as number,
+      lat: event.venue!.lat as number,
+      slug: event.slug,
+      title: event.title,
+      is_live: event.live_status,
+      kind: "event" as const,
+    }));
+  const mapMarkers = [...eventMarkers, ...venueMarkers];
+
+  const categories = EVENT_CATEGORIES.map((category) => ({
+    ...category,
+    count: upcoming.filter((event) => event.category === category.id).length,
+  })).filter((category) => category.count > 0);
+  const discoverableCities = cities.filter((city) =>
+    events.some((event) => (event.city_slug ?? event.venue?.city_slug) === city.slug) ||
+    venues.some((venue) => venue.city_slug === city.slug),
+  );
 
   const fomoLines = uniqueBySlug(events)
     .map((e) => e.fomo_line)
@@ -104,6 +130,21 @@ export function LandingSections({
       ) : null}
 
       <MyNightEntry />
+
+      <section className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-12 sm:px-6">
+        <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fuchsia-300/90">Find your night</p>
+            <h2 className="mt-1 font-[family-name:var(--font-display)] text-xl font-bold text-white">Where should you go?</h2>
+          </div>
+          <nav aria-label="Quick event discovery" className="flex flex-wrap gap-2 text-sm">
+            <Link href="/events?when=tonight" className="rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-1.5 font-medium text-fuchsia-100 transition hover:bg-fuchsia-500/20">Tonight</Link>
+            <Link href="/events?when=weekend" className="rounded-full border border-white/15 px-3 py-1.5 font-medium text-white/75 transition hover:border-white/30 hover:text-white">This weekend</Link>
+            <Link href="/events?when=upcoming" className="rounded-full border border-white/15 px-3 py-1.5 font-medium text-white/75 transition hover:border-white/30 hover:text-white">Upcoming</Link>
+            <Link href="/map" className="rounded-full border border-white/15 px-3 py-1.5 font-medium text-white/75 transition hover:border-white/30 hover:text-white">Near me</Link>
+          </nav>
+        </div>
+      </section>
 
       {musicGenres.length || venueInterests.length ? (
         <section className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-10 sm:px-6">
@@ -154,12 +195,19 @@ export function LandingSections({
           <>
         {tonight.length > 0 ? (
           <TrendingCarousel
-            title="Trending tonight"
+            title="Tonight"
             subtitle="Happening in Prishtina tonight"
             events={trendingTonight}
             savedEventIds={savedEventIds}
           />
         ) : null}
+
+        <TrendingCarousel
+          title="Trending"
+          subtitle="Featured nights and the next big plans"
+          events={trendingUpcoming}
+          savedEventIds={savedEventIds}
+        />
 
         <TrendingCarousel
           title={tonight.length > 0 ? "Coming up" : "Upcoming events"}
@@ -168,19 +216,9 @@ export function LandingSections({
           savedEventIds={savedEventIds}
         />
 
-        <TrendingCarousel
-          title="Most popular events"
-          subtitle="Crowd heat + saves across the city"
-          events={popular}
-          savedEventIds={savedEventIds}
-        />
-
-        <TrendingCarousel
-          title="Nearby places"
-          subtitle="Distance-aware picks (opt-in geolocation later)"
-          events={nearby}
-          savedEventIds={savedEventIds}
-        />
+        {nearby.some((event) => event.distance_km != null) ? (
+          <TrendingCarousel title="Nearby places" subtitle="Distance-aware picks" events={nearby} savedEventIds={savedEventIds} />
+        ) : null}
 
         <TrendingCarousel
           title="Live right now"
@@ -240,6 +278,47 @@ export function LandingSections({
           </>
         )}
 
+        {categories.length ? (
+          <section className="space-y-4">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">Browse by category</h2>
+                <p className="mt-1 text-sm text-white/55">Start with the kind of night you want.</p>
+              </div>
+              <Link href="/events" className="hidden items-center gap-1 text-sm font-semibold text-sky-300 hover:text-sky-200 sm:inline-flex">All events <ArrowRight className="h-4 w-4" /></Link>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <Link key={category.id} href={`/events?category=${encodeURIComponent(category.id)}`} className="rounded-full border border-white/15 bg-white/[0.03] px-3 py-2 text-sm font-medium text-white/80 transition hover:border-fuchsia-400/45 hover:bg-fuchsia-500/10 hover:text-white">
+                  {category.label} <span className="text-white/40">{category.count}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {discoverableCities.length ? (
+          <section className="space-y-4">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">Explore by city</h2>
+                <p className="mt-1 text-sm text-white/55">Only cities with NEYA venues or events are shown.</p>
+              </div>
+              <Link href="/cities/prishtina" className="hidden items-center gap-1 text-sm font-semibold text-sky-300 hover:text-sky-200 sm:inline-flex">Explore cities <ArrowRight className="h-4 w-4" /></Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {discoverableCities.map((city) => (
+                <Link key={city.slug} href={`/cities/${city.slug}`} className="group rounded-2xl border border-white/10 bg-gradient-to-br from-violet-950/30 to-zinc-950 p-5 transition hover:border-fuchsia-400/40">
+                  <Compass className="h-5 w-5 text-fuchsia-300" />
+                  <p className="mt-5 text-lg font-semibold text-white">{city.name}</p>
+                  <p className="mt-1 text-sm text-white/50">{city.country_name}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-sky-300">See what&apos;s on <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" /></span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         <section id="venues" className="space-y-6">
           <div>
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">
@@ -272,8 +351,9 @@ export function LandingSections({
               <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white md:text-3xl">
                 Live map
               </h2>
-              <p className="text-sm text-white/55">Dark cartography, live pins, venue deep links.</p>
+              <p className="text-sm text-white/55">Event and venue pins across the city.</p>
             </div>
+            <Link href="/map" className="inline-flex items-center gap-1 text-sm font-semibold text-sky-300 hover:text-sky-200">Open discovery map <ArrowRight className="h-4 w-4" /></Link>
           </div>
           {mapMarkers.length ? (
             <AnimatedMap className="shadow-2xl" markers={mapMarkers} />
@@ -298,6 +378,17 @@ export function LandingSections({
             </div>
           </section>
         ) : null}
+
+        <section className="rounded-3xl border border-white/10 bg-gradient-to-r from-sky-950/35 via-zinc-950 to-fuchsia-950/25 p-6 sm:p-8">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-300">NEYA Guides</p>
+              <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-bold text-white">Plan beyond one event</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">Explore local guides and event collections, then add the stops you like to My Night.</p>
+            </div>
+            <Link href="/guides" className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90">Browse guides <Sparkles className="h-4 w-4" /></Link>
+          </div>
+        </section>
 
         <section className="grid gap-6 lg:grid-cols-2">
           {[

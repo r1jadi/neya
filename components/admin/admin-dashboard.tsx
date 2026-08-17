@@ -16,6 +16,7 @@ import {
   updateReservationStatus,
 } from "@/actions/admin-crud";
 import { grantPremiumByUserId, updateEventSubmissionStatus, verifyEventSource } from "@/actions/admin-events";
+import { saveCity, setCityActive } from "@/actions/admin-discovery";
 import { deleteArtist, saveArtist } from "@/actions/artists";
 import {
   deleteVenueHighlight,
@@ -37,6 +38,7 @@ import type {
   AdminTicketRow,
   AdminVenueRow,
   AdminEventSourceRow,
+  AdminCityRow,
 } from "@/services/admin";
 import { VENUE_CATEGORIES } from "@/types";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
@@ -52,13 +54,14 @@ import { MUSIC_GENRES } from "@/types";
 import { EVENT_CATEGORIES } from "@/lib/discovery";
 import type { Artist, VenueHighlight } from "@/types";
 
-type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
+type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides" | "discovery";
 
 interface AdminDashboardProps {
   initialTab: Tab;
   hideNav?: boolean;
   venueAccounts: VenueAccountRow[];
   eventSources: AdminEventSourceRow[];
+  cities: AdminCityRow[];
   venues: AdminVenueRow[];
   events: AdminEventRow[];
   tickets: AdminTicketRow[];
@@ -90,6 +93,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "premium", label: "Premium" },
   { id: "venue-accounts", label: "Venue accounts" },
   { id: "guides", label: "Guides" },
+  { id: "discovery", label: "Discovery" },
 ];
 
 function venueLabel(v: AdminVenueRow) {
@@ -109,6 +113,7 @@ export function AdminDashboard({
   hideNav,
   venueAccounts,
   eventSources,
+  cities,
   venues,
   events,
   tickets,
@@ -165,6 +170,8 @@ export function AdminDashboard({
           </div>
         </div>
       ) : null}
+
+      {tab === "discovery" ? <DiscoveryPanel cities={cities} /> : null}
 
       {tab === "venues" ? (
         <section className="space-y-6">
@@ -521,6 +528,80 @@ function TriStateSelect({
         <option value="false">No</option>
       </select>
     </label>
+  );
+}
+
+function DiscoveryPanel({ cities }: { cities: AdminCityRow[] }) {
+  const [editingCity, setEditingCity] = useState<AdminCityRow | "new" | null>(null);
+  const countries = Array.from(new Map(cities.map((city) => [city.country_slug, city.country_name])).entries());
+  const regions = Array.from(new Map(cities.map((city) => [city.region_slug, city.region_name])).entries());
+  const city = editingCity && editingCity !== "new" ? editingCity : null;
+
+  return (
+    <section className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Discovery geography &amp; taxonomy</h2>
+          <p className="mt-1 text-sm text-white/50">Cities carry their country and region. Activate a city only after it has real NEYA activity.</p>
+        </div>
+        <Button type="button" size="sm" onClick={() => setEditingCity("new")}>Add city</Button>
+      </div>
+
+      {editingCity ? (
+        <form action={saveCity} className="space-y-4 rounded-xl border border-fuchsia-500/30 bg-fuchsia-950/10 p-6">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-white">{city ? `Edit ${city.name}` : "New city"}</h3>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setEditingCity(null)}>Close</Button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Input name="name" placeholder="City name" defaultValue={city?.name} required />
+            <Input name="slug" placeholder="city-slug" defaultValue={city?.slug} required />
+            <Input name="country_name" placeholder="Country name" defaultValue={city?.country_name} required />
+            <Input name="country_slug" placeholder="country-slug" defaultValue={city?.country_slug} required />
+            <Input name="region_name" placeholder="Region name" defaultValue={city?.region_name} required />
+            <Input name="region_slug" placeholder="region-slug" defaultValue={city?.region_slug} required />
+            <Input name="latitude" type="number" step="any" placeholder="Latitude (optional)" defaultValue={city?.latitude ?? ""} />
+            <Input name="longitude" type="number" step="any" placeholder="Longitude (optional)" defaultValue={city?.longitude ?? ""} />
+          </div>
+          <label className="flex items-center gap-2 text-sm text-white/80"><input name="is_active" type="checkbox" defaultChecked={city?.is_active ?? false} /> Active in public discovery</label>
+          <Button type="submit">Save city</Button>
+        </form>
+      ) : null}
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-xl border border-white/10 p-4">
+          <h3 className="text-sm font-semibold text-white">Countries</h3>
+          <p className="mt-1 text-xs text-white/45">Managed through city records.</p>
+          <div className="mt-3 flex flex-wrap gap-2">{countries.length ? countries.map(([slug, name]) => <span key={slug} className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-white/70">{name}</span>) : <span className="text-sm text-white/45">No countries yet.</span>}</div>
+        </div>
+        <div className="rounded-xl border border-white/10 p-4">
+          <h3 className="text-sm font-semibold text-white">Regions</h3>
+          <p className="mt-1 text-xs text-white/45">Managed through city records.</p>
+          <div className="mt-3 flex flex-wrap gap-2">{regions.length ? regions.map(([slug, name]) => <span key={slug} className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-white/70">{name}</span>) : <span className="text-sm text-white/45">No regions yet.</span>}</div>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto rounded-xl border border-white/10">
+        <table className="w-full min-w-[680px] text-left text-sm">
+          <thead className="border-b border-white/10 bg-white/[0.03] text-xs uppercase text-white/45"><tr><th className="px-4 py-3">City</th><th className="px-4 py-3">Country / region</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Actions</th></tr></thead>
+          <tbody>{cities.map((item) => <tr key={item.slug} className="border-b border-white/5"><td className="px-4 py-3"><p className="font-medium text-white">{item.name}</p><p className="text-xs text-white/40">{item.slug}</p></td><td className="px-4 py-3 text-xs text-white/60">{item.country_name} · {item.region_name}</td><td className="px-4 py-3"><span className={item.is_active ? "text-emerald-200" : "text-white/45"}>{item.is_active ? "Active" : "Inactive"}</span></td><td className="px-4 py-3"><div className="flex gap-2"><Button type="button" size="sm" variant="secondary" onClick={() => setEditingCity(item)}>Edit</Button><form action={setCityActive}><input type="hidden" name="slug" value={item.slug} /><input type="hidden" name="active" value={String(!item.is_active)} /><Button type="submit" size="sm" variant="ghost">{item.is_active ? "Deactivate" : "Activate"}</Button></form></div></td></tr>)}</tbody>
+        </table>
+        {!cities.length ? <p className="p-6 text-sm text-white/45">No cities yet. Add a city before publishing discovery there.</p> : null}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-xl border border-white/10 p-4">
+          <h3 className="text-sm font-semibold text-white">Event categories</h3>
+          <p className="mt-1 text-xs text-white/45">The production-safe category set used by event forms and filters.</p>
+          <div className="mt-3 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <span key={category.id} className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-white/70">{category.label}</span>)}</div>
+        </div>
+        <div className="rounded-xl border border-white/10 p-4">
+          <h3 className="text-sm font-semibold text-white">Genres</h3>
+          <p className="mt-1 text-xs text-white/45">The production-safe genre set used by event forms and filters.</p>
+          <div className="mt-3 flex max-h-36 flex-wrap gap-2 overflow-y-auto">{MUSIC_GENRES.map((genre) => <span key={genre.id} className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-white/70">{genre.label}</span>)}</div>
+        </div>
+      </div>
+    </section>
   );
 }
 

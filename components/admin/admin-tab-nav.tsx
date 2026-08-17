@@ -14,7 +14,8 @@ export type AdminTab =
   | "reservations"
   | "premium"
   | "venue-accounts"
-  | "guides";
+  | "guides"
+  | "discovery";
 
 const TABS: { id: AdminTab; label: string }[] = [
   { id: "overview", label: "Overview" },
@@ -28,6 +29,7 @@ const TABS: { id: AdminTab; label: string }[] = [
   { id: "premium", label: "Premium" },
   { id: "venue-accounts", label: "Venue accounts" },
   { id: "guides", label: "Guides" },
+  { id: "discovery", label: "Discovery" },
 ];
 
 export function AdminTabNav({ activeTab }: { activeTab: AdminTab }) {

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-type Props = { searchParams: Promise<{ city?: string; error?: string; guestlist?: string }> };
+type Props = { searchParams: Promise<{ city?: string; when?: string; category?: string; error?: string; guestlist?: string }> };
 
 export default async function EventsPage({ searchParams }: Props) {
   const q = await searchParams;
@@ -66,7 +66,7 @@ export default async function EventsPage({ searchParams }: Props) {
               You are already on this guestlist.
             </p>
           ) : null}
-          <DiscoveryEventBrowser events={events} savedEventIds={savedEventIds} city={city} />
+          <DiscoveryEventBrowser events={events} savedEventIds={savedEventIds} city={city} initialWindow={q.when} initialCategory={q.category} />
           <p className="mt-12 text-center text-sm text-white/45">
             <Link href="/" className="text-sky-300 hover:underline">
               ← Back home

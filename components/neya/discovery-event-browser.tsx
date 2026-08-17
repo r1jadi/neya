@@ -10,15 +10,17 @@ import { CITY_TZ, isTonight } from "@/lib/event-dates";
 import type { Event } from "@/types";
 import { cn } from "@/lib/utils";
 
-type Props = { events: Event[]; savedEventIds: string[]; city: string };
+type Props = { events: Event[]; savedEventIds: string[]; city: string; initialWindow?: string; initialCategory?: string };
 const windowOptions = [["all", "All upcoming"], ["tonight", "Tonight"], ["tomorrow", "Tomorrow"], ["week", "This week"], ["weekend", "This weekend"], ["next-week", "Next week"]] as const;
 function ymd(iso: string) { return new Date(iso).toLocaleDateString("en-CA", { timeZone: CITY_TZ }); }
 function addDays(date: string, count: number) { const value = new Date(`${date}T12:00:00`); value.setDate(value.getDate() + count); return value.toLocaleDateString("en-CA"); }
 function weekBounds(today: string, offset = 0) { const value = new Date(`${today}T12:00:00`); const day = value.getDay() || 7; return [addDays(today, 1 - day + offset * 7), addDays(today, 7 - day + offset * 7)] as const; }
 function useDebouncedValue(value: string, delay = 180) { const [debounced, setDebounced] = useState(value); useEffect(() => { const timer = window.setTimeout(() => setDebounced(value), delay); return () => window.clearTimeout(timer); }, [value, delay]); return debounced; }
 
-export function DiscoveryEventBrowser({ events, savedEventIds, city }: Props) {
-  const [query, setQuery] = useState(""); const debouncedQuery = useDebouncedValue(query); const [window, setWindow] = useState("all"); const [category, setCategory] = useState(""); const [genre, setGenre] = useState(""); const [venue, setVenue] = useState(""); const [date, setDate] = useState(""); const [access, setAccess] = useState("all"); const [price, setPrice] = useState("all"); const [showFilters, setShowFilters] = useState(false);
+export function DiscoveryEventBrowser({ events, savedEventIds, city, initialWindow, initialCategory }: Props) {
+  const selectedWindow = windowOptions.some(([value]) => value === initialWindow) ? initialWindow! : "all";
+  const selectedCategory = EVENT_CATEGORIES.some((item) => item.id === initialCategory) ? initialCategory! : "";
+  const [query, setQuery] = useState(""); const debouncedQuery = useDebouncedValue(query); const [window, setWindow] = useState(selectedWindow); const [category, setCategory] = useState(selectedCategory); const [genre, setGenre] = useState(""); const [venue, setVenue] = useState(""); const [date, setDate] = useState(""); const [access, setAccess] = useState("all"); const [price, setPrice] = useState("all"); const [showFilters, setShowFilters] = useState(Boolean(selectedCategory));
   const genres = useMemo(() => [...new Set(events.map((event) => event.genre).filter(Boolean))].sort(), [events]);
   const venues = useMemo(() => [...new Map(events.filter((event) => event.venue).map((event) => [event.venue!.id, event.venue!])).values()].sort((a, b) => a.name.localeCompare(b.name)), [events]);
   const filtered = useMemo(() => events.filter((event) => {

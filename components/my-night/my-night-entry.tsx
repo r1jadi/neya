@@ -7,7 +7,9 @@ import { useMyNight } from "@/components/my-night/my-night-provider";
 export function MyNightEntry() {
   const { hydrated, stops } = useMyNight();
 
-  if (!hydrated || !stops.length) return null;
+  if (!hydrated) return null;
+
+  const hasStops = stops.length > 0;
 
   return (
     <section className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-10 sm:px-6">
@@ -19,9 +21,9 @@ export function MyNightEntry() {
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500">
             <MapPinned className="h-4 w-4 text-black" />
           </span>
-          My Night · {stops.length} stop{stops.length === 1 ? "" : "s"}
+          {hasStops ? `My Night · ${stops.length} stop${stops.length === 1 ? "" : "s"}` : "My Night · build your route"}
         </span>
-        <span className="text-sm font-medium text-sky-300">Continue planning →</span>
+        <span className="text-sm font-medium text-sky-300">{hasStops ? "Continue planning →" : "Start planning →"}</span>
       </Link>
     </section>
   );

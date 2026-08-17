@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: `Admin · ${SITE.name}`,
 };
 
-type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
+type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides" | "discovery";
 
 const TABS: Tab[] = [
   "overview",
@@ -36,6 +36,7 @@ const TABS: Tab[] = [
   "premium",
   "venue-accounts",
   "guides",
+  "discovery",
 ];
 
 type Props = {
@@ -144,6 +145,7 @@ export default async function AdminPage({ searchParams }: Props) {
               hideNav
               venueAccounts={data.venueAccounts}
               eventSources={data.eventSources}
+              cities={data.cities}
               venues={data.venues}
               events={data.events}
               tickets={data.tickets}

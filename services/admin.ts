@@ -113,11 +113,12 @@ export type AdminReservationRow = {
   venues: { name: string } | { name: string }[] | null;
 };
 export type AdminEventSourceRow = { id: string; event_id: string; source_type: string; label: string | null; url: string; is_verified: boolean; verification_note: string | null };
+export type AdminCityRow = { slug: string; name: string; country_slug: string; country_name: string; region_slug: string; region_name: string; latitude: number | null; longitude: number | null; is_active: boolean };
 
 export async function getAdminDashboardData() {
   const admin = createAdminClient();
 
-  const [venuesRes, eventsRes, ticketsRes, guestlistsRes, reservationsRes, analyticsRes, venueAccountsRes, sourcesRes] =
+  const [venuesRes, eventsRes, ticketsRes, guestlistsRes, reservationsRes, analyticsRes, venueAccountsRes, sourcesRes, citiesRes] =
     await Promise.all([
     admin
       .from("venues")
@@ -145,6 +146,7 @@ export async function getAdminDashboardData() {
     admin.from("analytics").select("id", { count: "exact", head: true }),
     loadVenueAccounts(admin),
     admin.from("event_sources").select("id, event_id, source_type, label, url, is_verified, verification_note").order("created_at", { ascending: false }),
+    admin.from("cities").select("slug, name, country_slug, country_name, region_slug, region_name, latitude, longitude, is_active").order("region_name").order("country_name").order("name"),
   ]);
 
   const venueCount = venuesRes.data?.length ?? 0;
@@ -189,6 +191,7 @@ export async function getAdminDashboardData() {
     reservations: (reservationsRes.data ?? []) as AdminReservationRow[],
     venueAccounts: venueAccounts as VenueAccountRow[],
     eventSources: (sourcesRes.data ?? []) as AdminEventSourceRow[],
+    cities: (citiesRes.data ?? []) as AdminCityRow[],
     venueAccountsError: venueAccountsRes.error,
     stats: {
       venueCount,

@@ -3,11 +3,12 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { LandingSections } from "@/features/landing/sections";
 import { createClient } from "@/lib/supabase/server";
 import { getRecentActivity } from "@/services/activity";
-import { getFeaturedEvents } from "@/services/events";
+import { getDiscoveryEvents } from "@/services/events";
 import { getStoriesForCity } from "@/services/stories";
 import { happeningNowEvents, tonightEvents, upcomingEvents } from "@/lib/event-filters";
 import { getVenues } from "@/services/venues";
 import { getActiveHighlightsForHome } from "@/services/venue-highlights";
+import { getActiveCities } from "@/services/cities";
 
 type Props = { searchParams: Promise<{ error?: string }> };
 
@@ -18,12 +19,13 @@ export default async function Home({ searchParams }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [events, venues, stories, activityItems, highlights] = await Promise.all([
-    getFeaturedEvents(supabase),
+  const [events, venues, stories, activityItems, highlights, cities] = await Promise.all([
+    getDiscoveryEvents({}, supabase),
     getVenues(),
     getStoriesForCity("prishtina"),
     getRecentActivity(24),
     getActiveHighlightsForHome(6),
+    getActiveCities(),
   ]);
 
   let musicGenres: string[] = [];
@@ -75,6 +77,7 @@ export default async function Home({ searchParams }: Props) {
         savedEventIds={savedEventIds}
         spotlight={spotlight}
         highlights={highlights}
+        cities={cities}
       />
       <SiteFooter />
     </div>
