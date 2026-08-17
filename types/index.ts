@@ -187,6 +187,10 @@ export interface Event {
   is_hidden_premium?: boolean;
   is_listed_public?: boolean;
   is_featured?: boolean;
+  city_slug?: string;
+  category?: string;
+  tags?: string[];
+  is_free?: boolean;
 }
 
 export interface StoryItem {

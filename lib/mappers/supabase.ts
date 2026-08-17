@@ -124,6 +124,10 @@ export function mapEventRow(row: {
   is_hidden_premium?: boolean | null;
   is_listed_public?: boolean | null;
   is_featured?: boolean | null;
+  city_slug?: string | null;
+  category?: string | null;
+  tags?: string[] | null;
+  is_free?: boolean | null;
   venues:
     | {
         id: string;
@@ -201,5 +205,9 @@ export function mapEventRow(row: {
     is_hidden_premium: Boolean(row.is_hidden_premium),
     is_listed_public: row.is_listed_public !== false,
     is_featured: Boolean(row.is_featured),
+    city_slug: row.city_slug ?? v?.city_slug ?? "prishtina",
+    category: row.category ?? "nightlife",
+    tags: Array.isArray(row.tags) ? row.tags.map((tag) => tag.trim()).filter(Boolean) : [],
+    is_free: Boolean(row.is_free),
   };
 }

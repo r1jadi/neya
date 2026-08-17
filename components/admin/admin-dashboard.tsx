@@ -48,6 +48,7 @@ import {
 } from "@/lib/reservations/labels";
 import { cn } from "@/lib/utils";
 import { MUSIC_GENRES } from "@/types";
+import { EVENT_CATEGORIES } from "@/lib/discovery";
 import type { Artist, VenueHighlight } from "@/types";
 
 type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides";
@@ -695,10 +696,15 @@ function EventForm({
             </option>
           ))}
         </select>
+        <Input name="city_slug" placeholder="City slug" defaultValue={event?.city_slug ?? "prishtina"} required />
+        <select name="category" defaultValue={event?.category ?? "nightlife"} className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white">
+          {EVENT_CATEGORIES.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
+        </select>
         <Input name="capacity" type="number" placeholder="Capacity" defaultValue={event?.capacity ?? ""} />
         <PerformerFields initialPerformers={performers} />
         <ArtistPicker artists={artists} initialIds={initialArtistIds} className="sm:col-span-2" />
         <Input name="ticket_from_eur" type="number" step="0.01" placeholder="From price (EUR)" defaultValue={event?.ticket_from_eur ?? ""} />
+        <Input name="tags" placeholder="Tags (comma-separated)" defaultValue={event?.tags?.join(", ") ?? ""} />
         <ImageUploadField name="image_url" label="Poster / cover" defaultUrl={event?.image_url ?? ""} folder="events" />
         <textarea
           name="description"
@@ -743,6 +749,9 @@ function EventForm({
       <div className="flex flex-wrap gap-4 text-sm text-white/80">
         <label className="flex items-center gap-2">
           <input type="checkbox" name="is_featured" defaultChecked={event?.is_featured} /> Featured
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" name="is_free" defaultChecked={event?.is_free} /> Free event
         </label>
         <label className="flex items-center gap-2">
           <input type="checkbox" name="is_listed_public" defaultChecked={event?.is_listed_public !== false} /> Published

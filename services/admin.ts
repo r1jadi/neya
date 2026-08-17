@@ -52,6 +52,10 @@ export type AdminEventRow = {
   starts_at: string;
   ends_at: string | null;
   genre: string | null;
+  city_slug?: string;
+  category?: string;
+  tags?: string[];
+  is_free?: boolean;
   image_url: string | null;
   poster_url?: string | null;
   poster_generated_at?: string | null;
@@ -119,7 +123,7 @@ export async function getAdminDashboardData() {
     admin
       .from("events")
       .select(
-        "id, slug, title, description, venue_id, starts_at, ends_at, genre, image_url, poster_url, poster_generated_at, dj_lineup, performers, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, reservations_enabled, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
+        "id, slug, title, description, venue_id, starts_at, ends_at, genre, city_slug, category, tags, is_free, image_url, poster_url, poster_generated_at, dj_lineup, performers, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, reservations_enabled, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
       )
       .order("starts_at", { ascending: false })
       .limit(200),

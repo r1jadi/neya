@@ -8,6 +8,7 @@ import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 import type { EventPerformer } from "@/types";
 import { isVenueCategory, MUSIC_GENRES } from "@/types";
+import { EVENT_CATEGORIES } from "@/lib/discovery";
 import { isUuid } from "@/lib/utils";
 
 function parseJsonArray(raw: string | null): string[] {
@@ -189,6 +190,10 @@ export async function saveEvent(formData: FormData) {
     starts_at: startsAt,
     ends_at: endsAt,
     genre,
+    city_slug: String(formData.get("city_slug") ?? "prishtina").trim().toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 64) || "prishtina",
+    category: (() => { const value = String(formData.get("category") ?? "nightlife"); return EVENT_CATEGORIES.some((item) => item.id === value) ? value : "other"; })(),
+    tags: parseJsonArray(String(formData.get("tags") ?? "")).slice(0, 20).map((tag) => tag.slice(0, 48)),
+    is_free: formData.get("is_free") === "on",
     image_url: String(formData.get("image_url") ?? "").trim().slice(0, 2000) || null,
     performers,
     // Keep the legacy field populated for existing integrations and reads.
@@ -203,6 +208,7 @@ export async function saveEvent(formData: FormData) {
     allows_pay_at_venue: parseTriState(formData.get("allows_pay_at_venue")),
     is_featured: formData.get("is_featured") === "on",
     is_listed_public: formData.get("is_listed_public") !== "off",
+    submission_status: "approved",
     is_hidden_premium: formData.get("is_hidden_premium") === "on",
     updated_at: new Date().toISOString(),
   };

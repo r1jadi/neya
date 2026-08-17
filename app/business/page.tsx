@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
 import { MUSIC_GENRES, VENUE_CATEGORIES } from "@/types";
+import { EVENT_CATEGORIES } from "@/lib/discovery";
 
 export const metadata: Metadata = {
   title: `Venue hub · ${SITE.name}`,
@@ -42,7 +43,7 @@ export default async function BusinessPage({ searchParams }: Props) {
       ) : null}
       {q.event ? (
         <p className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
-          Event created and is live in your database feed.
+          Event submitted for NEYA review. It will appear in discovery after approval.
         </p>
       ) : null}
       {q.error ? (
@@ -125,10 +126,13 @@ export default async function BusinessPage({ searchParams }: Props) {
               </select>
             </label>
             <Input name="title" placeholder="Event title" required maxLength={160} />
+            <Input name="city_slug" placeholder="City (e.g. prishtina)" defaultValue="prishtina" required maxLength={64} />
             <label className="text-xs text-white/60">
               Starts
               <Input name="starts_at" type="datetime-local" required className="mt-1" />
             </label>
+            <label className="text-xs text-white/60">Ends (optional)<Input name="ends_at" type="datetime-local" className="mt-1" /></label>
+            <label className="text-xs text-white/60">Category<select name="category" defaultValue="nightlife" className="mt-1 w-full rounded-lg border border-white/15 bg-black/50 px-3 py-2 text-sm text-white">{EVENT_CATEGORIES.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}</select></label>
             <label className="text-xs text-white/60">
               Genre
               <select
@@ -143,6 +147,9 @@ export default async function BusinessPage({ searchParams }: Props) {
                 ))}
               </select>
             </label>
+            <Input name="tags" placeholder="Tags (comma-separated, optional)" maxLength={500} />
+            <textarea name="description" placeholder="Tell the city what to expect" maxLength={4000} rows={3} className="rounded-lg border border-white/15 bg-black/50 px-3 py-2 text-sm text-white placeholder:text-white/35" />
+            <label className="flex items-center gap-2 text-sm text-white/80"><input type="checkbox" name="is_free" /> Free event</label>
             <Button type="submit">Publish event</Button>
         </form>
       </section>

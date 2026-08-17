@@ -11,7 +11,7 @@ import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/events", label: "Tonight" },
+  { href: "/events", label: "Discover" },
   { href: "/artists", label: "Artists" },
   { href: "/guides", label: "Guides" },
   { href: "/#map", label: "Map" },

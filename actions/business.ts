@@ -8,6 +8,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { slugify } from "@/lib/slug";
 import { isVenueCategory, MUSIC_GENRES } from "@/types";
+import { EVENT_CATEGORIES } from "@/lib/discovery";
 
 export async function requestVenueListing(formData: FormData) {
   const rl = await rateLimit("venue-request", 5, 3600);
@@ -64,15 +65,20 @@ export async function createVenueEvent(formData: FormData) {
   const startsAt = datetimeLocalToUtcIso(startsAtLocal);
   const genreRaw = String(formData.get("genre") ?? "other").slice(0, 32);
   const genre = MUSIC_GENRES.some((option) => option.id === genreRaw) ? genreRaw : "other";
+  const categoryRaw = String(formData.get("category") ?? "nightlife");
+  const category = EVENT_CATEGORIES.some((item) => item.id === categoryRaw) ? categoryRaw : "other";
+  const citySlug = String(formData.get("city_slug") ?? "prishtina").trim().toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 64) || "prishtina";
+  const description = String(formData.get("description") ?? "").trim().slice(0, 4000) || null;
+  const endsAt = String(formData.get("ends_at") ?? "").trim();
   if (!title || !startsAt) redirect("/business?error=fields");
 
   const slug = slugify(title);
 
-  let venue: { id: string; image_url: string | null } | null = null;
+  let venue: { id: string; image_url: string | null; city_slug: string | null } | null = null;
   if (venueId) {
     const { data, error: vErr } = await supabase
       .from("venues")
-      .select("id, image_url")
+      .select("id, image_url, city_slug")
       .eq("id", venueId)
       .eq("owner_id", user.id)
       .maybeSingle();
@@ -85,7 +91,15 @@ export async function createVenueEvent(formData: FormData) {
     venue_id: venue?.id ?? null,
     title,
     starts_at: startsAt,
+    ends_at: endsAt ? datetimeLocalToUtcIso(endsAt) : null,
     genre,
+    category,
+    city_slug: venue?.city_slug ?? citySlug,
+    tags: String(formData.get("tags") ?? "").split(",").map((tag) => tag.trim().slice(0, 48)).filter(Boolean).slice(0, 20),
+    is_free: formData.get("is_free") === "on",
+    description,
+    submission_status: "pending_review",
+    is_listed_public: false,
     image_url: venue?.image_url ?? null,
     crowd_count: 0,
     atmosphere_rating: 8.5,

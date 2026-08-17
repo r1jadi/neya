@@ -1,34 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EmptyState } from "@/components/neya/empty-state";
-import { EventFeed } from "@/components/neya/event-feed";
+import { DiscoveryEventBrowser } from "@/components/neya/discovery-event-browser";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
-import { CalendarDays } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { getTonightEvents } from "@/services/events";
+import { getDiscoveryEvents } from "@/services/events";
 
 export const metadata: Metadata = {
-  title: `Events tonight · ${SITE.name}`,
-  description: "Events in Prishtina tonight — clubs, rooftops, live music, and student parties on NEYA.",
+  title: `Discover events · ${SITE.name}`,
+  description: "Discover nightlife, music and local experiences in Prishtina — tonight and beyond.",
   openGraph: {
-    title: `Events tonight · ${SITE.name}`,
-    description: "Discover what’s happening tonight in Prishtina.",
+    title: `Discover events · ${SITE.name}`,
+    description: "Discover what’s happening in Prishtina.",
     url: `${SITE.url}/events`,
     siteName: SITE.name,
   },
 };
 
-type Props = { searchParams: Promise<{ error?: string; guestlist?: string }> };
+type Props = { searchParams: Promise<{ city?: string; error?: string; guestlist?: string }> };
 
 export default async function EventsPage({ searchParams }: Props) {
   const q = await searchParams;
+  const city = (q.city ?? "prishtina").toLowerCase().replace(/[^a-z0-9-]/g, "") || "prishtina";
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const events = await getTonightEvents(supabase);
+  const events = await getDiscoveryEvents({ city }, supabase);
   let savedEventIds: string[] = [];
   if (user) {
     const { data } = await supabase.from("saved_events").select("event_id").eq("user_id", user.id).limit(400);
@@ -40,12 +39,12 @@ export default async function EventsPage({ searchParams }: Props) {
       <SiteHeader />
       <main className="flex-1 px-4 py-10 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">Prishtina</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">{city}</p>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-bold text-white sm:text-4xl">
-            Tonight&apos;s events
+            Discover what&apos;s happening
           </h1>
           <p className="mt-2 max-w-xl text-sm text-white/55">
-            What&apos;s on in Prishtina today — sorted by start time.
+            Tonight stays at the heart of NEYA. Now you can plan the whole week, too.
           </p>
           {q.error === "stripe" ? (
             <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
@@ -67,16 +66,7 @@ export default async function EventsPage({ searchParams }: Props) {
               You are already on this guestlist.
             </p>
           ) : null}
-          {events.length ? (
-            <EventFeed events={events} savedEventIds={savedEventIds} />
-          ) : (
-            <EmptyState
-              className="mt-10"
-              title="Nothing scheduled for tonight"
-              description="Check back later as venues publish new nights."
-              icon={<CalendarDays className="h-10 w-10" />}
-            />
-          )}
+          <DiscoveryEventBrowser events={events} savedEventIds={savedEventIds} city={city} />
           <p className="mt-12 text-center text-sm text-white/45">
             <Link href="/" className="text-sky-300 hover:underline">
               ← Back home

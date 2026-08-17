@@ -26,6 +26,10 @@ const eventSelect = `
         is_hidden_premium,
         is_listed_public,
         is_featured,
+        city_slug,
+        category,
+        tags,
+        is_free,
         venues (
           id,
           slug,
@@ -96,6 +100,39 @@ export async function getEventBySlug(slug: string, client?: SupabaseClient | nul
     console.error("[neya] getEventBySlug", e);
     return null;
   }
+}
+
+export type DiscoveryQuery = {
+  city?: string;
+  from?: string;
+  to?: string;
+  category?: string;
+  genre?: string;
+  venue?: string;
+  free?: boolean;
+  ticketed?: boolean;
+  reservations?: boolean;
+};
+
+/** Public discovery query over the same event records used by checkout and QR. */
+export async function getDiscoveryEvents(query: DiscoveryQuery = {}, client?: SupabaseClient | null): Promise<Event[]> {
+  try {
+    const supabase = clientOrPublic(client);
+    if (!supabase) return [];
+    let request = supabase.from("events").select(eventSelect).eq("is_listed_public", true).eq("submission_status", "approved");
+    if (query.city) request = request.eq("city_slug", query.city);
+    if (query.from) request = request.gte("starts_at", query.from);
+    if (query.to) request = request.lt("starts_at", query.to);
+    if (query.category) request = request.eq("category", query.category);
+    if (query.genre) request = request.eq("genre", query.genre);
+    if (query.venue) request = request.eq("venue_id", query.venue);
+    if (query.free) request = request.eq("is_free", true);
+    if (query.ticketed) request = request.eq("is_free", false);
+    if (query.reservations) request = request.eq("reservations_enabled", true);
+    const { data, error } = await request.gte("starts_at", new Date().toISOString()).order("is_featured", { ascending: false }).order("starts_at", { ascending: true }).limit(250);
+    if (error) { console.error("[neya] getDiscoveryEvents", error.message); return []; }
+    return data?.map((row) => mapEventRow(row as Parameters<typeof mapEventRow>[0])).filter((event): event is Event => event !== null) ?? [];
+  } catch (error) { console.error("[neya] getDiscoveryEvents", error); return []; }
 }
 
 /** Public events that start during the current calendar day in Prishtina. */
