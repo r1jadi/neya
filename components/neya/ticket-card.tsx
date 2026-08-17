@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { cn } from "@/lib/utils";
 import { createTicketCheckout } from "@/actions/bookings";
+import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
 interface TicketCardProps {
   eventTitle: string;
@@ -21,10 +22,11 @@ interface TicketCardProps {
   soldOut?: boolean;
   ticketId?: string | null;
   className?: string;
+  eventId?: string;
 }
 
 
-export function TicketCard({ eventTitle, tier, priceEur, description, currency = "EUR", quantityAvailable, status, endsAt, soldOut, ticketId, className }: TicketCardProps) {
+export function TicketCard({ eventTitle, tier, priceEur, description, currency = "EUR", quantityAvailable, status, endsAt, soldOut, ticketId, className, eventId }: TicketCardProps) {
   // Capture "now" once so the sales window doesn't flip while the card is on screen.
   const [now] = useState(() => Date.now());
   const salesEnded = Boolean(endsAt) && new Date(endsAt!).getTime() <= now;
@@ -44,7 +46,7 @@ export function TicketCard({ eventTitle, tier, priceEur, description, currency =
           {description ? <p className="text-sm text-white/65">{description}</p> : null}
           {quantityAvailable != null && !unavailable ? <p className="text-xs text-amber-200/90">{quantityAvailable} remaining</p> : null}
           {endsAt ? <p className="inline-flex items-center gap-2 text-xs text-amber-200/90"><Timer className="h-3.5 w-3.5" />{salesEnded ? "Sales ended" : "Sales end"} {new Date(endsAt).toLocaleDateString()}</p> : null}
-          {canBuy ? <form action={createTicketCheckout}><input type="hidden" name="ticket_id" value={ticketId!} /><input type="hidden" name="redirect" value={typeof window === "undefined" ? "/events" : window.location.pathname} /><label className="mb-3 flex items-center justify-between gap-3 text-sm text-white/70">Quantity<select name="quantity" defaultValue="1" className="rounded-lg border border-white/10 bg-black/50 px-2 py-1 text-white">{Array.from({ length: maxQuantity }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><SubmitButton className="w-full" pendingText="Preparing checkout…">Buy ticket</SubmitButton></form> : ticketId && unavailable ? <p className="text-center text-xs text-white/50">{status === "closed" ? "Ticket sales are closed." : salesEnded ? "Ticket sales have ended for this event." : "Sold out online — check door policy."}</p> : null}
+          {canBuy ? <form action={createTicketCheckout} onSubmit={() => void trackDiscoveryMetric("ticket_click", { eventId, dimensions: { source: "ticket_tier" } })}><input type="hidden" name="ticket_id" value={ticketId!} /><input type="hidden" name="redirect" value={typeof window === "undefined" ? "/events" : window.location.pathname} /><label className="mb-3 flex items-center justify-between gap-3 text-sm text-white/70">Quantity<select name="quantity" defaultValue="1" className="rounded-lg border border-white/10 bg-black/50 px-2 py-1 text-white">{Array.from({ length: maxQuantity }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><SubmitButton className="w-full" pendingText="Preparing checkout…">Buy ticket</SubmitButton></form> : ticketId && unavailable ? <p className="text-center text-xs text-white/50">{status === "closed" ? "Ticket sales are closed." : salesEnded ? "Ticket sales have ended for this event." : "Sold out online — check door policy."}</p> : null}
         </CardContent>
       </Card>
     </motion.div>

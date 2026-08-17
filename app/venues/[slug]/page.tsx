@@ -21,6 +21,7 @@ import { venueJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
 import { CheckInWidget } from "@/components/neya/check-in-widget";
 import { MyNightButton } from "@/components/my-night/my-night-button";
+import { DiscoveryTracker } from "@/components/neya/discovery-tracker";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -91,6 +92,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
       </Script>
       <SiteHeader />
       <main className="flex-1">
+        <DiscoveryTracker metric="venue_view" venueId={venue.id} dimensions={{ city: venue.city_slug, category: venue.category }} />
         <div className="relative aspect-[16/7] w-full max-h-[380px] overflow-hidden">
           <Image src={venue.image_url} alt="" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />

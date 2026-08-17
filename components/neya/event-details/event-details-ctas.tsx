@@ -11,6 +11,7 @@ import type { EventBookingMeta } from "@/services/booking-meta";
 import { formatReservationPrice } from "@/lib/reservations/config";
 import type { Event } from "@/types";
 import { cn, isUuid } from "@/lib/utils";
+import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
 export type EventDetailsFlash = {
   guestlist?: string;
@@ -103,7 +104,7 @@ export function EventDetailsCtas({
       {hasStripeTicket || (hasTicketPrice && meta?.hasTicketRows) ? (
       <div className="space-y-3">
         {meta?.ticketTypes.map((ticket) => (
-          <TicketCard key={ticket.id} eventTitle={event.title} tier={ticket.name} priceEur={ticket.priceCents / 100} currency={ticket.currency} description={ticket.description} quantityAvailable={ticket.quantityAvailable} status={ticket.status} endsAt={ticket.salesEnd ?? undefined} ticketId={ticket.id} />
+          <TicketCard key={ticket.id} eventId={event.id} eventTitle={event.title} tier={ticket.name} priceEur={ticket.priceCents / 100} currency={ticket.currency} description={ticket.description} quantityAvailable={ticket.quantityAvailable} status={ticket.status} endsAt={ticket.salesEnd ?? undefined} ticketId={ticket.id} />
         ))}
       </div>
     ) : hasExternalTicket ? (
@@ -111,6 +112,7 @@ export function EventDetailsCtas({
         href={event.ticket_url!}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => void trackDiscoveryMetric("ticket_click", { eventId: event.id, dimensions: { source: "external" } })}
         className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 py-3 text-sm font-bold text-white transition hover:opacity-95"
       >
         Buy tickets · €{event.ticket_from_eur ?? "—"}
@@ -145,8 +147,9 @@ export function EventDetailsCtas({
               guestlist={meta.guestlist}
               availability={meta.guestlistAvailability}
               trigger={
-                <button
-                  type="button"
+        <button
+          type="button"
+          onClick={() => void trackDiscoveryMetric("reservation_click", { eventId: event.id, venueId: event.venue?.id })}
                   className="flex-1 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/10 py-3 text-xs font-semibold text-fuchsia-100"
                 >
                   Guestlist
@@ -183,6 +186,7 @@ export function EventDetailsCtas({
               href={event.ticket_url!}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => void trackDiscoveryMetric("ticket_click", { eventId: event.id, dimensions: { source: "external_sticky" } })}
               className="flex flex-1 items-center justify-center rounded-xl bg-violet-600 py-3 text-xs font-bold text-white"
             >
               Tickets

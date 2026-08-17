@@ -51,7 +51,6 @@ export function eventJsonLd(event: Event, ticketTypes: TicketType[] = []) {
           "@type": "Offer",
           price: event.ticket_from_eur,
           priceCurrency: "EUR",
-          availability: "https://schema.org/InStock",
           url: event.ticket_url ?? undefined,
         }
       : undefined,

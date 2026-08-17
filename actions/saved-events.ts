@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
 export async function toggleSaveEvent(formData: FormData): Promise<{ saved: boolean }> {
   const supabase = await createClient();
@@ -31,6 +32,7 @@ export async function toggleSaveEvent(formData: FormData): Promise<{ saved: bool
     await supabase.from("saved_events").delete().eq("user_id", user.id).eq("event_id", eventId);
   } else {
     await supabase.from("saved_events").insert({ user_id: user.id, event_id: eventId });
+    await trackDiscoveryMetric("event_save", { eventId });
   }
 
   revalidatePath("/dashboard");
@@ -44,6 +46,6 @@ export async function toggleSaveVenue(formData: FormData): Promise<{ saved: bool
   const venueId = String(formData.get("venue_id") ?? "").trim(); const slug = String(formData.get("venue_slug") ?? "").trim();
   if (!user) redirect(`/login?next=${encodeURIComponent(slug ? `/venues/${slug}` : "/events")}`); if (!venueId) redirect("/events");
   const { data: existing } = await supabase.from("saved_venues").select("venue_id").eq("user_id", user.id).eq("venue_id", venueId).maybeSingle();
-  if (existing) await supabase.from("saved_venues").delete().eq("user_id", user.id).eq("venue_id", venueId); else await supabase.from("saved_venues").insert({ user_id: user.id, venue_id: venueId });
+  if (existing) await supabase.from("saved_venues").delete().eq("user_id", user.id).eq("venue_id", venueId); else { await supabase.from("saved_venues").insert({ user_id: user.id, venue_id: venueId }); await trackDiscoveryMetric("venue_save", { venueId }); }
   revalidatePath("/dashboard"); revalidatePath("/saved"); if (slug) revalidatePath(`/venues/${slug}`); return { saved: !existing };
 }

@@ -7,6 +7,7 @@ import { MUSIC_GENRES } from "@/types";
 import { MAX_IMAGE_UPLOAD_BYTES } from "@/lib/constants";
 import { rateLimit } from "@/lib/rate-limit";
 import { slugify } from "@/lib/slug";
+import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
 type Result = { ok: true } | { ok: false; error: string };
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,6 +56,7 @@ export async function submitPublicEvent(formData: FormData): Promise<Result> {
       socialLinks.website ? { source_type: "official_website", label: "Submitted website", url: socialLinks.website } : null,
     ].filter(Boolean);
     if (event?.id && sources.length) await admin.from("event_sources").insert(sources.map((source) => ({ ...source!, event_id: event.id })));
+    if (event?.id) await trackDiscoveryMetric("event_submission", { eventId: event.id, dimensions: { city, category } });
     return { ok: true };
   } catch (error) { console.error("[neya] public event submission", error); return { ok: false, error: "Submission is temporarily unavailable." }; }
 }

@@ -15,6 +15,7 @@ import { getEventBookingMetaBySlug } from "@/services/booking-meta";
 import { getArtistsForEvent } from "@/services/artists";
 import { getEventBySlug } from "@/services/events";
 import { getEventSources } from "@/services/event-sources";
+import { DiscoveryTracker } from "@/components/neya/discovery-tracker";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -87,6 +88,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
       </Script>
       <SiteHeader />
       <main className="flex-1">
+        <DiscoveryTracker metric="event_view" eventId={event.id} dimensions={{ city: event.city_slug ?? event.venue?.city_slug ?? "prishtina", category: event.category ?? "other" }} />
         <EventDetailsPageShell>
           <EventDetailsView
             event={event}

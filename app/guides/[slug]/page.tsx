@@ -15,6 +15,7 @@ import { SITE } from "@/lib/constants";
 import { formatDuration, formatPrice } from "@/lib/guides/constants";
 import { createClient } from "@/lib/supabase/server";
 import { getGuideBySlug, userHasGuideAccess } from "@/services/guides";
+import { DiscoveryTracker } from "@/components/neya/discovery-tracker";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -59,6 +60,7 @@ export default async function GuideDetailPage({ params, searchParams }: Props) {
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
       <main className="flex-1">
+        <DiscoveryTracker metric="guide_view" dimensions={{ guide_slug: guide.slug, location_type: guide.location_type }} />
         <div className="relative aspect-[21/9] max-h-[420px] w-full overflow-hidden">
           <Image src={guide.cover_image} alt="" fill className="object-cover" priority sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-black/40 to-transparent" />
