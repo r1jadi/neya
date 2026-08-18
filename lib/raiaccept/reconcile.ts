@@ -72,6 +72,30 @@ export async function reconcileRaiAcceptTicketPayments(
 }
 
 /**
+ * Reconcile one known RaiAccept ticket order immediately. This is used before
+ * a user starts another checkout (and when RaiAccept returns them to NEYA),
+ * so an ABANDONED provider order cannot wait for the scheduled sweep and keep
+ * inventory locked. The provider order is always fetched and verified first.
+ */
+export async function reconcileRaiAcceptTicketOrder(
+  admin: ReturnType<typeof createAdminClient>,
+  orderId: string,
+): Promise<string> {
+  const { data: order, error } = await admin
+    .from("ticket_orders")
+    .select(
+      "id, amount_cents, currency, merchant_order_reference, payment_status, status, inventory_released, created_at",
+    )
+    .eq("id", orderId)
+    .eq("payment_provider", "raiaccept")
+    .in("payment_status", ["pending", "processing"])
+    .maybeSingle();
+  if (error) throw new Error("Could not load ticket payment for reconciliation");
+  if (!order) return "not_active";
+  return reconcileOneOrder(admin, order);
+}
+
+/**
  * A. Retry webhook events that were received but never processed (e.g. the
  *    live handler crashed or the provider API was down). Uses the exact same
  *    verified processing as the live webhook.

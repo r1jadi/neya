@@ -11,6 +11,7 @@ import { safeInternalPath } from "@/lib/redirect";
 import { isUuid } from "@/lib/utils";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getRaiAcceptClient, RaiAcceptError, type RaiAcceptOrderPayload } from "@/lib/raiaccept/server";
+import { reconcileRaiAcceptTicketOrder } from "@/lib/raiaccept/reconcile";
 
 function loginNext(path: string) {
   return `/login?next=${encodeURIComponent(path)}`;
@@ -290,6 +291,35 @@ export async function createTicketCheckout(formData: FormData) {
     redirect(`${redirectTo}?error=ticket-unavailable`);
   }
 
+  // This RaiAccept Sandbox ABANDONED order did not produce a webhook event.
+  // Before the duplicate-hold RPC runs, reconcile this user's existing active
+  // RaiAccept order for the same ticket against the provider's final state.
+  // This preserves the audit row while atomically releasing a verified
+  // abandoned/cancelled/failed hold.
+  const admin = createAdminClient();
+  const { data: activeOrders, error: activeOrdersError } = await admin
+    .from("ticket_orders")
+    .select("id")
+    .eq("ticket_id", ticketId)
+    .eq("user_id", user.id)
+    .eq("payment_provider", "raiaccept")
+    .in("payment_status", ["pending", "processing"])
+    .eq("inventory_released", false);
+  if (activeOrdersError) redirect(`${redirectTo}?error=payment`);
+  for (const activeOrder of activeOrders ?? []) {
+    try {
+      await reconcileRaiAcceptTicketOrder(admin, activeOrder.id);
+    } catch (error) {
+      // Do not report an active payment as a duplicate when its provider state
+      // could not be verified. The user gets a retryable, non-sensitive error.
+      console.error("[neya] active RaiAccept ticket reconciliation failed", {
+        orderId: activeOrder.id,
+        error: error instanceof Error ? error.message : "unknown",
+      });
+      redirect(`${redirectTo}?error=payment`);
+    }
+  }
+
   // Reserve inventory and snapshot the immutable payment fields. The RPC is
   // atomic and rejects duplicate in-flight purchases for the same ticket.
   const { data: orderId, error: oErr } = await supabase.rpc("reserve_ticket_order", {
@@ -312,8 +342,6 @@ export async function createTicketCheckout(formData: FormData) {
     await releaseTicketReservationFor(orderId);
     redirect(`${redirectTo}?error=ticket`);
   }
-
-  const admin = createAdminClient();
 
   // Persist the RaiAccept payment attempt before any provider call so the
   // order stays traceable if a later step fails.
@@ -557,6 +585,14 @@ export async function releaseTicketReservation(orderId: string) {
     .eq("id", orderId)
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!order || order.payment_status !== "pending") return;
+  if (!order || !["pending", "processing"].includes(order.payment_status)) return;
   if (order.payment_provider !== "raiaccept") return;
+  try {
+    await reconcileRaiAcceptTicketOrder(createAdminClient(), order.id);
+  } catch (error) {
+    console.error("[neya] RaiAccept ticket return reconciliation failed", {
+      orderId: order.id,
+      error: error instanceof Error ? error.message : "unknown",
+    });
+  }
 }
