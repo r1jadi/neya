@@ -36,6 +36,10 @@ import {
 const EVENT_GRACE_MS = 5 * 60_000;
 /** Orders older than this in a non-terminal state are examined by the sweep. */
 const ORDER_AGE_MS = 30 * 60_000;
+/** A checkout hold is temporary. RaiAccept may leave a closed browser session
+ * in CHECKOUT without sending a terminal callback, so it must not lock a
+ * customer's inventory indefinitely. */
+const CHECKOUT_HOLD_MS = 5 * 60_000;
 /** Bounded work per sweep so RaiAccept is never hammered. */
 const DEFAULT_MAX_EVENTS = 50;
 const DEFAULT_MAX_ORDERS = 50;
@@ -207,6 +211,7 @@ type StuckOrder = {
   payment_status: string;
   status: string;
   inventory_released: boolean;
+  created_at: string;
 };
 
 async function reconcileOneOrder(
@@ -333,7 +338,14 @@ async function reconcileOneOrder(
   }
 
   if (finalStatus === "DRAFT" || finalStatus === "CHECKOUT") {
-    // Customer may still be paying — leave the order completely alone.
+    // A freshly-created payment form can still be paid. Once the bounded hold
+    // expires, release it through the same idempotent RPC used for verified
+    // terminal provider states. A late payment is still detected by the
+    // verified PAID flow and remains visible for reconciliation/refund.
+    if (finalStatus === "CHECKOUT" && Date.now() - new Date(order.created_at).getTime() >= CHECKOUT_HOLD_MS) {
+      await releaseExpiredCheckout(admin, order, attempt.id, attempt.provider_order_id);
+      return "checkout_hold_expired";
+    }
     return "in_progress";
   }
 
@@ -342,6 +354,27 @@ async function reconcileOneOrder(
     provider_status_message: `reconciliation: unmapped RaiAccept order status ${finalStatus}`,
   });
   return "unknown_status";
+}
+
+async function releaseExpiredCheckout(
+  admin: ReturnType<typeof createAdminClient>,
+  order: { id: string },
+  attemptId: string,
+  orderIdentification: string,
+) {
+  const { error: releaseError } = await admin.rpc("release_ticket_order", { p_order_id: order.id });
+  if (releaseError) {
+    throw new Error(`Could not release expired RaiAccept checkout ${orderIdentification}`);
+  }
+  await admin
+    .from("ticket_payment_attempts")
+    .update({
+      status: "cancelled",
+      provider_status_message: "NEYA checkout hold expired while RaiAccept remained CHECKOUT; inventory released",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", attemptId)
+    .in("status", ["pending", "processing"]);
 }
 
 /**
