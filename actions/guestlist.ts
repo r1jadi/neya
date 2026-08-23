@@ -17,6 +17,7 @@ import { getEventGuestlistMeta } from "@/services/guestlist";
 import type { GuestlistRequestStatus, SubmitGuestlistResult } from "@/types/guestlist";
 import { redirect } from "next/navigation";
 import { safeInternalPath } from "@/lib/redirect";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 const GL_STATUSES = new Set<GuestlistRequestStatus>(["pending", "approved", "rejected", "checked_in"]);
 
@@ -76,6 +77,18 @@ export async function submitGuestlistRequest(formData: FormData): Promise<Submit
   if ("success" in parsed) return parsed;
 
   const { eventId, firstName, lastName, fullName, phone, email, groupSize, notes } = parsed;
+
+  // Anti-abuse: each pending request holds a capacity spot, so submissions
+  // must be throttled per IP (and per email) — otherwise one attacker could
+  // drain an event's guestlist with rotating phone numbers.
+  const ip = await getClientIp();
+  const [ipLimit, emailLimit] = await Promise.all([
+    rateLimit(`guestlist-submit-ip:${ip || "anon"}`, 20, 3600),
+    rateLimit(`guestlist-submit:${ip || "anon"}:${email?.toLowerCase() ?? "no-email"}`, 6, 3600),
+  ]);
+  if (!ipLimit.success || !emailLimit.success) {
+    return { success: false, error: "Too many requests today. Please try again later.", code: "rate" };
+  }
 
   const meta = await getEventGuestlistMeta(eventId);
   if (!meta?.guestlist) {

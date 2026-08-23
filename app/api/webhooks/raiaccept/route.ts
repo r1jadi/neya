@@ -8,6 +8,9 @@ import {
   type RaiAcceptWebhookPayload,
 } from "@/lib/raiaccept/webhook";
 import { processReservationNotification } from "@/lib/raiaccept/reservation-webhook";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
+
+const MAX_BODY_BYTES = 512 * 1024;
 
 /**
  * RaiAccept notification webhook for ticket payments.
@@ -31,6 +34,20 @@ import { processReservationNotification } from "@/lib/raiaccept/reservation-webh
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
+  const contentLength = req.headers.get("content-length");
+  if (contentLength && Number(contentLength) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "payload too large" }, { status: 413 });
+  }
+
+  // Defense in depth: the endpoint is unauthenticated by design (the order is
+  // verified provider-side), so throttle ingress per IP to stop write-flooding
+  // of the webhook events tables with forged payloads.
+  const ip = await getClientIp(req.headers);
+  const rl = await rateLimit(`raiaccept-webhook:${ip || "unknown"}`, 600, 3600);
+  if (!rl.success) {
+    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  }
+
   const rawBody = await req.text().catch(() => "");
   if (!rawBody) {
     return NextResponse.json({ error: "empty body" }, { status: 400 });

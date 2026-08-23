@@ -11,15 +11,15 @@ import { isVenueCategory, MUSIC_GENRES } from "@/types";
 import { EVENT_CATEGORIES } from "@/lib/discovery";
 
 export async function requestVenueListing(formData: FormData) {
-  const rl = await rateLimit("venue-request", 5, 3600);
-  if (!rl.success) redirect("/business?error=rate");
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business");
   await assertNotVenueAccount(user.id);
+
+  const rl = await rateLimit(`venue-request:${user.id}`, 5, 3600);
+  if (!rl.success) redirect("/business?error=rate");
 
   const name = String(formData.get("name") ?? "").trim().slice(0, 120);
   const categoryRaw = String(formData.get("category") ?? "nightclub").slice(0, 32);
@@ -49,15 +49,15 @@ export async function requestVenueListing(formData: FormData) {
 }
 
 export async function createVenueEvent(formData: FormData) {
-  const rl = await rateLimit("event-create", 15, 3600);
-  if (!rl.success) redirect("/business?error=rate");
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/business");
   await assertNotVenueAccount(user.id);
+
+  const rl = await rateLimit(`event-create:${user.id}`, 15, 3600);
+  if (!rl.success) redirect("/business?error=rate");
 
   const venueId = String(formData.get("venue_id") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim().slice(0, 160);

@@ -8,7 +8,14 @@ import { isUuid } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+const MAX_BODY_BYTES = 64 * 1024;
+
 export async function POST(req: Request) {
+  const contentLength = req.headers.get("content-length");
+  if (contentLength && Number(contentLength) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "too large" }, { status: 413 });
+  }
+
   const rl = await rateLimit(`my-night-share:${await getClientIp(req.headers)}`, 20, 3600);
   if (!rl.success) return NextResponse.json({ error: "rate" }, { status: 429 });
 

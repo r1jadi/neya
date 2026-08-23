@@ -75,4 +75,4 @@ export type GuestlistEntryRow = {
 
 export type SubmitGuestlistResult =
   | { success: true }
-  | { success: false; error: string; code?: "full" | "closed" | "duplicate" | "invalid" | "server" };
+  | { success: false; error: string; code?: "full" | "closed" | "duplicate" | "invalid" | "server" | "rate" };

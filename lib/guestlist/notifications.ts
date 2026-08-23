@@ -7,6 +7,13 @@ import { SITE } from "@/lib/constants";
 import { guestlistStatusLabel } from "@/lib/guestlist/labels";
 import type { GuestlistRequestStatus } from "@/types/guestlist";
 
+/** Escape user-controlled values before interpolating them into email HTML. */
+function esc(value: string): string {
+  return value.replace(/[&<>'"]/g, (char) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]!,
+  );
+}
+
 export type GuestlistNotifyContext = {
   requestId: string;
   fullName: string;
@@ -41,15 +48,15 @@ function emailShell(title: string, bodyHtml: string): string {
 
 export async function notifyGuestlistReceived(ctx: GuestlistNotifyContext): Promise<void> {
   const when = eventWhenLine(ctx.startsAt);
-  const venue = ctx.venueName ? ` at ${ctx.venueName}` : "";
+  const venue = ctx.venueName ? ` at ${esc(ctx.venueName)}` : "";
   const statusLabel = guestlistStatusLabel("pending");
 
   const smsBody = `${SITE.name}: Guestlist request received for ${ctx.eventTitle}${venue}. Status: ${statusLabel}. Party of ${ctx.groupSize}. We'll notify you when reviewed.`;
 
   const html = emailShell(
     "Guestlist request received",
-    `<p style="color:#d4d4d8;line-height:1.5">Hi ${ctx.fullName},</p>
-    <p style="color:#d4d4d8;line-height:1.5">Your guestlist application for <strong>${ctx.eventTitle}</strong>${venue} was received.</p>
+    `<p style="color:#d4d4d8;line-height:1.5">Hi ${esc(ctx.fullName)},</p>
+    <p style="color:#d4d4d8;line-height:1.5">Your guestlist application for <strong>${esc(ctx.eventTitle)}</strong>${venue} was received.</p>
     <ul style="color:#a1a1aa;font-size:14px;line-height:1.6">
       <li><strong style="color:#e4e4e7">Status:</strong> ${statusLabel}</li>
       ${when ? `<li><strong style="color:#e4e4e7">When:</strong> ${when}</li>` : ""}
@@ -78,7 +85,7 @@ export async function notifyGuestlistStatusChange(ctx: GuestlistNotifyContext): 
   if (ctx.status === "pending") return;
 
   const when = eventWhenLine(ctx.startsAt);
-  const venue = ctx.venueName ? ` at ${ctx.venueName}` : "";
+  const venue = ctx.venueName ? ` at ${esc(ctx.venueName)}` : "";
   const statusLabel = guestlistStatusLabel(ctx.status);
 
   const approved = ctx.status === "approved" || ctx.status === "checked_in";
@@ -89,8 +96,8 @@ export async function notifyGuestlistStatusChange(ctx: GuestlistNotifyContext): 
   const title = approved ? "You're on the guestlist" : `Guestlist ${statusLabel.toLowerCase()}`;
   const html = emailShell(
     title,
-    `<p style="color:#d4d4d8;line-height:1.5">Hi ${ctx.fullName},</p>
-    <p style="color:#d4d4d8;line-height:1.5">Your guestlist request for <strong>${ctx.eventTitle}</strong>${venue} is now <strong style="color:${approved ? "#6ee7b7" : "#fca5a5"}">${statusLabel}</strong>.</p>
+    `<p style="color:#d4d4d8;line-height:1.5">Hi ${esc(ctx.fullName)},</p>
+    <p style="color:#d4d4d8;line-height:1.5">Your guestlist request for <strong>${esc(ctx.eventTitle)}</strong>${venue} is now <strong style="color:${approved ? "#6ee7b7" : "#fca5a5"}">${statusLabel}</strong>.</p>
     <ul style="color:#a1a1aa;font-size:14px;line-height:1.6">
       ${when ? `<li><strong style="color:#e4e4e7">When:</strong> ${when}</li>` : ""}
       <li><strong style="color:#e4e4e7">Party size:</strong> ${ctx.groupSize}</li>

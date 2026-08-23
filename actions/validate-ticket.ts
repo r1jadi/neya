@@ -8,6 +8,23 @@ import { isAdminEmail } from "@/lib/auth/admin";
 import { getProfileForUser } from "@/lib/auth/profile";
 import { canAccessVenuePortal } from "@/lib/auth/permissions";
 
+/**
+ * Atomically claim a ticket: only succeeds when the order is still unused.
+ * A conditional UPDATE (used_at IS NULL) is the single source of truth —
+ * two simultaneous scans of the same QR can never both claim it.
+ */
+async function claimOne(admin: ReturnType<typeof createAdminClient>, orderId: string): Promise<"ok" | "already" | "error"> {
+  const { data, error } = await admin
+    .from("ticket_orders")
+    .update({ used_at: new Date().toISOString() })
+    .eq("id", orderId)
+    .is("used_at", null)
+    .select("id")
+    .maybeSingle();
+  if (error) return "error";
+  return data ? "ok" : "already";
+}
+
 async function assertStaff() {
   const supabase = await createClient();
   const {
@@ -33,7 +50,9 @@ export async function validateTicketAtDoor(formData: FormData) {
     if (!o2) redirect("/business/scan?error=notfound");
     if (o2.payment_status !== "paid") redirect("/business/scan?error=unpaid");
     if (o2.used_at) redirect("/business/scan?info=already");
-    await admin.from("ticket_orders").update({ used_at: new Date().toISOString() }).eq("id", o2.id);
+    const claimed = await claimOne(admin, o2.id);
+    if (claimed === "error") redirect("/business/scan?error=update");
+    if (claimed === "already") redirect("/business/scan?info=already");
     revalidatePath("/business/scan");
     redirect("/business/scan?ok=1");
   };
@@ -71,11 +90,9 @@ export async function validateTicketAtDoor(formData: FormData) {
   if (order.payment_status !== "paid") redirect("/business/scan?error=unpaid");
   if (order.used_at) redirect("/business/scan?info=already");
 
-  const { error: uErr } = await createAdminClient()
-    .from("ticket_orders")
-    .update({ used_at: new Date().toISOString() })
-    .eq("id", order.id);
-  if (uErr) redirect("/business/scan?error=update");
+  const claimed = await claimOne(createAdminClient(), order.id);
+  if (claimed === "error") redirect("/business/scan?error=update");
+  if (claimed === "already") redirect("/business/scan?info=already");
 
   revalidatePath("/business/scan");
   redirect("/business/scan?ok=1");
