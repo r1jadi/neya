@@ -1,7 +1,7 @@
 "use server";
 
 import { sendTransactionalEmail } from "@/lib/email/resend";
-import { rateLimit } from "@/lib/rate-limit";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 export type ContactFormResult = { success: true } | { success: false; error: string };
 
@@ -25,7 +25,8 @@ export async function submitContactForm(formData: FormData): Promise<ContactForm
     return { success: false, error: "Please complete each field with valid details." };
   }
 
-  const rate = await rateLimit(`contact:${email}`, 5, 3600);
+  const ip = await getClientIp();
+  const rate = await rateLimit(`contact:${ip}:${email}`, 5, 3600);
   if (!rate.success) return { success: false, error: "Too many messages. Please try again later." };
 
   const html = `<!doctype html><html><body style="font-family:system-ui,sans-serif;background:#0a0a0a;color:#f4f4f5;padding:24px">

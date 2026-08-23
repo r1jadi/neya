@@ -14,14 +14,14 @@ export async function checkInAtVenue(formData: FormData) {
   const backToVenue = (state: "rate" | "err") =>
     redirect(venueSlug ? `/venues/${venueSlug}?checkin=${state}` : "/events?error=checkin");
 
-  const rl = await rateLimit("checkin", 30, 3600);
-  if (!rl.success) backToVenue("rate");
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=${encodeURIComponent(venueSlug ? `/venues/${venueSlug}` : "/venues")}`);
+
+  const rl = await rateLimit(`checkin:${user.id}`, 30, 3600);
+  if (!rl.success) backToVenue("rate");
 
   const visibilityRaw = String(formData.get("visibility") ?? "public").toLowerCase();
   const visibility = VIS.has(visibilityRaw) ? visibilityRaw : "public";

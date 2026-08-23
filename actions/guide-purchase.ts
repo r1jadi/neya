@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminUser } from "@/lib/auth/require-admin";
+import { isUuid } from "@/lib/utils";
 
 function loginNext(path: string) {
   return `/login?next=${encodeURIComponent(path)}`;
@@ -85,7 +87,10 @@ export async function purchaseGuide(formData: FormData) {
   redirect(`${redirectTo}?error=payment`);
 }
 
+/** Admin-only: activate a guide purchase (free-guide grants / future payment fulfillment). */
 export async function activateGuidePurchase(purchaseId: string, userId: string) {
+  await requireAdminUser();
+  if (!isUuid(purchaseId) || !isUuid(userId)) return;
   const admin = createAdminClient();
   const accessUntil = new Date();
   accessUntil.setFullYear(accessUntil.getFullYear() + 1);

@@ -17,14 +17,14 @@ function parseScore(raw: FormDataEntryValue | null) {
 }
 
 export async function submitAtmosphereReview(formData: FormData) {
-  const rl = await rateLimit("atmosphere", 20, 120);
-  if (!rl.success) redirect("/events?error=rate");
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/events");
+
+  const rl = await rateLimit(`atmosphere:${user.id}`, 20, 120);
+  if (!rl.success) redirect("/events?error=rate");
 
   const eventId = String(formData.get("event_id") ?? "").trim();
   const venueIdRaw = String(formData.get("venue_id") ?? "").trim();

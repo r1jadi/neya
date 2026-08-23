@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { rateLimit } from "@/lib/rate-limit";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { MAX_NIGHT_STOPS } from "@/lib/my-night/logic";
 import { todayYmdInTz } from "@/lib/event-dates";
 import { isUuid } from "@/lib/utils";
@@ -9,7 +9,7 @@ import { isUuid } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const rl = await rateLimit("my-night-share", 20, 3600);
+  const rl = await rateLimit(`my-night-share:${await getClientIp(req.headers)}`, 20, 3600);
   if (!rl.success) return NextResponse.json({ error: "rate" }, { status: 429 });
 
   let body: unknown;

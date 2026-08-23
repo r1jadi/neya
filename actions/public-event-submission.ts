@@ -5,7 +5,7 @@ import { datetimeLocalToUtcIso } from "@/lib/event-dates";
 import { EVENT_CATEGORIES } from "@/lib/discovery";
 import { MUSIC_GENRES } from "@/types";
 import { MAX_IMAGE_UPLOAD_BYTES } from "@/lib/constants";
-import { rateLimit } from "@/lib/rate-limit";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { slugify } from "@/lib/slug";
 import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
@@ -22,7 +22,8 @@ export async function submitPublicEvent(formData: FormData): Promise<Result> {
   const endsRaw = String(formData.get("ends_at") ?? "").trim(); const endsAt = endsRaw ? datetimeLocalToUtcIso(endsRaw) : null;
   if (!title || !startsAt || !EMAIL.test(organizerEmail) || (endsRaw && !endsAt)) return { ok: false, error: "Please provide an event name, valid contact email, and valid date/time." };
   if (endsAt && new Date(endsAt).getTime() < new Date(startsAt).getTime()) return { ok: false, error: "End time must be after the event start time." };
-  const limit = await rateLimit(`public-event:${organizerEmail}`, 5, 3600); if (!limit.success) return { ok: false, error: "Too many submissions. Please try again later." };
+  const ip = await getClientIp();
+  const limit = await rateLimit(`public-event:${ip}:${organizerEmail}`, 5, 3600); if (!limit.success) return { ok: false, error: "Too many submissions. Please try again later." };
   const city = String(formData.get("city_slug") ?? "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 64);
   const category = String(formData.get("category") ?? "other"); const genre = String(formData.get("genre") ?? "other");
   const ticketUrl = String(formData.get("ticket_url") ?? "").trim().slice(0, 2000); const sourceUrl = String(formData.get("source_url") ?? "").trim().slice(0, 2000);
