@@ -21,6 +21,15 @@ function safeRedirectPath(raw: string | null): string {
   return safeInternalPath(raw, "/events");
 }
 
+/** Map create_reservation() exception messages to the existing UI error codes. */
+function reservationErrorParam(message: string | undefined): string {
+  const m = message ?? "";
+  if (m.includes("missing-venue")) return "missing-venue";
+  if (m.includes("reservations-closed")) return "reservations-closed";
+  if (m.includes("payment-method")) return "payment-method";
+  return "reservation";
+}
+
 type VenueReservationRow = {
   id: string;
   name: string;
@@ -98,30 +107,23 @@ export async function createReservation(formData: FormData) {
 
   if (!config.reservationsEnabled) redirect(`${redirectTo}?error=reservations-closed`);
 
-  const fullNotes = [notes, phone ? `Phone: ${phone}` : ""].filter(Boolean).join("\n") || null;
+  const reservationRpcParams = {
+    p_venue_id: venueId,
+    p_event_id: eventId,
+    p_party_size: partySize,
+    p_notes: notes,
+    p_phone: phone,
+  };
 
   if (config.isFree) {
-    const { data: resv, error } = await supabase
-      .from("reservations")
-      .insert({
-        venue_id: venueId,
-        event_id: eventId,
-        user_id: user.id,
-        status: "confirmed",
-        party_size: partySize,
-        deposit_cents: 0,
-        notes: fullNotes,
-        payment_method: "none",
-        payment_status: "waived",
-        booking_kind: "table",
-      })
-      .select("id")
-      .single();
-
-    if (error || !resv) redirect(`${redirectTo}?error=reservation`);
+    const { data: resvId, error } = await supabase.rpc("create_reservation", {
+      ...reservationRpcParams,
+      p_payment_method: "none",
+    });
+    if (error || !resvId) redirect(`${redirectTo}?error=${reservationErrorParam(error?.message)}`);
 
     if (eventId) {
-      await logUserActivity(supabase, user.id, "confirmed_table", "reservation", resv.id, { event_id: eventId });
+      await logUserActivity(supabase, user.id, "confirmed_table", "reservation", resvId as string, { event_id: eventId });
     }
 
     revalidatePath("/dashboard");
@@ -143,24 +145,11 @@ export async function createReservation(formData: FormData) {
   }
 
   if (paymentMethod === "pay_at_venue") {
-    const { data: resv, error } = await supabase
-      .from("reservations")
-      .insert({
-        venue_id: venueId,
-        event_id: eventId,
-        user_id: user.id,
-        status: "pending_payment",
-        party_size: partySize,
-        deposit_cents: config.priceCents,
-        notes: fullNotes,
-        payment_method: "pay_at_venue",
-        payment_status: "due_at_venue",
-        booking_kind: "table",
-      })
-      .select("id")
-      .single();
-
-    if (error || !resv) redirect(`${redirectTo}?error=reservation`);
+    const { data: resvId, error } = await supabase.rpc("create_reservation", {
+      ...reservationRpcParams,
+      p_payment_method: "pay_at_venue",
+    });
+    if (error || !resvId) redirect(`${redirectTo}?error=${reservationErrorParam(error?.message)}`);
 
     revalidatePath("/dashboard");
     revalidatePath("/business/reservations");
@@ -168,50 +157,22 @@ export async function createReservation(formData: FormData) {
     redirect(`${redirectTo}?reservation=pending`);
   }
 
-  const { data: resv, error } = await supabase
-    .from("reservations")
-    .insert({
-      venue_id: venueId,
-      event_id: eventId,
-      user_id: user.id,
-      status: "pending",
-      party_size: partySize,
-      deposit_cents: config.priceCents,
-      notes: fullNotes,
-      payment_method: "online",
-      payment_status: "pending",
-      booking_kind: "table",
-    })
-    .select("id")
-    .single();
-
-  if (error || !resv) redirect(`${redirectTo}?error=reservation`);
-
-  if (config.priceCents <= 0) {
-    await supabase
-      .from("reservations")
-      .update({
-        status: "confirmed",
-        payment_status: "waived",
-        payment_method: "none",
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", resv.id);
-
-    revalidatePath("/dashboard");
-    redirect(`${redirectTo}?reservation=confirmed`);
-  }
+  const { data: resvId, error } = await supabase.rpc("create_reservation", {
+    ...reservationRpcParams,
+    p_payment_method: "online",
+  });
+  if (error || !resvId) redirect(`${redirectTo}?error=${reservationErrorParam(error?.message)}`);
 
   const origin = getPublicSiteUrl();
   const priceLabel =
     config.priceEur % 1 === 0 ? `€${config.priceEur.toFixed(0)}` : `€${config.priceEur.toFixed(2)}`;
   const bookingLabel = venue?.name ?? event?.title?.trim() ?? "NEYA table reservation";
 
-  const merchantOrderReference = `NEYA-RES-${resv.id}`;
+  const merchantOrderReference = `NEYA-RES-${resvId}`;
   const admin = createAdminClient();
   const { data: attempt, error: attemptError } = await admin
     .from("reservation_payment_attempts")
-    .insert({ reservation_id: resv.id, provider: "raiaccept", status: "pending", amount_cents: config.priceCents, currency: "EUR" })
+    .insert({ reservation_id: resvId, provider: "raiaccept", status: "pending", amount_cents: config.priceCents, currency: "EUR" })
     .select("id")
     .single();
   if (attemptError || !attempt) redirect(`${redirectTo}?error=payment`);
@@ -219,7 +180,7 @@ export async function createReservation(formData: FormData) {
   const { error: referenceError } = await admin
     .from("reservations")
     .update({ payment_provider: "raiaccept", merchant_order_reference: merchantOrderReference })
-    .eq("id", resv.id);
+    .eq("id", resvId as string);
   if (referenceError) {
     await admin.from("reservation_payment_attempts").update({ status: "failed" }).eq("id", attempt.id);
     redirect(`${redirectTo}?error=payment`);
@@ -236,9 +197,9 @@ export async function createReservation(formData: FormData) {
     },
     paymentMethodPreference: "CARD",
     urls: {
-      successUrl: `${origin}/checkout/success?type=reservation&reservation_id=${encodeURIComponent(resv.id)}`,
-      cancelUrl: `${origin}/checkout/cancel?reservation_id=${encodeURIComponent(resv.id)}`,
-      failUrl: `${origin}/checkout/failure?reservation_id=${encodeURIComponent(resv.id)}`,
+      successUrl: `${origin}/checkout/success?type=reservation&reservation_id=${encodeURIComponent(resvId as string)}`,
+      cancelUrl: `${origin}/checkout/cancel?reservation_id=${encodeURIComponent(resvId as string)}`,
+      failUrl: `${origin}/checkout/failure?reservation_id=${encodeURIComponent(resvId as string)}`,
       notificationUrl: `${origin}/api/webhooks/raiaccept`,
     },
   };
@@ -254,9 +215,9 @@ export async function createReservation(formData: FormData) {
   } catch (err) {
     const phase = err instanceof RaiAcceptError ? err.phase : "unknown";
     const code = err instanceof RaiAcceptError ? err.providerCode : null;
-    console.error("[neya] RaiAccept reservation checkout failed", { reservationId: resv.id, phase, code });
+    console.error("[neya] RaiAccept reservation checkout failed", { reservationId: resvId as string, phase, code });
     await admin.from("reservation_payment_attempts").update({ status: "failed", provider_status_code: code ?? phase, updated_at: new Date().toISOString() }).eq("id", attempt.id);
-    await admin.from("reservations").update({ payment_status: "failed" }).eq("id", resv.id).eq("payment_status", "pending");
+    await admin.from("reservations").update({ payment_status: "failed" }).eq("id", resvId as string).eq("payment_status", "pending");
     redirect(`${redirectTo}?error=payment`);
   }
   if (!paymentRedirectURL) redirect(`${redirectTo}?error=payment`);
