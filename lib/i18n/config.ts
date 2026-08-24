@@ -1,5 +1,5 @@
 /** Supported locales for NEYA. English is the default (fallback). */
-export const LOCALES = ["en", "sq", "de", "tr"] as const;
+export const LOCALES = ["en", "sq", "de", "tr", "sr"] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
@@ -10,6 +10,7 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   sq: "Shqip",
   de: "Deutsch",
   tr: "Türkçe",
+  sr: "Srpski",
 };
 
 /** Compact codes for the header language toggle. */
@@ -18,6 +19,7 @@ export const LOCALE_SHORT_LABELS: Record<Locale, string> = {
   sq: "SQ",
   de: "DE",
   tr: "TR",
+  sr: "SR",
 };
 
 /** Cookie name — read by the server (layout) and the client (provider). */
@@ -26,5 +28,5 @@ export const LOCALE_COOKIE = "neya_locale";
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 
 export function isLocale(value: string | null | undefined): value is Locale {
-  return value === "en" || value === "sq" || value === "de" || value === "tr";
+  return value === "en" || value === "sq" || value === "de" || value === "tr" || value === "sr";
 }

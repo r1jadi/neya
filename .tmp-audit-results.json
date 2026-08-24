@@ -1,0 +1,5266 @@
+[
+ {
+  "route": "/events",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "This week"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "This weekend"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "Rooftop"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Live Music"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Festival"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "This week"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "This weekend"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 320,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "This weekend"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "Rooftop"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Live Music"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Festival"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "This weekend"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 375,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "This weekend"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "Live Music"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Festival"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "This weekend"
+   },
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 414,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "Festival"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "BUTTON",
+    "text": "Next week"
+   }
+  ],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 560,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 640,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 768,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 820,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1024,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1100,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1280,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1366,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1440,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1536,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/events",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/anzo-25f610dc",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/artists",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/venues/boujee-1651fd7a",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/guides",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/map",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/my-night",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/login",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/countries/kosovo",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/cities/prishtina",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [
+   [
+    "ANZO",
+    "Add to My Night"
+   ],
+   [
+    "ANZO",
+    "Save"
+   ],
+   [
+    "BOUJEE",
+    "Add to My Night"
+   ],
+   [
+    "BOUJEE",
+    "Save"
+   ],
+   [
+    "edhe",
+    "Add to My Night"
+   ],
+   [
+    "edhe",
+    "Save"
+   ],
+   [
+    "GATE CLUB",
+    "Add to My Night"
+   ],
+   [
+    "GATE CLUB",
+    "Save"
+   ]
+  ],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/register",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/forgot-password",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/update-password",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/submit-event",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/contact",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [
+   {
+    "tag": "INPUT",
+    "text": ""
+   }
+  ],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/terms",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/privacy",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/cancel",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/checkout/failure",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/auth/auth-code-error",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/definitely-not-a-page",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ },
+ {
+  "route": "/onboarding",
+  "width": 1920,
+  "overflowX": false,
+  "overflowAmt": 0,
+  "clipped": [],
+  "hardClip": [],
+  "colliding": [],
+  "imgIssues": 0,
+  "consoleErrors": []
+ }
+]

@@ -5,6 +5,7 @@ import { en, type Dictionary } from "./dictionaries/en";
 import { sq } from "./dictionaries/sq";
 import { de } from "./dictionaries/de";
 import { tr } from "./dictionaries/tr";
+import { sr } from "./dictionaries/sr";
 import { DEFAULT_LOCALE, isLocale, LOCALE_COOKIE, type Locale } from "./config";
 
 /**
@@ -21,6 +22,7 @@ const dictionaries: Record<Locale, Dictionary> = {
   sq,
   de,
   tr,
+  sr,
 };
 
 interface I18nContextValue {
