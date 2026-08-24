@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+
+const DARK_STYLE = "mapbox://styles/mapbox/dark-v11";
+const LIGHT_STYLE = "mapbox://styles/mapbox/light-v11";
 
 export interface NightMapStop {
   index: number;
@@ -25,6 +29,11 @@ export function NightMap({ stops, className }: NightMapProps) {
   const routeRef = useRef<{ source: string; layer: string } | null>(null);
   const fetchIdRef = useRef(0);
   const [token] = useState(() => process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
+  const { resolvedTheme } = useTheme();
+  const themeRef = useRef(resolvedTheme);
+  useEffect(() => {
+    themeRef.current = resolvedTheme;
+  }, [resolvedTheme]);
 
   // Create the map once.
   useEffect(() => {
@@ -37,7 +46,7 @@ export function NightMap({ stops, className }: NightMapProps) {
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/dark-v11",
+      style: themeRef.current === "light" ? LIGHT_STYLE : DARK_STYLE,
       center: first ? [first.lng, first.lat] : [21.1655, 42.6629],
       zoom: 12.5,
       antialias: true,
@@ -54,6 +63,13 @@ export function NightMap({ stops, className }: NightMapProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- create once
   }, []);
+
+  // Swap the Mapbox style when the theme changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.setStyle(themeRef.current === "light" ? LIGHT_STYLE : DARK_STYLE);
+  }, [resolvedTheme]);
 
   // Markers + fit bounds + route (re-runs on reorder).
   useEffect(() => {
@@ -80,7 +96,7 @@ export function NightMap({ stops, className }: NightMapProps) {
       for (const stop of withCoords) {
         bounds.extend([stop.lng, stop.lat]);
         const el = document.createElement("div");
-        el.className = "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-black";
+        el.className = "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-[#09090b]";
         el.style.background = "#f472b6";
         el.style.boxShadow = "0 0 0 3px rgba(0,0,0,0.55)";
         el.textContent = String(stop.index + 1);

@@ -47,7 +47,7 @@ function SliderRow({
         <span className="font-medium text-white/70">
           {icon} {label}
         </span>
-        <span className={cn("rounded-full px-2 py-0.5 font-bold tabular-nums text-zinc-950", accent ?? "bg-sky-400")}>{value}</span>
+        <span className={cn("rounded-full px-2 py-0.5 font-bold tabular-nums text-[#09090b]", accent ?? "bg-sky-400")}>{value}</span>
       </div>
       <input
         type="range"

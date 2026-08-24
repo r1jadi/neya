@@ -3,7 +3,11 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+
+const DARK_STYLE = "mapbox://styles/mapbox/dark-v11";
+const LIGHT_STYLE = "mapbox://styles/mapbox/light-v11";
 
 export interface MapMarker {
   lng: number;
@@ -132,10 +136,23 @@ export function AnimatedMap({
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ remove: () => void }[]>([]);
   const callbacksRef = useRef({ onBoundsChange, onSelectMarker });
+  const { resolvedTheme } = useTheme();
+  const themeRef = useRef(resolvedTheme);
 
   useEffect(() => {
     callbacksRef.current = { onBoundsChange, onSelectMarker };
   }, [onBoundsChange, onSelectMarker]);
+
+  useEffect(() => {
+    themeRef.current = resolvedTheme;
+  }, [resolvedTheme]);
+
+  // Swap the Mapbox style when the theme changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.setStyle(themeRef.current === "light" ? LIGHT_STYLE : DARK_STYLE);
+  }, [resolvedTheme]);
 
   // Map lifecycle
   useEffect(() => {
@@ -146,7 +163,7 @@ export function AnimatedMap({
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/dark-v11",
+      style: themeRef.current === "light" ? LIGHT_STYLE : DARK_STYLE,
       center,
       zoom: 12.2,
       pitch: 45,
@@ -211,7 +228,7 @@ export function AnimatedMap({
               : "border-white/25 bg-zinc-900/95 shadow-[0_3px_14px_rgba(0,0,0,0.6)]",
           isSelected && "scale-110 ring-4 ring-fuchsia-400/70",
         );
-        el.style.color = isCluster || isLive ? "#030306" : "#fff";
+        el.style.color = isCluster || isLive ? "#030306" : themeRef.current === "light" ? "#1b1b22" : "#fff";
         el.style.fontSize = isCluster ? "12px" : "13px";
         if (isLive) el.style.animation = "neya-pin-pulse 2s ease-in-out infinite";
         el.innerHTML = isCluster ? String(item.clusterCount) : isLive ? "🔴" : (glyph ?? "✨");
@@ -231,7 +248,7 @@ export function AnimatedMap({
         if (!isCluster && item.atmosphere_rating != null && item.atmosphere_rating >= 6.5) {
           const vibe = document.createElement("span");
           vibe.className =
-            "pointer-events-none absolute -right-2 -top-2 rounded-full bg-gradient-to-r from-white to-zinc-200 px-1.5 py-0.5 text-[10px] font-bold text-zinc-900 shadow";
+            "pointer-events-none absolute -right-2 -top-2 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold text-zinc-950 shadow";
           vibe.textContent = `🔥${item.atmosphere_rating.toFixed(1)}`;
           el.appendChild(vibe);
         }
@@ -266,7 +283,7 @@ export function AnimatedMap({
       map.off("moveend", render);
       map.off("zoomend", render);
     };
-  }, [markers, selectedKey]);
+  }, [markers, selectedKey, resolvedTheme]);
 
   const missingToken = !process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 

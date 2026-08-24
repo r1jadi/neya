@@ -6,6 +6,8 @@ import { AccountPanel } from "@/components/auth/account-panel";
 import { LoginForm } from "@/components/auth/login-form";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/server";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export const metadata: Metadata = {
   title: `Log in · ${SITE.name}`,
@@ -18,6 +20,8 @@ type Props = { searchParams: Promise<{ error?: string; next?: string }> };
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
   const supabase = await createClient();
+  const locale = await getLocale();
+  const t = getDictionary(locale);
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -31,18 +35,18 @@ export default async function LoginPage({ searchParams }: Props) {
         ) : (
           <div className="w-full max-w-md space-y-6 rounded-3xl border border-white/10 bg-zinc-950/80 p-8 shadow-2xl backdrop-blur-xl">
             <div>
-              <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Welcome back</h1>
+              <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">{t.auth.welcomeBack}</h1>
               <p className="mt-2 text-sm text-white/55">
-                Sign in with your password, a one-tap email link, or Google.
+                {t.auth.welcomeBackSub}
               </p>
             </div>
             <LoginForm initialError={params.error} redirectTo={params.next} />
             <div className="flex justify-between text-xs text-white/45">
               <Link href="/register" className="text-sky-300 hover:underline">
-                Create account
+                {t.auth.createAccount}
               </Link>
               <Link href="/forgot-password" className="text-sky-300 hover:underline">
-                Forgot password?
+                {t.auth.forgotPassword}
               </Link>
             </div>
           </div>

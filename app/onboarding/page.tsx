@@ -4,6 +4,8 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { OnboardingFlow } from "@/components/neya/onboarding-flow";
 import { createClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/server";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export const metadata: Metadata = {
   title: `Welcome to ${SITE.name}`,
@@ -14,6 +16,8 @@ type Props = { searchParams: Promise<{ error?: string }> };
 
 export default async function OnboardingPage({ searchParams }: Props) {
   const q = await searchParams;
+  const locale = await getLocale();
+  const t = getDictionary(locale);
   const supabase = await createClient();
   const {
     data: { user },
@@ -32,7 +36,7 @@ export default async function OnboardingPage({ searchParams }: Props) {
       {q.error ? (
         <div className="mx-auto mt-4 w-full max-w-lg px-4">
           <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-            Something went wrong saving your preferences. Please try again.
+            {t.onboarding.error}
           </p>
         </div>
       ) : null}

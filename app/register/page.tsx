@@ -6,34 +6,39 @@ import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { signUpWithEmail } from "@/actions/auth-account";
 import { SITE } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/server";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export const metadata: Metadata = {
   title: `Create account · ${SITE.name}`,
   robots: { index: false, follow: false },
 };
 
-const REGISTER_ERRORS: Record<string, string> = {
-  exists: "An account with this email already exists — try logging in instead.",
-  password: "Password must be at least 6 characters.",
-  email: "That email address doesn't look right — check it and try again.",
-  invalid: "Please fill in your email and a password of at least 6 characters.",
-  generic: "We couldn't create your account right now. Please try again.",
-};
+type RegisterErrorKey = "exists" | "password" | "email" | "invalid" | "generic";
 
 type Props = { searchParams: Promise<{ error?: string; checkEmail?: string }> };
 
 export default async function RegisterPage({ searchParams }: Props) {
   const q = await searchParams;
-  const registerError = q.error ? (REGISTER_ERRORS[q.error] ?? REGISTER_ERRORS.generic) : null;
+  const locale = await getLocale();
+  const t = getDictionary(locale);
+  const REGISTER_ERRORS: Record<RegisterErrorKey, string> = {
+    exists: t.auth.registerErrorExists,
+    password: t.auth.registerErrorPassword,
+    email: t.auth.registerErrorEmail,
+    invalid: t.auth.registerErrorInvalid,
+    generic: t.auth.registerErrorGeneric,
+  };
+  const registerError = q.error && q.error in REGISTER_ERRORS ? REGISTER_ERRORS[q.error as RegisterErrorKey] : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-16">
-        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">Create account</h1>
+        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">{t.auth.createAccount}</h1>
         {q.checkEmail ? (
           <p className="mt-4 text-sm text-emerald-200/90">
-            Check your email to confirm your address, then you can log in.
+            {t.auth.checkEmailConfirm}
           </p>
         ) : (
           <form action={signUpWithEmail} className="mt-6 grid gap-3">
@@ -42,16 +47,16 @@ export default async function RegisterPage({ searchParams }: Props) {
                 {registerError}
               </p>
             ) : null}
-            <Input name="display_name" placeholder="Display name" autoComplete="name" />
-            <Input name="email" type="email" placeholder="Email" required autoComplete="email" />
-            <Input name="password" type="password" placeholder="Password (min 6)" required minLength={6} autoComplete="new-password" />
-            <SubmitButton className="w-full" pendingText="Creating account…">Sign up</SubmitButton>
+            <Input name="display_name" placeholder={t.auth.displayName} autoComplete="name" />
+            <Input name="email" type="email" placeholder={t.auth.email} required autoComplete="email" />
+            <Input name="password" type="password" placeholder={t.auth.passwordMin6} required minLength={6} autoComplete="new-password" />
+            <SubmitButton className="w-full" pendingText={t.auth.creatingAccount}>{t.auth.signUp}</SubmitButton>
           </form>
         )}
         <p className="mt-6 text-center text-sm text-white/50">
-          Already have an account?{" "}
+          {t.auth.alreadyHaveAccount}{" "}
           <Link href="/login" className="text-sky-300 hover:underline">
-            Log in
+            {t.auth.logIn}
           </Link>
         </p>
       </main>

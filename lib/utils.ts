@@ -19,7 +19,7 @@ export function isUuid(id: string) {
  * Pair with rounded-xl/border-none and appropriate padding/typography.
  */
 export const neyaPrimaryGradient =
-  "bg-gradient-to-r from-sky-400 to-fuchsia-500 text-zinc-950 hover:opacity-95";
+  "bg-gradient-to-r from-sky-400 to-fuchsia-500 text-[#09090b] hover:opacity-95";
 
 /**
  * NEYA secondary "buy/reserve" gradient — used for external ticket links and

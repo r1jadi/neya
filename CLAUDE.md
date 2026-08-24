@@ -43,7 +43,7 @@ Tone: FOMO, urgency, premium dark UI, live energy (crowds, atmosphere, scarcity)
 
 ## Conventions
 
-- **Dark-only** theme (`next-themes` forced dark in `AppProviders`).
+- **Dark by default**, optional **Light** theme (`.light` token overrides in `globals.css`; toggled via `next-themes` in `AppProviders` — theme persists in localStorage).
 - **Prishtina** as default city in `lib/constants.ts`.
 - Prefer **server components** for data pages; **client** for motion, map, dialogs.
 - Images: remote patterns for Unsplash + Cloudinary in `next.config.ts`; add your Supabase storage host when used.

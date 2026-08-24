@@ -5,8 +5,10 @@ import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n";
 
 export function UpdatePasswordForm() {
+  const { t } = useI18n();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -23,7 +25,7 @@ export function UpdatePasswordForm() {
     setError(null);
     setMessage(null);
     if (!supabase) {
-      setError("Sign-in is temporarily unavailable. Please try again later.");
+      setError(t.auth.signInUnavailable);
       return;
     }
     setPending(true);
@@ -31,11 +33,11 @@ export function UpdatePasswordForm() {
     const p1 = String(fd.get("password") ?? "");
     const p2 = String(fd.get("confirm") ?? "");
     if (p1.length < 6) {
-      setError("Use at least 6 characters.");
+      setError(t.auth.minChars);
       return;
     }
     if (p1 !== p2) {
-      setError("Passwords do not match.");
+      setError(t.auth.passwordsDoNotMatch);
       return;
     }
     const { error: err } = await supabase.auth.updateUser({ password: p1 });
@@ -44,11 +46,11 @@ export function UpdatePasswordForm() {
       setError(err.message);
       return;
     }
-    setMessage("Password updated.");
+    setMessage(t.auth.passwordUpdated);
   }
 
   if (!supabase) {
-    return <p className="text-sm text-red-200">Sign-in is temporarily unavailable. Please try again later.</p>;
+    return <p className="text-sm text-red-200">{t.auth.signInUnavailable}</p>;
   }
 
   return (
@@ -57,16 +59,16 @@ export function UpdatePasswordForm() {
         <p className="text-sm text-emerald-200/90">
           {message}{" "}
           <Link href="/events" className="text-sky-300 underline">
-            Open events
+            {t.auth.openEvents}
           </Link>
         </p>
       ) : (
         <form onSubmit={onSubmit} className="grid gap-3">
           {error ? <p className="text-sm text-red-300">{error}</p> : null}
-          <Input name="password" type="password" placeholder="New password" required minLength={6} autoComplete="new-password" />
-          <Input name="confirm" type="password" placeholder="Confirm password" required minLength={6} autoComplete="new-password" />
+          <Input name="password" type="password" placeholder={t.auth.newPassword} required minLength={6} autoComplete="new-password" />
+          <Input name="confirm" type="password" placeholder={t.auth.confirmPassword} required minLength={6} autoComplete="new-password" />
           <Button type="submit" disabled={pending}>
-            {pending ? "Updating…" : "Update password"}
+            {pending ? t.auth.updating : t.auth.updatePassword}
           </Button>
         </form>
       )}

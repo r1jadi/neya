@@ -7,6 +7,7 @@ import { PreferenceChips, type ChipOption } from "@/components/neya/preference-c
 import { Button } from "@/components/ui/button";
 import { completeOnboarding } from "@/actions/auth-account";
 import { MUSIC_GENRES } from "@/types";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const NIGHTLIFE_OPTIONS: ChipOption[] = [
@@ -60,6 +61,7 @@ const STEPS = [
 type StepId = (typeof STEPS)[number]["id"];
 
 export function OnboardingFlow() {
+  const { t } = useI18n();
   const router = useRouter();
   const [step, setStep] = useState<StepId>("intro");
   const [interests, setInterests] = useState<string[]>([]);
@@ -96,8 +98,6 @@ export function OnboardingFlow() {
       formData.set("city_slug", "prishtina");
       interests.forEach((id) => formData.append("category", id));
       genres.forEach((id) => formData.append("genre", id));
-      // completeOnboarding calls redirect() server-side — Next.js handles
-      // the client redirect automatically. No try/catch needed for that path.
       await completeOnboarding(formData);
       router.refresh();
       router.push("/events");
@@ -109,7 +109,6 @@ export function OnboardingFlow() {
     startTransition(async () => {
       const formData = new FormData();
       formData.set("city_slug", "prishtina");
-      // Even if skipped, still mark onboarding as complete
       await completeOnboarding(formData);
       router.refresh();
       router.push("/events");
@@ -118,7 +117,6 @@ export function OnboardingFlow() {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      {/* Progress indicator */}
       {step !== "intro" && step !== "done" ? (
         <div className="mb-8 flex items-center justify-center gap-2">
           {STEPS.slice(1, -1).map((s, i) => {
@@ -150,24 +148,16 @@ export function OnboardingFlow() {
               <span className="text-3xl">🌙</span>
             </div>
             <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white">
-              Let&apos;s find your kind of night
+              {t.onboarding.introTitle}
             </h1>
             <p className="mx-auto mt-4 max-w-sm text-sm text-white/55">
-              Tell NEYA what you&apos;re into and we&apos;ll personalize your discovery —
-              events, venues, and vibes that match your taste.
+              {t.onboarding.introBody}
             </p>
-            <Button
-              onClick={next}
-              className="mt-8 w-full"
-              size="lg"
-            >
-              Let&apos;s go
+            <Button onClick={next} className="mt-8 w-full" size="lg">
+              {t.onboarding.letsGo}
             </Button>
-            <button
-              onClick={skip}
-              className="mt-3 text-xs text-white/40 hover:text-white/60"
-            >
-              Skip for now
+            <button onClick={skip} className="mt-3 text-xs text-white/40 hover:text-white/60">
+              {t.onboarding.skipForNow}
             </button>
           </motion.div>
         ) : null}
@@ -179,10 +169,8 @@ export function OnboardingFlow() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl font-bold text-white">What&apos;s your scene?</h2>
-            <p className="mt-1 text-sm text-white/55">
-              Pick the nightlife you chase — we&apos;ll surface venues and events that match.
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.onboarding.scenes}</h2>
+            <p className="mt-1 text-sm text-white/55">{t.onboarding.scenesBody}</p>
             <div className="mt-6">
               <PreferenceChips
                 options={NIGHTLIFE_OPTIONS}
@@ -192,17 +180,14 @@ export function OnboardingFlow() {
             </div>
             <div className="mt-8 flex gap-2">
               <Button variant="secondary" onClick={back}>
-                Back
+                {t.onboarding.back}
               </Button>
               <Button onClick={next} className="flex-1">
-                Continue
+                {t.onboarding.continue}
               </Button>
             </div>
-            <button
-              onClick={skip}
-              className="mt-3 w-full text-center text-xs text-white/40 hover:text-white/60"
-            >
-              Skip
+            <button onClick={skip} className="mt-3 w-full text-center text-xs text-white/40 hover:text-white/60">
+              {t.onboarding.skip}
             </button>
           </motion.div>
         ) : null}
@@ -214,10 +199,8 @@ export function OnboardingFlow() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h2 className="text-xl font-bold text-white">What do you listen to?</h2>
-            <p className="mt-1 text-sm text-white/55">
-              Genres you actually chase — we&apos;ll match events to your taste.
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.onboarding.music}</h2>
+            <p className="mt-1 text-sm text-white/55">{t.onboarding.musicBody}</p>
             <div className="mt-6">
               <PreferenceChips
                 options={MUSIC_OPTIONS}
@@ -227,17 +210,14 @@ export function OnboardingFlow() {
             </div>
             <div className="mt-8 flex gap-2">
               <Button variant="secondary" onClick={back}>
-                Back
+                {t.onboarding.back}
               </Button>
               <Button onClick={next} className="flex-1">
-                Continue
+                {t.onboarding.continue}
               </Button>
             </div>
-            <button
-              onClick={skip}
-              className="mt-3 w-full text-center text-xs text-white/40 hover:text-white/60"
-            >
-              Skip
+            <button onClick={skip} className="mt-3 w-full text-center text-xs text-white/40 hover:text-white/60">
+              {t.onboarding.skip}
             </button>
           </motion.div>
         ) : null}
@@ -253,12 +233,10 @@ export function OnboardingFlow() {
               <span className="text-3xl">🌙</span>
             </div>
             <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white">
-              You&apos;re ready
+              {t.onboarding.ready}
             </h1>
             <p className="mx-auto mt-4 max-w-sm text-sm text-white/55">
-              {interests.length || genres.length
-                ? "We&apos;ve got your taste. Let&apos;s find something worth going out for."
-                : "Let&apos;s find something worth going out for. You can always set preferences later."}
+              {interests.length || genres.length ? t.onboarding.readyBody : t.onboarding.readyBodyNone}
             </p>
             {interests.length || genres.length ? (
               <div className="mx-auto mt-6 flex max-w-sm flex-wrap justify-center gap-2">
@@ -285,13 +263,8 @@ export function OnboardingFlow() {
                 {error}
               </p>
             ) : null}
-            <Button
-              onClick={finish}
-              disabled={pending}
-              className="mt-8 w-full"
-              size="lg"
-            >
-              {pending ? "Saving…" : "Explore NEYA"}
+            <Button onClick={finish} disabled={pending} className="mt-8 w-full" size="lg">
+              {pending ? t.onboarding.saving : t.onboarding.explore}
             </Button>
           </motion.div>
         ) : null}

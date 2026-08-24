@@ -6,6 +6,8 @@ import { InstallPrompt } from "@/components/neya/install-prompt";
 import { OfflineBanner } from "@/components/neya/offline-banner";
 import { ServiceWorkerRegister } from "@/components/neya/service-worker-register";
 import { AppProviders } from "@/providers/app-providers";
+import { I18nProvider } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n/server";
 import { SITE } from "@/lib/constants";
 import { Analytics } from "@vercel/analytics/next"
 
@@ -72,16 +74,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en" className="dark h-full w-full" suppressHydrationWarning>
+    <html lang={locale} className="dark h-full w-full" suppressHydrationWarning>
       <body
         className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} min-h-full w-full min-w-0 bg-[var(--background)] font-sans text-[var(--foreground)] antialiased`}
       >
+        <I18nProvider>
         <AppProviders>
           <JsonLd />
           <OfflineBanner />
@@ -89,6 +93,7 @@ export default function RootLayout({
           <InstallPrompt />
           <ServiceWorkerRegister />
         </AppProviders>
+        </I18nProvider>
 
         {/* VERCEL ANALYTICS */}
       <Analytics />

@@ -10,7 +10,12 @@ import { MyNightProvider } from "@/components/my-night/my-night-provider";
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [client] = useState(() => new QueryClient());
   return (
-    <ThemeProvider attribute="class" forcedTheme="dark" enableSystem={false} defaultTheme="dark">
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      themes={["dark", "light"]}
+    >
       <PostHogAnalytics>
         <QueryClientProvider client={client}>
           <MyNightProvider>{children}</MyNightProvider>

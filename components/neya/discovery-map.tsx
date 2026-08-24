@@ -7,6 +7,7 @@ import { AnimatedMap, type MapMarker } from "@/components/neya/animated-map";
 import { MapPreviewCard } from "@/components/neya/map-preview-card";
 import { TonightTimeline } from "@/components/neya/tonight-timeline";
 import { isHappeningNow, isOnThisWeekend, isTonight, CITY_TZ } from "@/lib/event-dates";
+import { useI18n } from "@/lib/i18n";
 import type { Event, Venue } from "@/types";
 import { cn } from "@/lib/utils";
 import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
@@ -58,6 +59,7 @@ interface DiscoveryMapProps {
 }
 
 export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProps) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [quick, setQuick] = useState<QuickFilter>("all");
   const [type, setType] = useState<TypeFilter>("all");
@@ -266,11 +268,11 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-white/35" />
-            <span className="sr-only">Search venues, events…</span>
+            <span className="sr-only">{t.mapPage.searchVenuesEvents}</span>
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search venues, events…"
+              placeholder={t.mapPage.searchVenuesEvents}
               className="h-10 w-full rounded-xl border border-white/10 bg-black/40 pl-9 pr-3 text-sm text-white placeholder:text-white/35"
             />
           </label>
@@ -284,17 +286,17 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
             )}
           >
             <Crosshair className={cn("h-4 w-4", locating && "animate-spin")} />
-            {location ? "Near me" : "Find nearby"}
+            {location ? t.mapPage.nearMe : t.mapPage.findNearby}
           </button>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
           {(
             [
-              ["all", "All"],
-              ["tonight", "🌙 Tonight"],
-              ["live", "🔴 Live now"],
-              ["weekend", "This weekend"],
+              ["all", t.mapPage.all],
+              ["tonight", `🌙 ${t.mapPage.tonight}`],
+              ["live", `🔴 ${t.mapPage.liveNow}`],
+              ["weekend", t.mapPage.thisWeekend],
             ] as [QuickFilter, string][]
           ).map(([id, label]) => (
             <button
@@ -327,7 +329,7 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
                 type === id ? "border-sky-400/70 bg-sky-500/15 text-sky-100" : "border-white/15 text-white/60 hover:border-white/30 hover:text-white",
               )}
             >
-              {id === "all" ? "Events & venues" : `${id} only`}
+              {id === "all" ? t.mapPage.eventsAndVenues : id === "events" ? t.mapPage.eventsOnly : t.mapPage.venuesOnly}
             </button>
           ))}
         </div>
@@ -512,7 +514,7 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
             <div className="px-4">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm font-semibold text-white">
-                  {resultsCount} {resultsCount === 1 ? "place" : "places"} nearby
+                  {resultsCount} {resultsCount === 1 ? t.mapPage.place : t.mapPage.placesNearby} nearby
                 </p>
                 {hasAnyFilters ? (
                   <button type="button" onClick={clearFilters} className="inline-flex items-center gap-1 text-xs font-semibold text-sky-300 hover:text-sky-200">

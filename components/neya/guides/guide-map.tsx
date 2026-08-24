@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTheme } from "next-themes";
 import type { GuideStop, GuideTransport } from "@/types/guides";
 import {
   GUIDE_STOP_CATEGORIES,
@@ -81,6 +82,11 @@ export function GuideMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const { resolvedTheme } = useTheme();
+  const themeRef = useRef(resolvedTheme);
+  useEffect(() => {
+    themeRef.current = resolvedTheme;
+  }, [resolvedTheme]);
   const [activeCategories, setActiveCategories] = useState<Set<string>>(
     () => new Set(GUIDE_STOP_CATEGORIES.map((c) => c.value)),
   );
@@ -134,7 +140,10 @@ export function GuideMap({
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/dark-v11",
+      style:
+        themeRef.current === "light"
+          ? "mapbox://styles/mapbox/light-v11"
+          : "mapbox://styles/mapbox/dark-v11",
       center,
       zoom: 12,
       pitch: 40,
@@ -149,6 +158,17 @@ export function GuideMap({
       mapRef.current = null;
     };
   }, [center]);
+
+  // Swap the Mapbox style when the theme changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.setStyle(
+      themeRef.current === "light"
+        ? "mapbox://styles/mapbox/light-v11"
+        : "mapbox://styles/mapbox/dark-v11",
+    );
+  }, [resolvedTheme]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -244,7 +264,7 @@ export function GuideMap({
               className={cn(
                 "rounded-full px-3 py-1 text-xs font-medium transition",
                 activeCategories.has(c.value)
-                  ? "text-black"
+                  ? "text-[#09090b]"
                   : "border border-white/15 text-white/50",
               )}
               style={activeCategories.has(c.value) ? { backgroundColor: c.color } : undefined}

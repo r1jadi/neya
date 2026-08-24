@@ -103,7 +103,7 @@ export function HomeFeed({ events, savedEventIds, hasVenues }: HomeFeedProps) {
               aria-pressed={windowId === w.id}
               className={cn(
                 "relative rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
-                windowId === w.id ? "text-zinc-950" : "text-white/65 hover:text-white",
+                windowId === w.id ? "text-[#09090b]" : "text-white/65 hover:text-white",
               )}
             >
               {windowId === w.id ? (

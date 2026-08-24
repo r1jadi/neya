@@ -71,7 +71,7 @@ export default async function SharedNightPage({ params }: Props) {
                   key={stop.refId}
                   className="flex gap-3 rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-3"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500 font-[family-name:var(--font-display)] text-sm font-bold text-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500 font-[family-name:var(--font-display)] text-sm font-bold text-[#09090b]">
                     {String(index + 1).padStart(2, "0")}
                   </div>
                   {stop.image ? (

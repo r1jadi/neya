@@ -20,7 +20,7 @@ export function MyNightEntry() {
       >
         <span className="flex min-w-0 items-center gap-2.5 text-sm font-semibold text-white">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500">
-            <MapPinned className="h-4 w-4 text-black" />
+            <MapPinned className="h-4 w-4 text-[#09090b]" />
           </span>
           <span className="min-w-0">
             <span className="block">

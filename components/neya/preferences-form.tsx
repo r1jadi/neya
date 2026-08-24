@@ -5,6 +5,7 @@ import { PreferenceChips, type ChipOption } from "@/components/neya/preference-c
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { updatePreferences } from "@/actions/user-preferences";
+import { useI18n } from "@/lib/i18n";
 
 const NIGHTLIFE_OPTIONS: ChipOption[] = [
   { id: "nightclub", label: "Clubs", icon: "🔥" },
@@ -66,6 +67,7 @@ export function PreferencesForm({
   initialCity,
   initialAge,
 }: PreferencesFormProps) {
+  const { t } = useI18n();
   const [interests, setInterests] = useState(initialInterests);
   const [genres, setGenres] = useState(initialGenres);
   const [city, setCity] = useState(initialCity);
@@ -97,10 +99,10 @@ export function PreferencesForm({
       {/* Nightlife interests */}
       <section>
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/45">
-          Nightlife
+          {t.onboarding.nightlife}
         </h3>
         <p className="mt-1 text-xs text-white/40">
-          The scenes you chase — we&apos;ll match venues and events.
+          {t.onboarding.nightlifeBody}
         </p>
         <div className="mt-3">
           <PreferenceChips
@@ -114,10 +116,10 @@ export function PreferencesForm({
       {/* Music genres */}
       <section>
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/45">
-          Music
+          {t.onboarding.music}
         </h3>
         <p className="mt-1 text-xs text-white/40">
-          Genres you actually listen to.
+          {t.onboarding.musicBody}
         </p>
         <div className="mt-3">
           <PreferenceChips
@@ -131,10 +133,10 @@ export function PreferencesForm({
       {/* City */}
       <section>
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/45">
-          City
+          {t.onboarding.city}
         </h3>
         <p className="mt-1 text-xs text-white/40">
-          Where you usually go out.
+          {t.onboarding.cityBody}
         </p>
         <div className="mt-3">
           <PreferenceChips
@@ -148,10 +150,10 @@ export function PreferencesForm({
       {/* Age */}
       <section>
         <label htmlFor="age" className="text-sm font-semibold uppercase tracking-widest text-white/45">
-          Age <span className="text-white/30">(optional)</span>
+          {t.onboarding.age} <span className="text-white/30">({t.onboarding.optional})</span>
         </label>
         <p className="mt-1 text-xs text-white/40">
-          Helps us show age-appropriate events.
+          {t.onboarding.ageBody}
         </p>
         <Input
           id="age"
@@ -165,8 +167,8 @@ export function PreferencesForm({
         />
       </section>
 
-      <SubmitButton className="w-full" pendingText="Saving…">
-        Save preferences
+      <SubmitButton className="w-full" pendingText={t.onboarding.saving}>
+        {t.onboarding.save}
       </SubmitButton>
     </form>
   );

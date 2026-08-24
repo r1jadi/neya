@@ -8,19 +8,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { useMyNight } from "@/components/my-night/my-night-provider";
 import { SearchDialog } from "@/components/neya/search-dialog";
+import { LanguageSwitcher } from "@/components/neya/language-switcher";
+import { ThemeToggle } from "@/components/neya/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-const links = [
-  { href: "/events", label: "Discover" },
-  { href: "/my-night", label: "My Night" },
-  { href: "/artists", label: "Artists" },
-  { href: "/guides", label: "Guides" },
-  { href: "/map", label: "Map" },
-  { href: "/#business", label: "For venues" },
-  { href: "/submit-event", label: "Submit event" },
-];
+const navLinks = [
+  { href: "/events", key: "discover" },
+  { href: "/my-night", key: "myNight" },
+  { href: "/artists", key: "artists" },
+  { href: "/guides", key: "guides" },
+  { href: "/map", key: "map" },
+  { href: "/#business", key: "forVenues" },
+  { href: "/submit-event", key: "submitEvent" },
+] as const;
 
 export function SiteHeaderClient({
   userEmail,
@@ -37,9 +40,12 @@ export function SiteHeaderClient({
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useI18n();
   const authed = Boolean(userEmail);
   const { hydrated, stops } = useMyNight();
   const stopCount = hydrated ? stops.length : 0;
+
+  const links = navLinks.map((l) => ({ href: l.href, label: t.common[l.key] }));
 
   /**
    * Route-based active matching: a nav item is active only when the current
@@ -56,21 +62,21 @@ export function SiteHeaderClient({
   const authedLinks = (
     <>
       <Button variant="ghost" asChild>
-        <Link href="/dashboard">Dashboard</Link>
+        <Link href="/dashboard">{t.common.dashboard}</Link>
       </Button>
       {showVenuePortal ? (
         <Button variant="ghost" asChild>
-          <Link href="/venue">Venue portal</Link>
+          <Link href="/venue">{t.common.venuePortal}</Link>
         </Button>
       ) : null}
       {showBusiness && !showVenuePortal ? (
         <Button variant="ghost" asChild>
-          <Link href="/business">Venue hub</Link>
+          <Link href="/business">{t.common.venueHub}</Link>
         </Button>
       ) : null}
       {isAdmin ? (
         <Button variant="ghost" asChild>
-          <Link href="/admin">Admin</Link>
+          <Link href="/admin">{t.common.admin}</Link>
         </Button>
       ) : null}
       <SignOutButton />
@@ -80,10 +86,10 @@ export function SiteHeaderClient({
   const guestLinks = (
     <>
       <Button variant="ghost" asChild>
-        <Link href="/login">Log in</Link>
+        <Link href="/login">{t.common.logIn}</Link>
       </Button>
       <Button variant="ghost" asChild>
-        <Link href="/register">Register</Link>
+        <Link href="/register">{t.common.register}</Link>
       </Button>
     </>
   );
@@ -119,7 +125,7 @@ export function SiteHeaderClient({
             >
               {l.label}
               {l.href === "/my-night" && stopCount > 0 ? (
-                <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 px-1 text-[10px] font-bold text-black">
+                <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 px-1 text-[10px] font-bold text-[#09090b]">
                   {stopCount}
                 </span>
               ) : null}
@@ -128,15 +134,19 @@ export function SiteHeaderClient({
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           <SearchDialog />
+          <LanguageSwitcher />
+          <ThemeToggle />
           {authed ? authedLinks : guestLinks}
         </div>
         <div className="hidden md:block">
           <Button asChild>
-            <Link href={authed ? "/events" : "/register"}>{authed ? "Tonight" : "Get NEYA"}</Link>
+            <Link href={authed ? "/events" : "/register"}>{authed ? t.common.tonight : t.common.getNeya}</Link>
           </Button>
         </div>
         <div className="flex items-center gap-2 md:hidden">
           <SearchDialog />
+          <LanguageSwitcher />
+          <ThemeToggle />
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10"
@@ -172,7 +182,7 @@ export function SiteHeaderClient({
                 >
                   {l.label}
                   {l.href === "/my-night" && stopCount > 0 ? (
-                    <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 px-1 text-[10px] font-bold text-black">
+                    <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 px-1 text-[10px] font-bold text-[#09090b]">
                       {stopCount}
                     </span>
                   ) : null}
@@ -185,7 +195,7 @@ export function SiteHeaderClient({
                     className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
                     onClick={() => setOpen(false)}
                   >
-                    Dashboard
+                    {t.common.dashboard}
                   </Link>
                   {showVenuePortal ? (
                     <Link
@@ -193,7 +203,7 @@ export function SiteHeaderClient({
                       className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
                       onClick={() => setOpen(false)}
                     >
-                      Venue portal
+                      {t.common.venuePortal}
                     </Link>
                   ) : null}
                   {showBusiness && !showVenuePortal ? (
@@ -202,7 +212,7 @@ export function SiteHeaderClient({
                       className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
                       onClick={() => setOpen(false)}
                     >
-                      Venue hub
+                      {t.common.venueHub}
                     </Link>
                   ) : null}
                   {isAdmin ? (
@@ -211,7 +221,7 @@ export function SiteHeaderClient({
                       className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
                       onClick={() => setOpen(false)}
                     >
-                      Admin
+                      {t.common.admin}
                     </Link>
                   ) : null}
                   <SignOutButton navStyle />
@@ -223,14 +233,14 @@ export function SiteHeaderClient({
                     className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
                     onClick={() => setOpen(false)}
                   >
-                    Log in
+                    {t.common.logIn}
                   </Link>
                   <Link
                     href="/register"
                     className="rounded-lg px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/5"
                     onClick={() => setOpen(false)}
                   >
-                    Register
+                    {t.common.register}
                   </Link>
                 </>
               )}
@@ -239,7 +249,7 @@ export function SiteHeaderClient({
                 className="mt-2 rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-black"
                 onClick={() => setOpen(false)}
               >
-                {authed ? "Tonight" : "Get NEYA"}
+                {authed ? t.common.tonight : t.common.getNeya}
               </Link>
             </div>
           </motion.div>

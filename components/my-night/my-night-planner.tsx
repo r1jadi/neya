@@ -218,7 +218,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                       dragIndex === index ? "border-fuchsia-400/50 opacity-60" : "border-white/[0.08]",
                     )}
                   >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500 font-[family-name:var(--font-display)] text-sm font-bold text-black">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500 font-[family-name:var(--font-display)] text-sm font-bold text-[#09090b]">
                       {String(index + 1).padStart(2, "0")}
                     </div>
                     {stop.image ? (

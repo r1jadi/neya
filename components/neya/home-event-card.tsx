@@ -159,7 +159,7 @@ export function HomeEventCard({ event, className, saved, variant = "hero", style
             </p>
           </div>
           {hasTickets && event.ticket_status !== "sold_out" ? (
-            <span className="relative z-20 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-sky-400 to-fuchsia-500 px-4 py-2 text-xs font-bold text-zinc-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] transition group-hover:shadow-[0_0_28px_rgba(244,114,182,0.5)]">
+            <span className="relative z-20 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-sky-400 to-fuchsia-500 px-4 py-2 text-xs font-bold text-[#09090b] shadow-[0_0_20px_rgba(56,189,248,0.35)] transition group-hover:shadow-[0_0_28px_rgba(244,114,182,0.5)]">
               <Ticket className="h-3.5 w-3.5" />
               {event.ticket_url ? "Get tickets" : "View tickets"}
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

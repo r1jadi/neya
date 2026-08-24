@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n";
 
 function callbackUrl(redirectPath?: string) {
   if (typeof window === "undefined") return "";
@@ -14,36 +15,37 @@ function callbackUrl(redirectPath?: string) {
 }
 
 export function LoginForm({ initialError, redirectTo }: { initialError?: string; redirectTo?: string }) {
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(
     initialError === "auth"
-      ? "Could not complete sign-in. Try again."
+      ? t.auth.signInFailed
       : initialError === "config"
-        ? "Server configuration error."
+        ? t.auth.configError
         : null,
   );
 
   function friendlyAuthError(message: string): string {
     const m = message.toLowerCase();
     if (m.includes("invalid credentials") || m.includes("invalid login")) {
-      return "Email or password is incorrect.";
+      return t.auth.invalidCredentials;
     }
     if (m.includes("email not confirmed") || m.includes("not confirmed")) {
-      return "Please confirm your email address before signing in.";
+      return t.auth.emailNotConfirmed;
     }
     if (m.includes("too many requests") || m.includes("rate limit")) {
-      return "Too many attempts. Wait a moment and try again.";
+      return t.auth.tooManyRequests;
     }
     if (m.includes("user not found")) {
-      return "No account found with this email. Try creating one instead.";
+      return t.auth.noAccountFound;
     }
     if (m.includes("network") || m.includes("fetch")) {
-      return "Couldn't connect. Check your internet and try again.";
+      return t.auth.couldntConnect;
     }
-    return "Something went wrong. Please try again.";
+    return t.auth.genericError;
   }
 
   async function signInWithPassword(e: React.FormEvent) {
@@ -82,7 +84,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       window.location.href = data.url;
     } else {
       setLoading(null);
-      setError("Google sign-in is unavailable right now. Try email or password instead.");
+      setError(t.auth.googleUnavailable);
     }
   }
 
@@ -101,7 +103,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       setError(friendlyAuthError(err.message));
       return;
     }
-    setMessage("Check your email for the magic link.");
+    setMessage(t.auth.checkEmail);
   }
 
   return (
@@ -117,7 +119,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
       <form onSubmit={signInWithPassword} className="grid gap-3">
         <Input
           type="email"
-          placeholder="Email"
+          placeholder={t.auth.email}
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -125,22 +127,22 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
         />
         <Input
           type="password"
-          placeholder="Password"
+          placeholder={t.auth.password}
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button type="submit" className="w-full" disabled={loading !== null}>
-          {loading === "password" ? "Signing in…" : "Continue with password"}
+          {loading === "password" ? t.auth.signingIn : t.auth.continueWithPassword}
         </Button>
       </form>
       <form onSubmit={sendMagicLink} className="grid gap-2">
         <Button type="submit" variant="secondary" className="w-full" disabled={loading !== null || !email}>
-          {loading === "magic" ? "Sending…" : "Email me a magic link"}
+          {loading === "magic" ? t.auth.sending : t.auth.emailMagicLink}
         </Button>
       </form>
       <div className="relative py-2 text-center text-xs text-white/40">
-        <span className="relative z-10 bg-zinc-950/80 px-2">or</span>
+        <span className="relative z-10 bg-zinc-950/80 px-2">{t.auth.or}</span>
         <span className="absolute inset-x-0 top-1/2 h-px bg-white/10" />
       </div>
       <Button
@@ -150,11 +152,11 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
         disabled={loading !== null}
         onClick={() => void signInWithGoogle()}
       >
-        {loading === "google" ? "Redirecting…" : "Continue with Google"}
+        {loading === "google" ? t.auth.redirecting : t.auth.continueWithGoogle}
       </Button>
       <p className="text-center text-xs text-white/45">
         <Link href="/" className="text-sky-300 hover:underline">
-          ← Home
+          ← {t.auth.home}
         </Link>
       </p>
     </div>
