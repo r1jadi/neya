@@ -412,7 +412,7 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.98 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-3 top-3 z-20 hidden w-[300px] lg:block"
+              className="absolute right-3 top-3 z-20 hidden w-[300px] md:block"
             >
               <MapPreviewCard
                 kind={selected.kind ?? "event"}
@@ -520,7 +520,8 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
                   </button>
                 ) : null}
               </div>
-              <div className="mt-2 max-h-[300px] overflow-y-auto pb-2">
+              {sheet !== "collapsed" ? (
+                <div className="mt-2 max-h-[300px] overflow-y-auto pb-2">
                 {sheet !== "card" ? (
                   markers.length ? (
                     <ul className="space-y-2">
@@ -577,8 +578,9 @@ export function DiscoveryMap({ events, venues, savedEventIds }: DiscoveryMapProp
                     saved={selectedEvent ? savedEventIds?.includes(selectedEvent.id) : undefined}
                   />
                 ) : null}
+                </div>
+              ) : null}
               </div>
-            </div>
           </motion.div>
         </div>
 

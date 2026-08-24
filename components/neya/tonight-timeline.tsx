@@ -6,14 +6,25 @@ import { CITY_TZ } from "@/lib/event-dates";
 import type { Event } from "@/types";
 import { cn } from "@/lib/utils";
 
-// SSR-safe clock: server snapshot is null so first client paint matches SSR
+// SSR-safe clock: server renders null so first client paint matches SSR
 // (no hydration mismatch), then re-subscribes to a 60s tick on the client.
+// The snapshot is cached between ticks — React requires getSnapshot to return
+// a stable reference, otherwise useSyncExternalStore warns and can loop.
+let cachedNow: number | null = null;
+let clockInitialized = false;
 function subscribeClock(callback: () => void) {
-  const id = setInterval(callback, 60000);
+  if (!clockInitialized) {
+    cachedNow = Date.now();
+    clockInitialized = true;
+  }
+  const id = setInterval(() => {
+    cachedNow = Date.now();
+    callback();
+  }, 60000);
   return () => clearInterval(id);
 }
 function getClockClient(): number | null {
-  return Date.now();
+  return cachedNow;
 }
 function getClockServer(): number | null {
   return null;

@@ -140,7 +140,7 @@ export function SearchDialog() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Search events, venues and guides"
-        className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm text-white/60 transition hover:border-sky-400/40 hover:text-white"
+        className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm text-white/60 transition hover:border-sky-400/40 hover:text-white md:h-11"
       >
         <Search className="h-4 w-4" />
         <span className="hidden lg:inline">Search</span>
