@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
 
 interface EventStatusChipProps {
@@ -49,19 +49,30 @@ function computeStatus(
   return { text: `Starts in ${Math.round(diff / DAY)}d`, tone: "soon" };
 }
 
+// --- SSR-safe "now" clock via useSyncExternalStore -------------------------
+// The server snapshot is null so SSR and the first client paint match
+// (no hydration mismatch from the browser clock). After hydration the
+// store subscribes to a 30s interval and re-renders with the real time.
+const NOW_NULL = null as number | null;
+
+function subscribeNow(callback: () => void) {
+  const id = setInterval(callback, 30000);
+  return () => clearInterval(id);
+}
+function getNowClient(): number | null {
+  return Date.now();
+}
+function getNowServer(): number | null {
+  return NOW_NULL;
+}
+
 /**
  * Real-time event state chip — “Live now” / “Starts in 2h 15m” / “Event ended”.
  * Computed client-side only after mount, so the server render can never
  * mismatch the browser clock; re-evaluates every 30 seconds.
  */
 export function EventStatusChip({ startsAt, endsAt, liveStatus, className }: EventStatusChipProps) {
-  const [now, setNow] = useState<number | null>(null);
-
-  useEffect(() => {
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 30000);
-    return () => clearInterval(id);
-  }, []);
+  const now = useSyncExternalStore(subscribeNow, getNowClient, getNowServer);
 
   const state = now == null ? null : computeStatus(startsAt, endsAt, Boolean(liveStatus), new Date(now));
   if (!state) return null;

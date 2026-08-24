@@ -6,7 +6,7 @@ import { Minus, Plus, Timer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SubmitButton } from "@/components/ui/submit-button";
-import { cn } from "@/lib/utils";
+import { cn, neyaSecondaryGradient } from "@/lib/utils";
 import { createTicketCheckout } from "@/actions/bookings";
 import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
@@ -149,7 +149,7 @@ export function TicketCard({
               </div>
 
               <SubmitButton
-                className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white hover:opacity-95"
+                className={cn("w-full", neyaSecondaryGradient)}
                 pendingText="Preparing checkout…"
               >
                 {ctaLabel}

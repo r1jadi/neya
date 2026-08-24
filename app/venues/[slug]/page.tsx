@@ -22,7 +22,7 @@ import { getVenuePulse } from "@/services/pulse";
 import { SITE } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { venueJsonLd } from "@/lib/seo/json-ld";
-import { isUuid } from "@/lib/utils";
+import { isUuid, neyaPrimaryGradient } from "@/lib/utils";
 import { isHappeningNow, isOnDayOffset, isOnThisWeekend } from "@/lib/event-dates";
 import { CheckInWidget } from "@/components/neya/check-in-widget";
 import { MyNightButton } from "@/components/my-night/my-night-button";
@@ -133,7 +133,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
       <main className="flex-1">
         <DiscoveryTracker metric="venue_view" venueId={venue.id} dimensions={{ city: venue.city_slug, category: venue.category }} />
         <div className="relative aspect-[16/7] w-full max-h-[380px] overflow-hidden">
-          <Image src={venue.image_url} alt="" fill className="object-cover" priority />
+          <Image src={venue.image_url} alt={`${venue.name} — ${venue.category.replace(/_/g, " ")}`} fill className="object-cover" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
             <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2">
@@ -288,8 +288,8 @@ export default async function VenuePage({ params, searchParams }: Props) {
                 </p>
                 <Link
                   href="/events"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-500 px-4 py-2.5 text-sm font-bold text-zinc-950 transition hover:opacity-95"
-                >
+                  className={`mt-4 inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition ${neyaPrimaryGradient}`}
+>
                   Browse upcoming events
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -471,7 +471,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                     className="group flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] py-2 pl-2 pr-4 transition hover:border-fuchsia-400/30 hover:bg-fuchsia-500/5"
                   >
                     {artist.profile_image ? (
-                      <Image src={artist.profile_image} alt="" width={40} height={40} className="h-10 w-10 rounded-xl object-cover" />
+                      <Image src={artist.profile_image} alt={artist.name} width={40} height={40} className="h-10 w-10 rounded-xl object-cover" />
                     ) : null}
                     <span className="min-w-0">
                       <span className="block text-sm font-medium text-white group-hover:text-fuchsia-100">

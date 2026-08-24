@@ -72,7 +72,7 @@ interface HomeFeedProps {
 
 export function HomeFeed({ events, savedEventIds, hasVenues }: HomeFeedProps) {
   const [windowId, setWindowId] = useState<Window>("tonight");
-  const windows = useMemo(buildWindows, []);
+  const windows = useMemo(() => buildWindows(), []);
 
   const view = useMemo(() => {
     const lists: Record<Window, Event[]> = {

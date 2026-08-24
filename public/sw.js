@@ -38,7 +38,7 @@ function isNeverCached(url) {
   return false;
 }
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   self.skipWaiting();
 });
 

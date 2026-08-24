@@ -9,6 +9,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Reset password · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ sent?: string; error?: string }> };

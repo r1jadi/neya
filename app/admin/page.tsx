@@ -20,6 +20,7 @@ export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: `Admin · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "tickets" | "guestlists" | "reservations" | "premium" | "venue-accounts" | "guides" | "discovery";

@@ -8,6 +8,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Scan tickets · Venue hub · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ ok?: string; error?: string; info?: string }> };

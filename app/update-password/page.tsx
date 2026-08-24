@@ -6,6 +6,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `New password · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 export default function UpdatePasswordPage() {

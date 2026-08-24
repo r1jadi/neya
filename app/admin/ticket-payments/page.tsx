@@ -9,7 +9,7 @@ import { SITE } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export const metadata: Metadata = { title: `Ticket payments · Admin · ${SITE.name}` };
+export const metadata: Metadata = { title: `Ticket payments · Admin · ${SITE.name}`, robots: { index: false, follow: false } };
 
 type Props = { searchParams: Promise<{ provider?: string; paymentStatus?: string; attemptStatus?: string; problem?: string; refundStatus?: string; error?: string; detail?: string; ok?: string; result?: string }> };
 type Attempt = { id: string; ticket_order_id: string; provider: string; provider_order_id: string | null; provider_transaction_id: string | null; status: string; amount_cents: number; currency: string; refunded_amount_cents: number; refund_pending_cents: number; provider_status_message: string | null; created_at: string; updated_at: string };

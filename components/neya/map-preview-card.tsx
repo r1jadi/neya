@@ -7,10 +7,9 @@ import { LiveBadge } from "@/components/neya/live-badge";
 import { SaveEventButton } from "@/components/neya/save-event-button";
 import { SaveVenueButton } from "@/components/neya/save-venue-button";
 import { Badge } from "@/components/ui/badge";
-import { formatEventWhen } from "@/lib/event-dates";
 import { formatEventTimeRange, formatGenreLabel } from "@/lib/event-display";
 import type { Event, Venue } from "@/types";
-import { isUuid } from "@/lib/utils";
+import { cn, isUuid, neyaPrimaryGradient } from "@/lib/utils";
 
 interface MapPreviewCardProps {
   kind: "event" | "venue";
@@ -40,7 +39,7 @@ export function MapPreviewCard({
     return (
       <article className={`flex w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/95 shadow-[0_30px_80px_rgba(0,0,0,0.7)] ${className ?? ""}`}>
         <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden">
-          <Image src={event.image_url} alt="" fill className="object-cover" sizes="(max-width:768px) 100vw, 320px" />
+          <Image src={event.image_url} alt={event.title} fill className="object-cover" sizes="(max-width:768px) 100vw, 320px" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
           <div className="absolute left-3 top-3 flex flex-wrap items-center gap-2">
             <LiveBadge live={event.live_status && event.crowd_count > 0} />
@@ -99,8 +98,8 @@ export function MapPreviewCard({
               ) : null}
               <Link
                 href={`/events/${event.slug}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-sky-400 to-fuchsia-500 px-4 py-2 text-xs font-bold text-zinc-950 transition hover:opacity-95"
-              >
+                className={cn("inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition", neyaPrimaryGradient)}
+>
                 View event <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -117,7 +116,7 @@ export function MapPreviewCard({
     return (
       <article className={`flex w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/95 shadow-2xl ${className ?? ""}`}>
         <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden">
-          <Image src={venue.image_url} alt="" fill className="object-cover" sizes="(max-width:768px) 100vw, 320px" />
+          <Image src={venue.image_url} alt={venue.name} fill className="object-cover" sizes="(max-width:768px) 100vw, 320px" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
           <div className="absolute left-3 top-3 flex flex-wrap items-center gap-2">
             <Badge variant="secondary" className="backdrop-blur-md">

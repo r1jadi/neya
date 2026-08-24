@@ -10,6 +10,7 @@ import { SITE } from "@/lib/constants";
 export const metadata: Metadata = {
   title: `Log in · ${SITE.name}`,
   description: "Sign in to NEYA — save events, book tables, and get on guestlists in Prishtina.",
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ error?: string; next?: string }> };

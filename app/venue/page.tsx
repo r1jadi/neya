@@ -6,6 +6,7 @@ import { getVenuePortalStats, getVenueWithEvents } from "@/services/venue-portal
 
 export const metadata: Metadata = {
   title: `Venue portal · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ error?: string }> };

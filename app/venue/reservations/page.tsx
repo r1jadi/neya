@@ -13,6 +13,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Reservations · Venue portal · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ ok?: string; error?: string }> };

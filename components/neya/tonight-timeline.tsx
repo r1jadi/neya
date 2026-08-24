@@ -1,10 +1,23 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { isTonight } from "@/lib/event-dates";
 import { CITY_TZ } from "@/lib/event-dates";
 import type { Event } from "@/types";
 import { cn } from "@/lib/utils";
+
+// SSR-safe clock: server snapshot is null so first client paint matches SSR
+// (no hydration mismatch), then re-subscribes to a 60s tick on the client.
+function subscribeClock(callback: () => void) {
+  const id = setInterval(callback, 60000);
+  return () => clearInterval(id);
+}
+function getClockClient(): number | null {
+  return Date.now();
+}
+function getClockServer(): number | null {
+  return null;
+}
 
 interface TonightTimelineProps {
   events: Event[];
@@ -25,8 +38,13 @@ function hourOf(iso: string): number {
  * Hidden entirely when there aren’t enough events to be meaningful.
  */
 export function TonightTimeline({ events, activeHour, onPickHour }: TonightTimelineProps) {
+  // `now` is null on the server and first paint, then a real timestamp.
+  // Until it resolves we render nothing — the timeline is a live, time-aware
+  // widget and a server-rendered (wrong) version would cause hydration drift.
+  const now = useSyncExternalStore(subscribeClock, getClockClient, getClockServer);
   const buckets = useMemo(() => {
-    const tonight = events.filter((e) => isTonight(e.starts_at) && new Date(e.starts_at).getTime() > Date.now() - 6 * 3600000);
+    if (now == null) return null;
+    const tonight = events.filter((e) => isTonight(e.starts_at) && new Date(e.starts_at).getTime() > now - 6 * 3600000);
     if (tonight.length < 2) return null;
     const byHour = new Map<number, Event[]>();
     for (const event of tonight) {
@@ -46,7 +64,7 @@ export function TonightTimeline({ events, activeHour, onPickHour }: TonightTimel
       else if (hour >= 21) label = "Peak building";
       return { hour, count: list.length, label };
     });
-  }, [events]);
+  }, [events, now]);
 
   if (!buckets) return null;
 

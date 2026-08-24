@@ -1,9 +1,24 @@
 "use client";
 
 import { Radio } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import type { VenuePulse } from "@/services/pulse";
 import { cn } from "@/lib/utils";
+
+// SSR-safe mounted flag: false on the server and first client paint (so
+// Date.now()-derived text never hydrates), true afterwards. Subscribing to a
+// no-op store avoids the setState-in-effect lint rule.
+function subscribeMounted(callback: () => void) {
+  // Resolve on the next macrotask so the client snapshot flips to true.
+  const id = setTimeout(callback, 0);
+  return () => clearTimeout(id);
+}
+function getMountedClient() {
+  return true;
+}
+function getMountedServer() {
+  return false;
+}
 
 interface VenuePulsePanelProps {
   /** Real aggregates from reviews across the venue’s events; null when unavailable. */
@@ -52,8 +67,7 @@ function updatedAgo(updatedAt: string | null): string | null {
 
 /** Read-only venue signal — same visual language as the event pulse, no fabricated values. */
 export function VenuePulsePanel({ pulse, crowdCount, className }: VenuePulsePanelProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(subscribeMounted, getMountedClient, getMountedServer);
 
   const overall = pulse?.overall ?? null;
   const pct = overall == null ? 0 : clamp(overall, 0, 10) * 10;

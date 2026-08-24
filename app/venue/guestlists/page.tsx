@@ -10,6 +10,7 @@ import { getVenueWithEvents, listGuestlistRequestsForVenue } from "@/services/ve
 
 export const metadata: Metadata = {
   title: `Guestlists · Venue portal · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ ok?: string; error?: string; detail?: string }> };

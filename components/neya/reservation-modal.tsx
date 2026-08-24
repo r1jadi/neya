@@ -20,7 +20,7 @@ import {
   type ReservationPaymentMethod,
   type ResolvedReservationConfig,
 } from "@/lib/reservations/config";
-import { cn } from "@/lib/utils";
+import { cn, neyaPrimaryGradient } from "@/lib/utils";
 
 interface ReservationModalProps {
   venueName: string;
@@ -81,7 +81,7 @@ function ReservationFormActions({ submitLabel, onCancel }: { submitLabel: string
         Cancel
       </Button>
       <SubmitButton
-        className="bg-gradient-to-r from-sky-400 to-fuchsia-500 text-zinc-950 hover:opacity-95"
+        className={neyaPrimaryGradient}
         pendingText="Submitting…"
       >
         {submitLabel}

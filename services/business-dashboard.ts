@@ -56,7 +56,6 @@ type EventRow = {
 
 type ReservationRow = { id: string; status: string; event_id: string | null };
 type GuestlistRow = { event_id: string; status: string };
-type TicketRow = { id: string; event_id: string };
 type OrderRow = { ticket_id: string; quantity: number; amount_cents: number | null };
 
 /**

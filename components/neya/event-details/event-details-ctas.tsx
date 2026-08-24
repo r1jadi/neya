@@ -11,7 +11,7 @@ import { AddToCalendarButton } from "@/components/neya/add-to-calendar-button";
 import type { EventBookingMeta } from "@/services/booking-meta";
 import { formatReservationPrice } from "@/lib/reservations/config";
 import type { Event } from "@/types";
-import { cn, isUuid } from "@/lib/utils";
+import { cn, isUuid, neyaPrimaryGradient, neyaSecondaryGradient } from "@/lib/utils";
 import { trackDiscoveryMetric } from "@/actions/discovery-analytics";
 
 export type EventDetailsFlash = {
@@ -57,7 +57,7 @@ export function EventDetailsCtas({
       trigger={
         <button
           type="button"
-          className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-500 py-3 text-sm font-bold text-zinc-950 transition hover:opacity-95"
+          className={cn("w-full rounded-xl py-3 text-sm font-bold transition", neyaPrimaryGradient)}
         >
           {meta.reservation.isFree ? "Reserve free table" : `Reserve table · ${formatReservationPrice(meta.reservation.priceEur)}`}
         </button>
@@ -122,7 +122,7 @@ export function EventDetailsCtas({
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => void trackDiscoveryMetric("ticket_click", { eventId: event.id, dimensions: { source: "external" } })}
-        className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 py-3 text-sm font-bold text-white transition hover:opacity-95"
+        className={cn("flex w-full items-center justify-center rounded-xl py-3 text-sm font-bold transition", neyaSecondaryGradient)}
       >
         Buy tickets · €{event.ticket_from_eur ?? "—"}
       </a>
@@ -176,7 +176,7 @@ export function EventDetailsCtas({
               trigger={
                 <button
                   type="button"
-                  className="flex-1 rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-500 py-3 text-xs font-bold text-zinc-950"
+                  className={cn("flex-1 rounded-xl py-3 text-xs font-bold", neyaPrimaryGradient)}
                 >
                   Reserve
                 </button>

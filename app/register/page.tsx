@@ -9,6 +9,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Create account · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 const REGISTER_ERRORS: Record<string, string> = {

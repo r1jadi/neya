@@ -7,7 +7,7 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { useSupabaseRealtime } from "@/hooks/use-supabase-realtime";
 import { createClient } from "@/lib/supabase/client";
 import type { EventPulse } from "@/services/pulse";
-import { cn } from "@/lib/utils";
+import { cn, neyaPrimaryGradient } from "@/lib/utils";
 
 type EventRow = { atmosphere_rating?: number };
 
@@ -268,7 +268,7 @@ export function LiveAtmospherePanel({ eventId, venueId, eventSlug, initialScore,
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
               <p className="text-[11px] text-white/40">Line higher means longer wait.</p>
-              <SubmitButton pendingText="Sending pulse…" className="bg-gradient-to-r from-sky-400 to-fuchsia-500 font-bold text-zinc-950 hover:brightness-110">
+              <SubmitButton pendingText="Sending pulse…" className={cn("font-bold hover:brightness-110", neyaPrimaryGradient)}>
                 Submit pulse 🔥
               </SubmitButton>
             </div>

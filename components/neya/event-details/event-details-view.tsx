@@ -333,7 +333,7 @@ export function EventDetailsView({
                   {artists.map((artist) => (
                     <li key={`artist-${artist.id}`} className="flex items-center gap-3 rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-3">
                       {artist.profile_image ? (
-                        <Image src={artist.profile_image} alt="" width={48} height={48} className="h-12 w-12 rounded-xl object-cover" />
+                        <Image src={artist.profile_image} alt={artist.name} width={48} height={48} className="h-12 w-12 rounded-xl object-cover" />
                       ) : null}
                       <div className="min-w-0">
                         <Link href={`/artists/${artist.slug}`} className="font-medium text-fuchsia-100 hover:text-white hover:underline">
@@ -349,7 +349,7 @@ export function EventDetailsView({
                       .filter((entry): entry is [string, string] => entry[1] !== null);
                     return (
                       <li key={`${performer.name}-${performer.genre ?? ""}`} className="flex gap-3 rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-3">
-                        {performer.image_url ? <Image src={performer.image_url} alt="" width={48} height={48} className="h-12 w-12 rounded-xl object-cover" /> : null}
+                        {performer.image_url ? <Image src={performer.image_url} alt={performer.name} width={48} height={48} className="h-12 w-12 rounded-xl object-cover" /> : null}
                         <div className="min-w-0">
                           <p className="font-medium text-fuchsia-100">{performer.name}</p>
                           {performer.genre ? <p className="mt-0.5 text-xs text-white/50">{performer.genre}</p> : null}

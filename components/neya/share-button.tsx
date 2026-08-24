@@ -11,7 +11,7 @@ interface ShareButtonProps {
   url?: string;
   className?: string;
   variant?: "ghost" | "solid";
-  /** Link target kind, for the discovery analytics event. */
+  /** Link target kind, for the discovery analytics event. Currently unused but kept for API stability. */
   kind?: "event" | "venue";
 }
 
@@ -22,8 +22,10 @@ export function ShareButton({
   url,
   className,
   variant = "ghost",
-  kind = "event",
+  // Reserved for future discovery analytics; intentionally unused for now.
+  kind: _kind = "event",
 }: ShareButtonProps) {
+  void _kind;
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);

@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { cn } from "@/lib/utils";
-import { VENUE_CATEGORIES } from "@/types";
 
 export interface MapMarker {
   lng: number;

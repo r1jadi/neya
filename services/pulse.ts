@@ -15,7 +15,7 @@ export interface EventPulse {
   updatedAt: string | null;
 }
 
-export interface VenuePulse extends EventPulse {}
+export type VenuePulse = EventPulse;
 
 type ReviewRow = {
   music_quality: number | null;

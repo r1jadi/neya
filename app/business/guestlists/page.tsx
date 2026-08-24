@@ -12,6 +12,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: `Guestlists · Venue hub · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ ok?: string; error?: string; detail?: string }> };

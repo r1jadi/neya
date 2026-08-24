@@ -7,6 +7,7 @@ import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Analytics · Venue portal · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 export default async function VenueAnalyticsPage() {
