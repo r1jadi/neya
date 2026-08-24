@@ -1,0 +1,28 @@
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.19.224.1:3000
+- Environments: .env.local
+✓ Ready in 465ms
+✓ Running next.config.ts took 54ms
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "50mb"
+  · serverActions
+
+ GET / 200 in 2.3s (next.js: 606ms, proxy.ts: 258ms, application-code: 1444ms)
+ GET / 200 in 318ms (next.js: 4ms, proxy.ts: 7ms, application-code: 307ms)
+ GET / 200 in 444ms (next.js: 16ms, proxy.ts: 9ms, application-code: 418ms)
+ GET / 200 in 371ms (next.js: 4ms, proxy.ts: 18ms, application-code: 348ms)
+ GET / 200 in 355ms (next.js: 4ms, proxy.ts: 9ms, application-code: 342ms)
+ GET / 200 in 302ms (next.js: 3ms, proxy.ts: 7ms, application-code: 292ms)
+ GET / 200 in 305ms (next.js: 4ms, proxy.ts: 5ms, application-code: 295ms)
+ GET / 200 in 373ms (next.js: 5ms, proxy.ts: 5ms, application-code: 364ms)
+ GET / 200 in 409ms (next.js: 8ms, proxy.ts: 13ms, application-code: 388ms)
+ GET / 200 in 508ms (next.js: 5ms, proxy.ts: 8ms, application-code: 496ms)
+ GET / 200 in 382ms (next.js: 3ms, proxy.ts: 9ms, application-code: 370ms)
+ GET / 200 in 381ms (next.js: 3ms, proxy.ts: 8ms, application-code: 370ms)
+ GET /guides 200 in 281ms (next.js: 58ms, proxy.ts: 8ms, application-code: 215ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET / 200 in 336ms (next.js: 5ms, proxy.ts: 5ms, application-code: 325ms)
+ GET /guides 200 in 195ms (next.js: 10ms, proxy.ts: 5ms, application-code: 180ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[?25h

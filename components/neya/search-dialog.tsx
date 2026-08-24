@@ -63,7 +63,7 @@ function ResultRow({ item }: { item: SearchResultItem }) {
   );
 }
 
-export function SearchDialog() {
+export function SearchDialog({ compact = false }: { compact?: boolean }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -150,13 +150,21 @@ export function SearchDialog() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t.search.ariaLabel}
-        className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm text-white/60 transition hover:border-sky-400/40 hover:text-white md:h-11"
+        className={
+          compact
+            ? "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/60 transition hover:border-sky-400/40 hover:text-white"
+            : "inline-flex h-9 shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm text-white/60 transition hover:border-sky-400/40 hover:text-white"
+        }
       >
         <Search className="h-4 w-4" />
-        <span className="hidden lg:inline">{t.common.search}</span>
-        <kbd className="hidden rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold text-white/40 lg:inline">
-          ⌘K
-        </kbd>
+        {compact ? null : (
+          <>
+            <span className="hidden 2xl:inline">{t.common.search}</span>
+            <kbd className="hidden rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold text-white/40 2xl:inline">
+              ⌘K
+            </kbd>
+          </>
+        )}
       </button>
 
       <AnimatePresence>

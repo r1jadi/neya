@@ -27,7 +27,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={isLight ? t.common.darkTheme : t.common.lightTheme}
       title={isLight ? t.common.darkTheme : t.common.lightTheme}
       className={cn(
-        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/70 transition hover:text-white",
+        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/70 transition hover:border-white/20 hover:text-white",
         className,
       )}
     >

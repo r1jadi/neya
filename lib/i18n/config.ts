@@ -12,6 +12,14 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   tr: "Türkçe",
 };
 
+/** Compact codes for the header language toggle. */
+export const LOCALE_SHORT_LABELS: Record<Locale, string> = {
+  en: "EN",
+  sq: "SQ",
+  de: "DE",
+  tr: "TR",
+};
+
 /** Cookie name — read by the server (layout) and the client (provider). */
 export const LOCALE_COOKIE = "neya_locale";
 

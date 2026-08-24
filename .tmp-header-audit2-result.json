@@ -1,0 +1,1173 @@
+[
+ {
+  "width": 320,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 320,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 360,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 360,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 375,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 375,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 390,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 390,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 414,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 414,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 480,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 480,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 560,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 560,
+  "menu": true,
+  "locale": "en",
+  "headerH": 578,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 257,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 46,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 640,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 640,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 768,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 768,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 820,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 820,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 900,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 900,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1024,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1024,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1100,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1100,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1152,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1152,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1200,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1200,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1240,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1240,
+  "menu": true,
+  "locale": "en",
+  "headerH": 526,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 231,
+  "centers": [
+   32,
+   32
+  ],
+  "navVisible": false,
+  "navLeft": 0,
+  "navRight": 0,
+  "sizes": {
+   "logo": 51,
+   "nav": 0,
+   "search": 36,
+   "lang": 0,
+   "theme": 36,
+   "login": 0,
+   "register": 0,
+   "hamburger": 36
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1280,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 87,
+  "navRight": 858,
+  "sizes": {
+   "logo": 51,
+   "nav": 353,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 0,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1340,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 117,
+  "navRight": 888,
+  "sizes": {
+   "logo": 51,
+   "nav": 353,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 0,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1366,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 130,
+  "navRight": 821,
+  "sizes": {
+   "logo": 51,
+   "nav": 353,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 76,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1440,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 167,
+  "navRight": 858,
+  "sizes": {
+   "logo": 51,
+   "nav": 353,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 76,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1536,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 215,
+  "navRight": 906,
+  "sizes": {
+   "logo": 51,
+   "nav": 381,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 76,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1600,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 247,
+  "navRight": 938,
+  "sizes": {
+   "logo": 51,
+   "nav": 381,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 76,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1728,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 311,
+  "navRight": 1002,
+  "sizes": {
+   "logo": 51,
+   "nav": 381,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 76,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ },
+ {
+  "width": 1920,
+  "menu": false,
+  "locale": "en",
+  "headerH": 65,
+  "docOverflow": false,
+  "barOverflow": false,
+  "colliding": [],
+  "clipped": [],
+  "maxOffCenter": 1,
+  "centers": [
+   32,
+   32,
+   32
+  ],
+  "navVisible": true,
+  "navLeft": 407,
+  "navRight": 1098,
+  "sizes": {
+   "logo": 51,
+   "nav": 381,
+   "search": 36,
+   "lang": 135,
+   "theme": 36,
+   "login": 63,
+   "register": 76,
+   "hamburger": 0
+  },
+  "langSwitcherVisible": true
+ }
+]
+
+=== ISSUES ===
+[]

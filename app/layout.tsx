@@ -85,7 +85,7 @@ export default async function RootLayout({
       <body
         className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable} min-h-full w-full min-w-0 bg-[var(--background)] font-sans text-[var(--foreground)] antialiased`}
       >
-        <I18nProvider>
+        <I18nProvider initialLocale={locale}>
         <AppProviders>
           <JsonLd />
           <OfflineBanner />

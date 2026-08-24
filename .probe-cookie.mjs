@@ -1,0 +1,12 @@
+import { chromium } from "playwright-core";
+const browser = await chromium.launch({ channel: "msedge", headless: true });
+const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+await context.addCookies([{ name: "neya_locale", value: "de", domain: "localhost", path: "/" }]);
+const page = await context.newPage();
+await page.goto("http://localhost:3000", { waitUntil: "domcontentloaded" });
+await page.waitForSelector("header");
+await page.waitForTimeout(1200);
+console.log("client document.cookie =", JSON.stringify(await page.evaluate(() => document.cookie)));
+const sent = await page.evaluate(async () => (await fetch("/api/health-probe-nope").catch(()=>null)) ?? null));
+console.log("fetch ok");
+await browser.close();

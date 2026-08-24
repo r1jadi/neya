@@ -1,0 +1,113 @@
+﻿[
+  {
+    "tag": "hdr-de",
+    "width": 1280,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-de",
+    "width": 1366,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-de",
+    "width": 1440,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-de",
+    "width": 1536,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [
+      "NEYAPrishtina x Entdecken",
+      "Event einreichen x Events, Locations "
+    ],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-de",
+    "width": 1920,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [
+      "NEYAPrishtina x Entdecken",
+      "Event einreichen x Events, Locations "
+    ],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-tr",
+    "width": 1280,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-tr",
+    "width": 1366,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-tr",
+    "width": 1440,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-tr",
+    "width": 1536,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-tr",
+    "width": 1920,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [],
+    "clipped": []
+  }
+]
+
+ISSUES: [
+  {
+    "tag": "hdr-de",
+    "width": 1536,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [
+      "NEYAPrishtina x Entdecken",
+      "Event einreichen x Events, Locations "
+    ],
+    "clipped": []
+  },
+  {
+    "tag": "hdr-de",
+    "width": 1920,
+    "docOverflow": false,
+    "barOverflow": false,
+    "colliding": [
+      "NEYAPrishtina x Entdecken",
+      "Event einreichen x Events, Locations "
+    ],
+    "clipped": []
+  }
+]

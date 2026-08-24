@@ -1,0 +1,2385 @@
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:144:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:143:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  142 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
+  143 |           {links.map((l) => (
+> 144 |             <Link
+      |             ^
+  145 |               key={l.href}
+  146 |               href={l.href}
+  147 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Keşfet
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <Home>
+                <div className="flex min-h...">
+                  <SiteHeader>
+                    <SiteHeaderClient userEmail={null} isAdmin={false} showBusiness={false} showVenuePortal={false} ...>
+                      <header className="sticky top...">
+                        <div className="mx-auto fl...">
+                          <LinkComponent>
+                          <nav className="hidden min...">
+                            <LinkComponent href="/events" aria-current={undefined} className="relative s...">
+                              <a aria-current={undefined} className="relative s..." ref={function} ...>
++                               Entdecken
+-                               Discover
+                            ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at a (<anonymous>)
+    at <unknown> (components/layout/site-header-client.tsx:201:13)
+    at Array.map (<anonymous>)
+    at SiteHeaderClient (components/layout/site-header-client.tsx:200:18)
+    at SiteHeader (components\layout\site-header.tsx:35:5)
+    at Home (app\page.tsx:63:7)
+  199 |         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 px-2 xl:flex 2xl:gap-x-5">
+  200 |           {links.map((l) => (
+> 201 |             <Link
+      |             ^
+  202 |               key={l.href}
+  203 |               href={l.href}
+  204 |               aria-current={isActive(l.href) ? "page" : undefined}

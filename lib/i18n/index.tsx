@@ -40,11 +40,12 @@ function readLocaleCookie(): Locale {
   return isLocale(value) ? value : DEFAULT_LOCALE;
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  // Lazy initializer: on the client the persisted cookie wins immediately
-  // (no effect round-trip); during SSR the document is unavailable so the
-  // default is used, matching the server-rendered `<html lang>`.
-  const [locale, setLocaleState] = useState<Locale>(() => readLocaleCookie());
+export function I18nProvider({ initialLocale, children }: { initialLocale?: Locale; children: React.ReactNode }) {
+  // Server locales arrive via the `initialLocale` prop (root layout reads
+  // the cookie for SSR, so server + first client render agree — no
+  // hydration mismatch or locale flash). Without a prop (e.g. an embed or
+  // test harness) fall back to the persisted cookie, then the default.
+  const [locale, setLocaleState] = useState<Locale>(() => initialLocale ?? readLocaleCookie());
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);

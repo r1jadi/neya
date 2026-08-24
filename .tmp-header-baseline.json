@@ -1,0 +1,256 @@
+﻿[
+  {
+    "width": 320,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 320,
+    "variant": "menu",
+    "headerH": 578,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 375,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 375,
+    "variant": "menu",
+    "headerH": 578,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 390,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 390,
+    "variant": "menu",
+    "headerH": 578,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 414,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 414,
+    "variant": "menu",
+    "headerH": 578,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 480,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 480,
+    "variant": "menu",
+    "headerH": 578,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 640,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 640,
+    "variant": "menu",
+    "headerH": 526,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 768,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 768,
+    "variant": "menu",
+    "headerH": 526,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 820,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 820,
+    "variant": "menu",
+    "headerH": 526,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1024,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1024,
+    "variant": "menu",
+    "headerH": 526,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1100,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1100,
+    "variant": "menu",
+    "headerH": 526,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1280,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1366,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1440,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1536,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  },
+  {
+    "width": 1920,
+    "variant": "closed",
+    "headerH": 65,
+    "headerOverflow": false,
+    "barOverflow": false,
+    "docOverflow": false,
+    "colliding": [],
+    "clipped": []
+  }
+]
+
+=== ISSUES SUMMARY ===
+[]
+failCount 0

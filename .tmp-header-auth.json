@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "ph_phc_AJfi7g4ZV7NLqhfQDJifiDej5t9GiDmv2SYkkFaaxgqf_posthog",
+      "value": "%7B%22%24device_id%22%3A%2201a03547-701e-7954-8839-73be2f6a7f5e%22%2C%22distinct_id%22%3A%2201a03547-701e-7954-8839-73be2f6a7f5e%22%2C%22%24user_state%22%3A%22anonymous%22%7D",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1819136274,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "ph_phc_AJfi7g4ZV7NLqhfQDJifiDej5t9GiDmv2SYkkFaaxgqf_posthog",
+          "value": "{\"$device_id\":\"01a03547-701e-7954-8839-73be2f6a7f5e\",\"distinct_id\":\"01a03547-701e-7954-8839-73be2f6a7f5e\",\"$user_state\":\"anonymous\",\"$initialization_time\":\"2026-08-24T19:37:54.281Z\",\"$configured_session_timeout_ms\":1800000,\"$feature_flag_errors\":[],\"$active_feature_flags\":[],\"$enabled_feature_flags\":{},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{},\"$minimal_flag_called_events\":false,\"$feature_flag_request_id\":\"003723b3-dfaf-4813-8dc5-7207aedb81e4\",\"$feature_flag_evaluated_at\":1787600274184}"
+        }
+      ]
+    }
+  ]
+}
