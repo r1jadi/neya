@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { CheckCircle2, Loader2, Users } from "lucide-react";
 import { submitGuestlistRequest } from "@/actions/guestlist";
 import {
@@ -85,17 +86,24 @@ export function GuestlistModal({
       <DialogContent className="max-h-[90dvh] overflow-y-auto border-white/10 bg-zinc-950 sm:max-w-md">
         {submitted ? (
           <div className="py-6 text-center">
-            <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400" />
+            <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400" strokeWidth={1.5} />
             <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-bold text-white">
-              Request submitted
+              You&apos;re on the list
             </h3>
+            <p className="mt-1 text-sm font-medium text-white/80">{eventTitle}</p>
             <p className="mt-2 text-sm text-white/60">
-              We&apos;ll email or text you a confirmation if you provided contact details. You&apos;ll hear from us again
-              once the venue approves your request.
+              {guestlist.requiresManualApproval
+                ? "The venue team reviews requests — you&apos;ll get a text or email once approved."
+                : "You&apos;ll receive a confirmation shortly. Bring ID matching your name at the door."}
             </p>
-            <Button type="button" className="mt-6 w-full" onClick={() => handleOpenChange(false)}>
-              Done
-            </Button>
+            <div className="mt-6 flex flex-col gap-2">
+              <Button type="button" className="w-full" onClick={() => handleOpenChange(false)}>
+                Done
+              </Button>
+              <Link href="/dashboard" className="text-sm text-sky-300 hover:underline">
+                View on your dashboard
+              </Link>
+            </div>
           </div>
         ) : (
           <>

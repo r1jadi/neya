@@ -46,3 +46,75 @@ body {
   background: rgba(244, 114, 182, 0.35);
   color: #fff;
 }
+
+/* Live map pins — subtle radar-style pulse for live venues/events */
+@keyframes neya-pin-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 9px rgba(244, 63, 94, 0);
+  }
+}
+
+/* NEYA Pulse sliders */
+input[type="range"].neya-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+input[type="range"].neya-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 26px;
+  width: 26px;
+  border-radius: 9999px;
+  border: 3px solid #020617;
+  background: linear-gradient(135deg, #38bdf8, #f472b6);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6), 0 0 18px rgba(244, 114, 182, 0.5);
+  cursor: pointer;
+}
+input[type="range"].neya-slider::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  border-radius: 9999px;
+  border: 3px solid #020617;
+  background: linear-gradient(135deg, #38bdf8, #f472b6);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6), 0 0 18px rgba(244, 114, 182, 0.5);
+  cursor: pointer;
+}
+
+/* Respect reduced-motion preferences — kill pulsing/radar/glow animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-ping,
+  .animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* Safe-area handling for standalone PWA / notched devices.
+   Applied via utility classes so desktop (no safe areas) is unaffected. */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-top-sm {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+.safe-bottom-sm {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}

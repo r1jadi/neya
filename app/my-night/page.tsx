@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `My Night · ${SITE.name}`,
   description: "Plan your night in 3 stops — pick venues and events, order them, and share the plan.",
+  robots: { index: false, follow: false },
 };
 
 export default async function MyNightPage() {

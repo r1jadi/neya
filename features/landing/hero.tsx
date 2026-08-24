@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Radio } from "lucide-react";
 import { NeonButton } from "@/components/neya/neon-button";
-import { formatEventWhen } from "@/lib/event-dates";
+import { CITY_TZ, formatEventWhen } from "@/lib/event-dates";
+import type { TimeOfDay } from "@/lib/event-dates";
 import { PLACEHOLDER_IMAGE } from "@/lib/images";
 import { SITE } from "@/lib/constants";
 import type { Event } from "@/types";
@@ -19,13 +20,21 @@ export interface HeroStats {
 interface LandingHeroProps {
   stats?: HeroStats;
   spotlight?: Event | null;
+  /** Time-aware headline + subline, computed on the server to avoid hydration drift. */
+  timeCopy?: { label: string; subline: string; timeOfDay: TimeOfDay };
 }
 
-export function LandingHero({ stats, spotlight }: LandingHeroProps) {
+export function LandingHero({ stats, spotlight, timeCopy }: LandingHeroProps) {
   const hereNow = stats?.hereNow ?? 0;
   const tonight = stats?.tonightCount ?? 0;
   const vibe = stats?.vibe ?? 0;
   const hasSpotlight = Boolean(spotlight);
+  const cityDate = new Date().toLocaleDateString("en-GB", {
+    timeZone: CITY_TZ,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
 
   return (
     <section className="relative isolate w-full min-w-0 overflow-hidden pt-10 pb-20 sm:pt-16 sm:pb-28">
@@ -44,7 +53,7 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70"
           >
             <Radio className="h-3.5 w-3.5 text-emerald-400" />
-            Live in Prishtina
+            Live in Prishtina · {cityDate}
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -52,7 +61,7 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
             transition={{ delay: 0.05, duration: 0.55 }}
             className="mt-6 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
           >
-            {SITE.tagline}
+            {timeCopy?.label ?? SITE.tagline}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -60,7 +69,7 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
             transition={{ delay: 0.12, duration: 0.55 }}
             className="mt-5 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg"
           >
-            Clubs, rooftops, live sets, student nights — one pulse for the city. Real venues, real events, no demo filler.
+            {timeCopy?.subline ?? "Clubs, rooftops, live sets, student nights — one pulse for the city. Where are you going tonight?"}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -125,7 +134,7 @@ export function LandingHero({ stats, spotlight }: LandingHeroProps) {
               </Link>
             ) : (
               <div className="flex h-full flex-col items-center justify-center p-8 text-center">
-                <Image src={PLACEHOLDER_IMAGE} alt="" width={120} height={120} className="opacity-40" />
+                <Image src={PLACEHOLDER_IMAGE} alt="" width={120} height={80} className="opacity-40" />
                 <p className="mt-6 text-lg font-semibold text-white/80">Events coming soon</p>
                 <p className="mt-2 text-sm text-white/50">The city pulse updates as venues go live.</p>
               </div>

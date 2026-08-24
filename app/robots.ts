@@ -10,7 +10,27 @@ export default function robots(): MetadataRoute.Robots {
     }
   })();
   return {
-    rules: { userAgent: "*", allow: "/" },
+    rules: [
+      {
+        userAgent: "*",
+        allow: ["/", "/my-night/"],
+        disallow: [
+          "/dashboard",
+          "/business",
+          "/admin",
+          "/venue",
+          "/checkout",
+          "/onboarding",
+          "/my-night$",
+          "/api/",
+          "/auth/",
+          "/login",
+          "/register",
+          "/forgot-password",
+          "/update-password",
+        ],
+      },
+    ],
     sitemap: `${SITE.url}/sitemap.xml`,
     host,
   };

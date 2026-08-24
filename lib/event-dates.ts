@@ -1,6 +1,38 @@
 /** Prishtina / Kosovo — CET/CEST */
 export const CITY_TZ = "Europe/Belgrade";
 
+export type TimeOfDay = "morning" | "afternoon" | "evening" | "late_night" | "very_late";
+
+/**
+ * Deterministic time-of-day bucket in the city timezone (no AI, no clock drift
+ * beyond the wall clock). Used to make discovery copy feel alive across the day.
+ */
+export function getTimeOfDay(now = new Date(), tz = CITY_TZ): TimeOfDay {
+  const w = wallClockParts(now.getTime(), tz);
+  const h = w.h;
+  if (h >= 5 && h < 11) return "morning";
+  if (h >= 11 && h < 16) return "afternoon";
+  if (h >= 16 && h < 21) return "evening";
+  if (h >= 21 || h < 2) return "late_night";
+  return "very_late";
+}
+
+/** Short, time-aware line for discovery surfaces. */
+export function timeOfDayCopy(now = new Date(), tz = CITY_TZ): { label: string; subline: string } {
+  switch (getTimeOfDay(now, tz)) {
+    case "morning":
+      return { label: "What\u2019s happening tonight?", subline: "Coffee for now, plans for later — the city wakes up fast." };
+    case "afternoon":
+      return { label: "Plan your night.", subline: "The evening is still yours to shape — see what\u2019s on." };
+    case "evening":
+      return { label: "Your night starts here.", subline: "Doors are opening across the city. Pick where you\u2019re headed." };
+    case "late_night":
+      return { label: "Where\u2019s everyone going?", subline: "The city is moving — check the live pulse before you go out." };
+    case "very_late":
+      return { label: "Still going? \uD83D\uDC40", subline: "The night isn\u2019t over yet — see what\u2019s live right now." };
+  }
+}
+
 const DATETIME_LOCAL_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/;
 
 function wallClockParts(utcMs: number, tz = CITY_TZ) {
@@ -103,6 +135,22 @@ export function isOnThisWeekend(startsAt: string, now = new Date(), tz = CITY_TZ
 
 export function isTonight(startsAt: string, now = new Date()): boolean {
   return ymdInTz(startsAt) === ymdInTz(now);
+}
+
+/** YYYY-MM-DD (city TZ) of the calendar day `offset` days from `now`. */
+export function ymdOffsetInTz(offset: number, now = new Date(), tz = CITY_TZ): string {
+  const w = wallClockParts(now.getTime(), tz);
+  const target = addCalendarDaysInTz(w.y, w.m, w.d, offset, tz);
+  return ymdFromParts(target);
+}
+
+export function ymdForDateInTz(iso: string, tz = CITY_TZ): string {
+  return ymdInTz(iso, tz);
+}
+
+/** True when the event starts during the calendar day `offset` days from `now` (0 = today). */
+export function isOnDayOffset(startsAt: string, offset: number, now = new Date()): boolean {
+  return ymdInTz(startsAt, CITY_TZ) === ymdOffsetInTz(offset, now, CITY_TZ);
 }
 
 /** UTC boundaries for the current calendar day in the supplied timezone. */

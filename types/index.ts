@@ -295,6 +295,8 @@ export interface NightStopDisplay {
   subtitle?: string | null;
   /** Event start time (ISO) — null for plain venue stops. */
   time?: string | null;
+  /** Event end time (ISO) — for time-aware status and conflict detection. */
+  endsAt?: string | null;
   image?: string | null;
   /** Link target slug (event or venue). */
   slug?: string | null;

@@ -1,4 +1,12 @@
-import { isHappeningNow, isOnThisWeekend, isPast, isTonight, isUpcoming } from "@/lib/event-dates";
+import {
+  isHappeningNow,
+  isOnDayOffset,
+  isOnThisWeekend,
+  isPast,
+  isTonight,
+  isUpcoming,
+  ymdForDateInTz,
+} from "@/lib/event-dates";
 import type { Event, MusicGenre } from "@/types";
 
 const DJ_GENRES: MusicGenre[] = ["house", "deep_house", "tech_house", "techno", "melodic_techno", "hard_techno"];
@@ -6,6 +14,35 @@ const DJ_GENRES: MusicGenre[] = ["house", "deep_house", "tech_house", "techno", 
 /** Events starting later today (Prishtina TZ). */
 export function tonightEvents(events: Event[], now = new Date()) {
   return events.filter((e) => isTonight(e.starts_at, now) && !isPast(e.starts_at, e.ends_at, now));
+}
+
+/** Events starting tomorrow (Prishtina TZ). */
+export function tomorrowEvents(events: Event[], now = new Date()) {
+  return events.filter(
+    (e) => isOnDayOffset(e.starts_at, 1, now) && !isPast(e.starts_at, e.ends_at, now),
+  );
+}
+
+/** Events starting on any of the given day-offsets from now (0 = today, 1 = tomorrow…). */
+export function eventsOnDayOffsets(events: Event[], offsets: number[], now = new Date()) {
+  const set = new Set(offsets);
+  return events.filter(
+    (e) => set.has(dayOffset(e.starts_at, now)) && !isPast(e.starts_at, e.ends_at, now),
+  );
+}
+
+function dayOffset(startsAt: string, now: Date): number {
+  for (let offset = 0; offset < 14; offset++) {
+    if (isOnDayOffset(startsAt, offset, now)) return offset;
+  }
+  return 99;
+}
+
+/** Events starting on a specific calendar date (YYYY-MM-DD). */
+export function eventsOnYmd(events: Event[], ymd: string) {
+  return events.filter(
+    (e) => ymdForDateInTz(e.starts_at) === ymd && !isPast(e.starts_at, e.ends_at),
+  );
 }
 
 /** Events with start time in the future. */

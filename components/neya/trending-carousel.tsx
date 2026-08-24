@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import type { Event } from "@/types";
 import { EventCard } from "@/components/neya/event-card";
 import { Button } from "@/components/ui/button";
@@ -14,9 +15,12 @@ interface TrendingCarouselProps {
   events: Event[];
   className?: string;
   savedEventIds?: string[];
+  /** Optional “View all →” target on desktop when a matching page exists. */
+  viewAllHref?: string;
+  viewAllLabel?: string;
 }
 
-export function TrendingCarousel({ title, subtitle, events, className, savedEventIds }: TrendingCarouselProps) {
+export function TrendingCarousel({ title, subtitle, events, className, savedEventIds, viewAllHref, viewAllLabel }: TrendingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   if (!events.length) return null;
@@ -33,13 +37,24 @@ export function TrendingCarousel({ title, subtitle, events, className, savedEven
           </h2>
           {subtitle ? <p className="mt-1 text-sm text-white/55">{subtitle}</p> : null}
         </div>
-        <div className="hidden gap-2 sm:flex">
-          <Button type="button" variant="secondary" size="icon" onClick={() => scrollBy(-1)} aria-label="Previous">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button type="button" variant="secondary" size="icon" onClick={() => scrollBy(1)} aria-label="Next">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center gap-2">
+          {viewAllHref ? (
+            <Link
+              href={viewAllHref}
+              className="hidden items-center gap-1 text-sm font-semibold text-sky-300 transition hover:text-sky-200 sm:inline-flex"
+            >
+              {viewAllLabel ?? "View all"}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          ) : null}
+          <div className="hidden gap-2 sm:flex">
+            <Button type="button" variant="secondary" size="icon" onClick={() => scrollBy(-1)} aria-label="Previous">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button type="button" variant="secondary" size="icon" onClick={() => scrollBy(1)} aria-label="Next">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
       <div

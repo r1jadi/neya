@@ -107,6 +107,14 @@ export function EventDetailsCtas({
         {meta?.ticketTypes.map((ticket) => (
           <TicketCard key={ticket.id} eventId={event.id} eventTitle={event.title} tier={ticket.name} priceEur={ticket.priceCents / 100} currency={ticket.currency} description={ticket.description} quantityAvailable={ticket.quantityAvailable} status={ticket.status} endsAt={ticket.salesEnd ?? undefined} ticketId={ticket.id} />
         ))}
+        {meta?.ticketSoldOut ? (
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center">
+            <p className="text-sm font-semibold text-white/80">All tickets sold out</p>
+            <Link href="/events" className="mt-1 inline-block text-xs text-sky-300 hover:underline">
+              Browse other events
+            </Link>
+          </div>
+        ) : null}
       </div>
     ) : hasExternalTicket ? (
       <a
@@ -136,7 +144,7 @@ export function EventDetailsCtas({
     return (
       <div
         className={cn(
-          "fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-zinc-950/90 p-3 backdrop-blur-xl sm:hidden",
+          "safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-zinc-950/90 p-3 backdrop-blur-xl sm:hidden",
           className,
         )}
       >
@@ -177,6 +185,13 @@ export function EventDetailsCtas({
           ) : null}
           {hasTicketTypes && !meta?.ticketSoldOut ? (
             <MobileTicketCheckout event={event} meta={meta!} />
+          ) : hasTicketTypes && meta?.ticketSoldOut ? (
+            <Link
+              href="/events"
+              className="flex flex-1 items-center justify-center rounded-xl border border-white/10 bg-white/5 py-3 text-xs font-semibold text-white/50"
+            >
+              Sold out
+            </Link>
           ) : hasExternalTicket ? (
             <a
               href={event.ticket_url!}
@@ -206,6 +221,7 @@ export function EventDetailsCtas({
             title: event.title,
             subtitle: event.venue?.name ?? "Venue TBA",
             time: event.starts_at,
+            endsAt: event.ends_at ?? null,
             image: event.image_url,
             slug: event.slug,
             lat: event.venue?.lat ?? null,

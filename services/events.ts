@@ -168,6 +168,45 @@ export async function getTonightEvents(client?: SupabaseClient | null): Promise<
   }
 }
 
+/** Events to surface as “You might also like” — same venue, then same genre, then nearest dates. */
+export async function getRelatedEvents(
+  event: Pick<Event, "id" | "genre" | "starts_at" | "venue">,
+  client?: SupabaseClient | null,
+  limit = 6,
+): Promise<Event[]> {
+  try {
+    const supabase = clientOrPublic(client);
+    if (!supabase) return [];
+
+    // Prefer the same genre; widen to everything when the genre pool is thin.
+    const genreCandidates = await getDiscoveryEvents({ genre: event.genre }, supabase);
+    const pool =
+      genreCandidates.length >= limit
+        ? genreCandidates
+        : [...genreCandidates, ...(await getDiscoveryEvents({}, supabase))];
+
+    const now = Date.now();
+    const target = new Date(event.starts_at).getTime();
+    const scored = pool
+      .filter((candidate) => candidate.id !== event.id)
+      .map((candidate) => {
+        const sameVenue = event.venue != null && candidate.venue?.id === event.venue.id;
+        const sameGenre = candidate.genre === event.genre;
+        const start = new Date(candidate.starts_at).getTime();
+        const daysUntil = (start - now) / 86400000;
+        const dateBonus = daysUntil >= 0 && daysUntil <= 14 ? 40 - daysUntil * 2.5 : 0;
+        const proximity = Math.max(0, 20 - Math.abs(start - target) / 86400000);
+        return { event: candidate, score: (sameVenue ? 100 : 0) + (sameGenre ? 50 : 0) + dateBonus + proximity };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    return scored.slice(0, limit).map((item) => item.event);
+  } catch (error) {
+    console.error("[neya] getRelatedEvents", error);
+    return [];
+  }
+}
+
 export async function getUpcomingEventsForVenue(
   venueId: string,
   client?: SupabaseClient | null,

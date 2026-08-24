@@ -3,18 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Sparkles } from "lucide-react";
+import { MapPin, Sparkles, CalendarClock } from "lucide-react";
 import { VENUE_CATEGORIES, type Venue } from "@/types";
 import { LiveBadge } from "@/components/neya/live-badge";
 import { MyNightButton } from "@/components/my-night/my-night-button";
 import { SaveVenueButton } from "@/components/neya/save-venue-button";
 import { Badge } from "@/components/ui/badge";
+import { formatEventWhen } from "@/lib/event-dates";
 import { cn } from "@/lib/utils";
+import type { Event } from "@/types";
 
 interface VenueCardProps {
   venue: Venue;
   /** Optional "This week" highlight title shown on the card. */
   highlightTitle?: string;
+  /** Optional event happening tonight at this venue — surfaced on the card. */
+  tonight?: Event | null;
   className?: string;
   saved?: boolean;
 }
@@ -22,7 +26,8 @@ interface VenueCardProps {
 const categoryLabel = (category: Venue["category"]) =>
   category === "club" ? "Club" : VENUE_CATEGORIES.find((item) => item.id === category)?.label ?? "Other";
 
-export function VenueCard({ venue, highlightTitle, className, saved }: VenueCardProps) {
+export function VenueCard({ venue, highlightTitle, tonight, className, saved }: VenueCardProps) {
+  const tonightWhen = tonight ? formatEventWhen(tonight.starts_at) : null;
   return (
     <motion.div
       whileHover={{ y: -3 }}
@@ -74,7 +79,20 @@ export function VenueCard({ venue, highlightTitle, className, saved }: VenueCard
             ) : null}
             <span>{"€".repeat(venue.price_level)}</span>
           </div>
-          {highlightTitle ? (
+          {tonight ? (
+            <Link
+              href={`/events/${tonight.slug}`}
+              className="relative z-20 mt-2 flex items-start gap-2 rounded-lg border border-sky-400/20 bg-sky-500/10 px-2.5 py-1.5 transition hover:border-sky-400/45 hover:bg-sky-500/15"
+            >
+              <CalendarClock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-300" />
+              <span className="min-w-0">
+                <span className="block text-[10px] font-bold uppercase tracking-widest text-sky-300/90">Tonight</span>
+                <span className="mt-0.5 line-clamp-1 text-xs font-medium text-white/90">
+                  {tonight.title} · {tonightWhen}
+                </span>
+              </span>
+            </Link>
+          ) : highlightTitle ? (
             <p className="mt-1.5 line-clamp-1 text-xs font-medium text-amber-200/90">
               <Sparkles className="mr-1 inline h-3 w-3" />
               This week: {highlightTitle}

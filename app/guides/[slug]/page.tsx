@@ -29,10 +29,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${guide.title} · NEYA Guides`,
     description: guide.description ?? undefined,
+    alternates: {
+      canonical: `${SITE.url}/guides/${guide.slug}`,
+    },
     openGraph: {
+      type: "article",
       title: guide.title,
       description: guide.description ?? undefined,
+      url: `${SITE.url}/guides/${guide.slug}`,
       images: guide.cover_image ? [{ url: guide.cover_image }] : undefined,
+    },
+    twitter: {
+      card: guide.cover_image ? "summary_large_image" : "summary",
+      title: guide.title,
+      description: guide.description ?? undefined,
+      images: guide.cover_image ? [guide.cover_image] : undefined,
     },
   };
 }

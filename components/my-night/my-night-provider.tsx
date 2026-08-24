@@ -93,11 +93,16 @@ export function MyNightProvider({ children }: { children: React.ReactNode }) {
     setHydrated(true);
   }, []);
 
-  // Bootstrap: session → server plan (merging any local guest plan), else local.
+  // Bootstrap: show the local plan instantly, then reconcile with the server
+  // plan when signed in (merging any local guest stops).
   useEffect(() => {
     if (bootstrapped.current) return;
     bootstrapped.current = true;
     let cancelled = false;
+
+    // Hydrate the local plan right away so the UI is never empty while the
+    // session check is in flight, and guest clicks can't overwrite a plan.
+    loadFromLocal();
 
     const supabase = createClient();
     supabase.auth.getSession().then(async ({ data }) => {
@@ -113,7 +118,6 @@ export function MyNightProvider({ children }: { children: React.ReactNode }) {
         await loadFromServer();
       } else {
         setAuthed(false);
-        loadFromLocal();
       }
     });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CreditCard, Store } from "lucide-react";
+import { CreditCard, Minus, Plus, Store, Users } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -119,6 +119,7 @@ export function ReservationModal({
   const [open, setOpen] = useState(false);
   const defaultMethod = config.availableMethods[0] ?? "online";
   const [paymentMethod, setPaymentMethod] = useState<ReservationPaymentMethod>(defaultMethod);
+  const [partySize, setPartySize] = useState(2);
 
   const redirectPath = eventSlug ? `/events/${eventSlug}` : `/venues`;
   const priceLabel = formatReservationPrice(config.priceEur);
@@ -196,15 +197,45 @@ export function ReservationModal({
 
           <div>
             <label htmlFor="res-phone" className="mb-1 block text-xs text-white/45">Phone</label>
-            <Input id="res-phone" name="phone" placeholder="+383 44 …" type="tel" autoComplete="tel" required />
+            <Input id="res-phone" name="phone" placeholder="+383 44 …" type="tel" autoComplete="tel" required className="h-11" />
           </div>
           <div>
-            <label htmlFor="res-party" className="mb-1 block text-xs text-white/45">Guests</label>
-            <Input id="res-party" name="party_size" type="number" defaultValue={2} min={1} max={20} required />
+            <label className="mb-1 flex items-center gap-1.5 text-xs text-white/45">
+              <Users className="h-3 w-3" />
+              Party size
+            </label>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPartySize((n) => Math.max(1, n - 1))}
+                disabled={partySize <= 1}
+                aria-label="Decrease party size"
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-white transition",
+                  partySize <= 1 ? "cursor-not-allowed opacity-40" : "hover:border-white/25 hover:bg-white/10",
+                )}
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+              <span className="w-10 text-center text-lg font-semibold tabular-nums text-white">{partySize}</span>
+              <button
+                type="button"
+                onClick={() => setPartySize((n) => Math.min(20, n + 1))}
+                disabled={partySize >= 20}
+                aria-label="Increase party size"
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-white transition",
+                  partySize >= 20 ? "cursor-not-allowed opacity-40" : "hover:border-white/25 hover:bg-white/10",
+                )}
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+              <input type="hidden" name="party_size" value={partySize} />
+            </div>
           </div>
           <div>
             <label htmlFor="res-notes" className="mb-1 block text-xs text-white/45">Notes (optional)</label>
-            <Input id="res-notes" name="notes" placeholder="Birthday, arrival time…" maxLength={500} />
+            <Input id="res-notes" name="notes" placeholder="Birthday, arrival time…" maxLength={500} className="h-11" />
           </div>
 
           <ReservationFormActions submitLabel={submitLabel} onCancel={() => setOpen(false)} />

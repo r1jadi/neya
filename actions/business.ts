@@ -72,6 +72,15 @@ export async function createVenueEvent(formData: FormData) {
   const endsAt = String(formData.get("ends_at") ?? "").trim();
   if (!title || !startsAt) redirect("/business?error=fields");
 
+  const imageUrlRaw = String(formData.get("image_url") ?? "").trim().slice(0, 2000);
+  const capacityRaw = String(formData.get("capacity") ?? "").trim();
+  const capacity = capacityRaw ? Math.max(0, Math.min(100000, Number(capacityRaw) || 0)) || null : null;
+  const ticketFromRaw = String(formData.get("ticket_from_eur") ?? "").trim();
+  const ticketFromEur =
+    ticketFromRaw && Number.isFinite(Number(ticketFromRaw))
+      ? Math.max(0, Math.min(100000, Number(ticketFromRaw)))
+      : null;
+
   const slug = slugify(title);
 
   let venue: { id: string; image_url: string | null; city_slug: string | null } | null = null;
@@ -100,7 +109,9 @@ export async function createVenueEvent(formData: FormData) {
     description,
     submission_status: "pending_review",
     is_listed_public: false,
-    image_url: venue?.image_url ?? null,
+    image_url: imageUrlRaw || (venue?.image_url ?? null),
+    capacity,
+    ticket_from_eur: ticketFromEur,
     crowd_count: 0,
     atmosphere_rating: 8.5,
     live_status: false,

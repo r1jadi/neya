@@ -54,6 +54,7 @@ export function EventCard({ event, className, saved }: EventCardProps) {
                   title: event.title,
                   subtitle: event.venue?.name ?? "Venue TBA",
                   time: event.starts_at,
+                  endsAt: event.ends_at ?? null,
                   image: event.image_url,
                   slug: event.slug,
                   lat: event.venue?.lat ?? null,

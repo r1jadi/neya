@@ -13,8 +13,10 @@ import { eventJsonLd } from "@/lib/seo/json-ld";
 import { isUuid } from "@/lib/utils";
 import { getEventBookingMetaBySlug } from "@/services/booking-meta";
 import { getArtistsForEvent } from "@/services/artists";
-import { getEventBySlug } from "@/services/events";
+import { getEventBySlug, getRelatedEvents, getUpcomingEventsForVenue } from "@/services/events";
 import { getEventSources } from "@/services/event-sources";
+import { getEventPulse } from "@/services/pulse";
+import { getEventSocialCounts } from "@/services/social";
 import { DiscoveryTracker } from "@/components/neya/discovery-tracker";
 
 type Props = {
@@ -33,10 +35,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${event.title} · ${SITE.name}`,
     description,
+    alternates: {
+      canonical: `${SITE.url}/events/${event.slug}`,
+    },
     openGraph: {
+      type: "article",
       title: event.title,
       description,
+      url: `${SITE.url}/events/${event.slug}`,
       images: [{ url: event.image_url }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: event.title,
+      description,
+      images: [event.image_url],
     },
   };
 }
@@ -52,10 +65,16 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const event = await getEventBySlug(slug, supabase);
   if (!event) notFound();
 
-  const [meta, artists, sources] = await Promise.all([
+  const [meta, artists, sources, pulse, relatedEvents, moreAtVenue, social] = await Promise.all([
     getEventBookingMetaBySlug(slug),
     getArtistsForEvent(isUuid(event.id) ? event.id : ""),
     getEventSources(event.id, supabase),
+    getEventPulse(isUuid(event.id) ? event.id : ""),
+    getRelatedEvents(event, supabase),
+    event.venue && isUuid(event.venue.id)
+      ? getUpcomingEventsForVenue(event.venue.id, supabase)
+      : Promise.resolve([]),
+    getEventSocialCounts(isUuid(event.id) ? event.id : ""),
   ]);
 
   let saved = false;
@@ -98,6 +117,10 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             saved={saved}
             purchasedTickets={purchasedTickets}
             showSave={Boolean(user)}
+            pulse={pulse}
+            relatedEvents={relatedEvents}
+            venueEvents={moreAtVenue}
+            social={social}
             flash={{
               guestlist: sp.guestlist,
               voted: sp.voted,

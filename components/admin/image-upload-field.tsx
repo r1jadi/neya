@@ -6,14 +6,18 @@ import { MAX_IMAGE_UPLOAD_BYTES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+type UploadResult = { url?: string; error?: string };
+
 interface ImageUploadFieldProps {
   name: string;
   label: string;
   defaultUrl?: string;
   folder?: string;
+  /** Override the server action used to upload (defaults to the admin upload). */
+  uploader?: (fd: FormData) => Promise<UploadResult>;
 }
 
-export function ImageUploadField({ name, label, defaultUrl = "", folder = "venues" }: ImageUploadFieldProps) {
+export function ImageUploadField({ name, label, defaultUrl = "", folder = "venues", uploader }: ImageUploadFieldProps) {
   const [url, setUrl] = useState(defaultUrl);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +36,7 @@ export function ImageUploadField({ name, label, defaultUrl = "", folder = "venue
     const fd = new FormData();
     fd.set("file", file);
     fd.set("folder", folder);
-    const res = await uploadAdminImage(fd);
+    const res = await (uploader ?? uploadAdminImage)(fd);
     setUploading(false);
     if (res.error) {
       setError(res.error);

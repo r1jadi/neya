@@ -12,7 +12,7 @@ interface MyNightButtonProps {
 }
 
 export function MyNightButton({ stop, variant = "icon", className }: MyNightButtonProps) {
-  const { stops, addStop, removeStop, limitHit } = useMyNight();
+  const { hydrated, stops, addStop, removeStop, limitHit } = useMyNight();
   const index = stops.findIndex((s) => s.kind === stop.kind && s.refId === stop.refId);
   const added = index >= 0;
   const blocked = limitHit && !added;
@@ -23,6 +23,7 @@ export function MyNightButton({ stop, variant = "icon", className }: MyNightButt
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
+        if (!hydrated) return; // plan not loaded yet — avoid clobbering it
         if (added) removeStop(index);
         else addStop(stop);
       }}

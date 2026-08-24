@@ -26,6 +26,26 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
         : null,
   );
 
+  function friendlyAuthError(message: string): string {
+    const m = message.toLowerCase();
+    if (m.includes("invalid credentials") || m.includes("invalid login")) {
+      return "Email or password is incorrect.";
+    }
+    if (m.includes("email not confirmed") || m.includes("not confirmed")) {
+      return "Please confirm your email address before signing in.";
+    }
+    if (m.includes("too many requests") || m.includes("rate limit")) {
+      return "Too many attempts. Wait a moment and try again.";
+    }
+    if (m.includes("user not found")) {
+      return "No account found with this email. Try creating one instead.";
+    }
+    if (m.includes("network") || m.includes("fetch")) {
+      return "Couldn't connect. Check your internet and try again.";
+    }
+    return "Something went wrong. Please try again.";
+  }
+
   async function signInWithPassword(e: React.FormEvent) {
     e.preventDefault();
     setLoading("password");
@@ -35,7 +55,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(null);
     if (err) {
-      setError(err.message);
+      setError(friendlyAuthError(err.message));
       return;
     }
     const dest = redirectTo?.startsWith("/") && !redirectTo.startsWith("//") && !redirectTo.startsWith("/\\") ? redirectTo : "/events";
@@ -55,7 +75,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
     });
     if (err) {
       setLoading(null);
-      setError(err.message);
+      setError(friendlyAuthError(err.message));
       return;
     }
     if (data.url) {
@@ -78,7 +98,7 @@ export function LoginForm({ initialError, redirectTo }: { initialError?: string;
     });
     setLoading(null);
     if (err) {
-      setError(err.message);
+      setError(friendlyAuthError(err.message));
       return;
     }
     setMessage("Check your email for the magic link.");

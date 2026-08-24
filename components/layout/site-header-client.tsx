@@ -6,12 +6,15 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { useMyNight } from "@/components/my-night/my-night-provider";
+import { SearchDialog } from "@/components/neya/search-dialog";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/events", label: "Discover" },
+  { href: "/my-night", label: "My Night" },
   { href: "/artists", label: "Artists" },
   { href: "/guides", label: "Guides" },
   { href: "/map", label: "Map" },
@@ -35,6 +38,8 @@ export function SiteHeaderClient({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const authed = Boolean(userEmail);
+  const { hydrated, stops } = useMyNight();
+  const stopCount = hydrated ? stops.length : 0;
 
   /**
    * Route-based active matching: a nav item is active only when the current
@@ -106,31 +111,42 @@ export function SiteHeaderClient({
               href={l.href}
               aria-current={isActive(l.href) ? "page" : undefined}
               className={cn(
-                "text-sm font-medium transition",
+                "relative text-sm font-medium transition",
                 isActive(l.href)
                   ? "text-white underline decoration-sky-400/70 decoration-2 underline-offset-8"
                   : "text-white/70 hover:text-white",
               )}
             >
               {l.label}
+              {l.href === "/my-night" && stopCount > 0 ? (
+                <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 px-1 text-[10px] font-bold text-black">
+                  {stopCount}
+                </span>
+              ) : null}
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-2 md:flex">{authed ? authedLinks : guestLinks}</div>
+        <div className="hidden items-center gap-2 md:flex">
+          <SearchDialog />
+          {authed ? authedLinks : guestLinks}
+        </div>
         <div className="hidden md:block">
           <Button asChild>
             <Link href={authed ? "/events" : "/register"}>{authed ? "Tonight" : "Get NEYA"}</Link>
           </Button>
         </div>
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 md:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <SearchDialog />
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
       <AnimatePresence>
         {open ? (
@@ -147,7 +163,7 @@ export function SiteHeaderClient({
                   href={l.href}
                   aria-current={isActive(l.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-lg px-3 py-2 text-sm font-medium transition",
+                    "flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition",
                     isActive(l.href)
                       ? "bg-white/5 text-white"
                       : "text-white/80 hover:bg-white/5",
@@ -155,6 +171,11 @@ export function SiteHeaderClient({
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
+                  {l.href === "/my-night" && stopCount > 0 ? (
+                    <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 px-1 text-[10px] font-bold text-black">
+                      {stopCount}
+                    </span>
+                  ) : null}
                 </Link>
               ))}
               {authed ? (

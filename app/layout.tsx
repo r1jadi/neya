@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Outfit, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { JsonLd } from "@/components/seo/json-ld";
+import { InstallPrompt } from "@/components/neya/install-prompt";
+import { OfflineBanner } from "@/components/neya/offline-banner";
+import { ServiceWorkerRegister } from "@/components/neya/service-worker-register";
 import { AppProviders } from "@/providers/app-providers";
 import { SITE } from "@/lib/constants";
 import { Analytics } from "@vercel/analytics/next"
@@ -27,6 +30,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
+  themeColor: "#000000",
 };
 
 export const metadata: Metadata = {
@@ -51,13 +55,21 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} · ${SITE.tagline}`,
     description: "What’s happening tonight in Prishtina — on NEYA.",
+    images: [{ url: "/icon-512.png", width: 512, height: 512, alt: SITE.name }],
   },
   twitter: {
     card: "summary_large_image",
     title: SITE.name,
     description: SITE.tagline,
+    images: ["/icon-512.png"],
   },
   robots: { index: true, follow: true },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "NEYA",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export default function RootLayout({
@@ -72,7 +84,10 @@ export default function RootLayout({
       >
         <AppProviders>
           <JsonLd />
+          <OfflineBanner />
           <div className="flex min-h-full w-full min-w-0 flex-col">{children}</div>
+          <InstallPrompt />
+          <ServiceWorkerRegister />
         </AppProviders>
 
         {/* VERCEL ANALYTICS */}

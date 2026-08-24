@@ -20,12 +20,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const plan = await getSharedPlanByToken(token);
   if (!plan) return { title: "Plan not found" };
   const names = plan.stops.map((s) => s.title).join(", ");
+  const firstImage = plan.stops.find((s) => s.image)?.image;
   return {
     title: `${plan.title} · ${SITE.name}`,
     description: `A night plan on NEYA: ${names}.`,
     openGraph: {
       title: `${plan.title} · ${SITE.name}`,
       description: `A night plan on NEYA: ${names}.`,
+      images: firstImage ? [{ url: firstImage }] : undefined,
+    },
+    twitter: {
+      card: firstImage ? "summary_large_image" : "summary",
+      title: `${plan.title} · ${SITE.name}`,
+      description: `A night plan on NEYA: ${names}.`,
+      images: firstImage ? [firstImage] : undefined,
     },
   };
 }

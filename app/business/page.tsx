@@ -11,6 +11,7 @@ import { EVENT_CATEGORIES } from "@/lib/discovery";
 
 export const metadata: Metadata = {
   title: `Venue hub · ${SITE.name}`,
+  robots: { index: false, follow: false },
 };
 
 type Props = { searchParams: Promise<{ error?: string; created?: string; event?: string }> };
