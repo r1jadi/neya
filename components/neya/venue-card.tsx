@@ -11,6 +11,7 @@ import { SaveVenueButton } from "@/components/neya/save-venue-button";
 import { Badge } from "@/components/ui/badge";
 import { formatEventWhen } from "@/lib/event-dates";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { Event } from "@/types";
 
 interface VenueCardProps {
@@ -27,6 +28,7 @@ const categoryLabel = (category: Venue["category"]) =>
   category === "club" ? "Club" : VENUE_CATEGORIES.find((item) => item.id === category)?.label ?? "Other";
 
 export function VenueCard({ venue, highlightTitle, tonight, className, saved }: VenueCardProps) {
+  const { t } = useI18n();
   const tonightWhen = tonight ? formatEventWhen(tonight.starts_at) : null;
   return (
     <motion.div
@@ -68,9 +70,9 @@ export function VenueCard({ venue, highlightTitle, tonight, className, saved }: 
           <h3 className="text-base font-semibold text-white">{venue.name}</h3>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-white/60">
             {venue.atmosphere_score != null ? (
-              <span className="text-sky-200/90">{venue.atmosphere_score.toFixed(1)} vibe</span>
+              <span className="text-sky-200/90">{venue.atmosphere_score.toFixed(1)} {t.venueCard.vibe}</span>
             ) : null}
-            {venue.crowd_count != null ? <span>{venue.crowd_count} here</span> : null}
+            {venue.crowd_count != null ? <span>{venue.crowd_count} {t.venueCard.here}</span> : null}
             {venue.distance_km != null ? (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
@@ -86,7 +88,7 @@ export function VenueCard({ venue, highlightTitle, tonight, className, saved }: 
             >
               <CalendarClock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-300" />
               <span className="min-w-0">
-                <span className="block text-[10px] font-bold uppercase tracking-widest text-sky-300/90">Tonight</span>
+                <span className="block text-[10px] font-bold uppercase tracking-widest text-sky-300/90">{t.venueCard.tonight}</span>
                 <span className="mt-0.5 line-clamp-1 text-xs font-medium text-white/90">
                   {tonight.title} · {tonightWhen}
                 </span>
@@ -95,7 +97,7 @@ export function VenueCard({ venue, highlightTitle, tonight, className, saved }: 
           ) : highlightTitle ? (
             <p className="mt-1.5 line-clamp-1 text-xs font-medium text-amber-200/90">
               <Sparkles className="mr-1 inline h-3 w-3" />
-              This week: {highlightTitle}
+              {t.venueCard.thisWeek}: {highlightTitle}
             </p>
           ) : null}
         </div>

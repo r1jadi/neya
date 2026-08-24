@@ -9,6 +9,7 @@ import { tomorrowEvents, tonightEvents, thisWeekend } from "@/lib/event-filters"
 import { CITY_TZ, getThisWeekendRange } from "@/lib/event-dates";
 import type { Event } from "@/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type Window = "tonight" | "tomorrow" | "weekend";
 
@@ -48,11 +49,11 @@ function weekendRange(tz = CITY_TZ): string {
   return `${fmt(startYmd)} – ${fmt(endYmd)}`;
 }
 
-function buildWindows(): { id: Window; label: string; hint: string }[] {
+function buildWindows(t: ReturnType<typeof useI18n>["t"]): { id: Window; label: string; hint: string }[] {
   return [
-    { id: "tonight", label: "Tonight", hint: shortDate(0) },
-    { id: "tomorrow", label: "Tomorrow", hint: shortDate(1) },
-    { id: "weekend", label: "This weekend", hint: weekendRange() },
+    { id: "tonight", label: t.homeFeed.tonight, hint: shortDate(0) },
+    { id: "tomorrow", label: t.homeFeed.tomorrow, hint: shortDate(1) },
+    { id: "weekend", label: t.homeFeed.thisWeekend, hint: weekendRange() },
   ];
 }
 
@@ -71,8 +72,9 @@ interface HomeFeedProps {
 }
 
 export function HomeFeed({ events, savedEventIds, hasVenues }: HomeFeedProps) {
+  const { t } = useI18n();
   const [windowId, setWindowId] = useState<Window>("tonight");
-  const windows = useMemo(() => buildWindows(), []);
+  const windows = useMemo(() => buildWindows(t), [t]);
 
   const view = useMemo(() => {
     const lists: Record<Window, Event[]> = {
@@ -89,7 +91,7 @@ export function HomeFeed({ events, savedEventIds, hasVenues }: HomeFeedProps) {
     <section className="mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-300/90">What&apos;s on</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-300/90">{t.homeFeed.whatsOn}</p>
           <h2 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Prishtina · {active.label} · {active.hint}
           </h2>
@@ -120,7 +122,7 @@ export function HomeFeed({ events, savedEventIds, hasVenues }: HomeFeedProps) {
       </div>
 
       <p className="mt-3 text-sm text-white/50">
-        {view.length} {view.length === 1 ? "night" : "nights"} lined up · Prishtina · {longDate()}
+        {t.homeFeed.nightsLinedUp.replace("{count}", String(view.length)).replace("{plural}", view.length === 1 ? t.homeFeed.night : t.homeFeed.nights).replace("{city}", t.venueList.eyebrow).replace("{date}", longDate())}
       </p>
 
       <div className="mt-5">
@@ -154,7 +156,7 @@ export function HomeFeed({ events, savedEventIds, hasVenues }: HomeFeedProps) {
             href={`/events?when=${windowId}`}
             className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:border-sky-400/40 hover:text-white"
           >
-            View all {windowId === "tonight" ? "tonight" : windowId === "tomorrow" ? "tomorrow" : "this weekend"} in the calendar
+            {t.homeFeed.viewAllCalendar.replace("{when}", windowId === "tonight" ? t.homeFeed.tonight : windowId === "tomorrow" ? t.homeFeed.tomorrow : t.homeFeed.thisWeekend)}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -172,14 +174,15 @@ function HomeEmptyState({
   hasVenues: boolean;
   onSetWindow: (w: Window) => void;
 }) {
+  const { t } = useI18n();
   const headline =
-    windowId === "tonight" ? "Nothing tonight… yet" : windowId === "tomorrow" ? "Nothing tomorrow… yet" : "Nothing this weekend… yet";
+    windowId === "tonight" ? t.homeFeed.nothingTonight : windowId === "tomorrow" ? t.homeFeed.nothingTomorrow : t.homeFeed.nothingWeekend;
   const body =
     windowId === "tonight"
-      ? "Prishtina is quiet for now — but nights get added all the time."
+      ? t.homeFeed.quietForNow
       : windowId === "tomorrow"
-        ? "Tomorrow is wide open. Check venues or skip ahead to the weekend."
-        : "The weekend is still free. Venues and DJs keep publishing — check back soon.";
+        ? t.homeFeed.tomorrowOpen
+        : t.homeFeed.weekendFree;
   const otherWindow: Window = windowId === "weekend" ? "tomorrow" : "weekend";
 
   return (
@@ -195,7 +198,7 @@ function HomeEmptyState({
             className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
           >
             <Compass className="h-4 w-4" />
-            Explore the map
+            {t.common.exploreTheMap}
           </Link>
           {hasVenues ? (
             <Link
@@ -203,7 +206,7 @@ function HomeEmptyState({
               className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/80 transition hover:border-sky-400/40 hover:text-white"
             >
               <Sparkles className="h-4 w-4" />
-              Explore venues
+              {t.myNight.exploreVenues}
             </Link>
           ) : null}
           <button
@@ -212,7 +215,7 @@ function HomeEmptyState({
             className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/80 transition hover:border-fuchsia-400/40 hover:text-white"
           >
             <CalendarDays className="h-4 w-4" />
-            {otherWindow === "weekend" ? "Browse this weekend" : "Try tomorrow instead"}
+            {otherWindow === "weekend" ? t.homeFeed.browseThisWeekend : t.homeFeed.tryTomorrow}
           </button>
         </div>
       </div>

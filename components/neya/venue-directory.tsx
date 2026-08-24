@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/neya/empty-state";
 import { VENUE_CATEGORIES, type Venue } from "@/types";
 import type { Event } from "@/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type Props = {
   venues: Venue[];
@@ -24,6 +25,7 @@ function venueMatchesQuery(venue: Venue, query: string) {
 }
 
 export function VenueDirectory({ venues, tonightByVenue, savedVenueIds }: Props) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
 
@@ -45,11 +47,11 @@ export function VenueDirectory({ venues, tonightByVenue, savedVenueIds }: Props)
       <div className="flex flex-col gap-3 sm:flex-row">
         <label className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-white/35" />
-          <span className="sr-only">Search venues</span>
+          <span className="sr-only">{t.venueList.searchLabel}</span>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search venues by name, area or music…"
+            placeholder={t.venueList.searchVenues}
             className="h-10 w-full rounded-xl border border-white/10 bg-black/40 pl-9 pr-3 text-sm text-white placeholder:text-white/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
           />
         </label>
@@ -67,7 +69,7 @@ export function VenueDirectory({ venues, tonightByVenue, savedVenueIds }: Props)
               : "border-white/15 text-white/65 hover:border-fuchsia-400/40 hover:text-white",
           )}
         >
-          All
+          {t.actions.all}
         </button>
         {categories.map((c) => (
           <button
@@ -88,7 +90,7 @@ export function VenueDirectory({ venues, tonightByVenue, savedVenueIds }: Props)
       </div>
 
       <p className="mt-4 text-xs text-white/45">
-        {filtered.length} {filtered.length === 1 ? "venue" : "venues"} · Prishtina
+        {filtered.length} {filtered.length === 1 ? t.venueList.venue : t.venueList.venues} · {t.venueList.eyebrow}
       </p>
 
       {filtered.length ? (
@@ -105,8 +107,8 @@ export function VenueDirectory({ venues, tonightByVenue, savedVenueIds }: Props)
       ) : (
         <div className="mt-8">
           <EmptyState
-            title="No venues match that"
-            description="Try a different search or category — every approved venue in Prishtina is listed here."
+            title={t.venueList.noMatchTitle}
+            description={t.venueList.noMatchDesc}
             icon={<Search className="h-10 w-10" />}
           />
         </div>

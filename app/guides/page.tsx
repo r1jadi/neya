@@ -15,6 +15,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPublishedGuides } from "@/services/guides";
 import { getDiscoveryEvents } from "@/services/events";
 import type { GuideCategory } from "@/types/guides";
+import { getDictionary } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: `Travel Guides · ${SITE.name}`,
@@ -32,16 +33,17 @@ type Props = {
 };
 
 /** Intent chips link straight into the existing event discovery filters. */
-const INTENTS = [
-  { label: "🔥 Party", href: "/events?category=nightlife" },
-  { label: "🎧 Techno", href: "/events?genre=techno" },
-  { label: "🎤 Live music", href: "/events?category=live_music" },
-  { label: "💸 Free", href: "/events?access=free" },
-  { label: "🌅 Rooftops", href: "/map" },
-  { label: "🗓 This weekend", href: "/events?when=weekend" },
-];
 
 export default async function GuidesPage({ searchParams }: Props) {
+  const t = await getDictionary();
+  const INTENTS = [
+    { label: t.guidesPage.party, href: "/events?category=nightlife" },
+    { label: t.guidesPage.techno, href: "/events?genre=techno" },
+    { label: t.guidesPage.liveMusic, href: "/events?category=live_music" },
+    { label: t.guidesPage.free, href: "/events?access=free" },
+    { label: t.guidesPage.rooftops, href: "/map" },
+    { label: t.guidesPage.thisWeekend, href: "/events?when=weekend" },
+  ];
   const q = await searchParams;
   const supabase = await createClient();
   const [allGuides, events] = await Promise.all([getPublishedGuides(supabase), getDiscoveryEvents({ city: "prishtina" }, supabase)]);
@@ -65,13 +67,12 @@ export default async function GuidesPage({ searchParams }: Props) {
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-fuchsia-600/20 blur-[110px]" />
             <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-sky-600/15 blur-[100px]" />
             <div className="relative max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">NEYA Guides</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">{t.guidesPage.eyebrow}</p>
               <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-bold leading-tight text-white sm:text-5xl">
-                Explore Kosovo
+                {t.guidesPage.title}
               </h1>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-white/60">
-                Discover places, experiences, nightlife and things worth doing — curated itineraries for
-                everything from a single night in Prishtina to a full Kosovo adventure.
+                {t.guidesPage.description}
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-2">
                 {INTENTS.map((intent) => (
@@ -91,20 +92,20 @@ export default async function GuidesPage({ searchParams }: Props) {
           {allGuides.length ? (
             <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <dt className="text-[11px] uppercase tracking-widest text-white/40">Guides</dt>
+                <dt className="text-[11px] uppercase tracking-widest text-white/40">{t.guidesPage.guides}</dt>
                 <dd className="mt-1 text-2xl font-bold text-white">{allGuides.length}</dd>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <dt className="text-[11px] uppercase tracking-widest text-white/40">Categories</dt>
+                <dt className="text-[11px] uppercase tracking-widest text-white/40">{t.guidesPage.categories}</dt>
                 <dd className="mt-1 text-2xl font-bold text-white">{availableCategories.length || "—"}</dd>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <dt className="text-[11px] uppercase tracking-widest text-white/40">Destinations</dt>
+                <dt className="text-[11px] uppercase tracking-widest text-white/40">{t.guidesPage.destinations}</dt>
                 <dd className="mt-1 text-2xl font-bold text-white">{locations.length || "—"}</dd>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <dt className="text-[11px] uppercase tracking-widest text-white/40">From</dt>
-                <dd className="mt-1 text-2xl font-bold text-white">{maxPrice > 0 ? `€${Math.min(...allGuides.map((g) => g.price))}` : "Free"}</dd>
+                <dt className="text-[11px] uppercase tracking-widest text-white/40">{t.guidesPage.from}</dt>
+                <dd className="mt-1 text-2xl font-bold text-white">{maxPrice > 0 ? `€${Math.min(...allGuides.map((g) => g.price))}` : t.actions.free}</dd>
               </div>
             </dl>
           ) : null}
@@ -118,7 +119,7 @@ export default async function GuidesPage({ searchParams }: Props) {
 
           {featured.length > 0 && !filters.featured ? (
             <section className="mt-10">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-white/45">Featured</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-white/45">{t.guidesPage.featured}</h2>
               <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {featured.slice(0, 3).map((g) => (
                   <GuideCard key={g.id} guide={g} />
@@ -129,7 +130,7 @@ export default async function GuidesPage({ searchParams }: Props) {
 
           <section className="mt-10">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-white/45">
-              {guides.length} guide{guides.length === 1 ? "" : "s"}
+              {guides.length} {guides.length === 1 ? t.guidesPage.guide : t.guidesPage.guides}
             </h2>
             {guides.length ? (
               <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -140,8 +141,8 @@ export default async function GuidesPage({ searchParams }: Props) {
             ) : (
               <div className="mt-6 flex flex-col items-center">
                 <EmptyState
-                  title="No guides match your filters"
-                  description="Try a different category or clear the filters — new guides are added regularly."
+                  title={t.guidesPage.noGuides}
+                  description={t.guidesPage.noGuidesDesc}
                   icon={<Compass className="h-10 w-10" />}
                 />
                 <Link
@@ -149,7 +150,7 @@ export default async function GuidesPage({ searchParams }: Props) {
                   className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
                 >
                   <MapPin className="h-4 w-4" />
-                  Clear filters
+                  {t.guidesPage.clearFilters}
                 </Link>
               </div>
             )}
@@ -164,7 +165,7 @@ export default async function GuidesPage({ searchParams }: Props) {
 
           <p className="mt-12 text-center text-sm text-white/45">
             <Link href="/" className="text-sky-300 hover:underline">
-              ← Back home
+              {t.eventsPage.backHome}
             </Link>
           </p>
         </div>

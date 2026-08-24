@@ -11,6 +11,7 @@ import { MyNightButton } from "@/components/my-night/my-night-button";
 import { Badge } from "@/components/ui/badge";
 import { formatEventWhen, isHappeningNow } from "@/lib/event-dates";
 import { cn, isUuid } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface EventCardProps {
   event: Event;
@@ -19,6 +20,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, className, saved }: EventCardProps) {
+  const { t } = useI18n();
   const happening = isHappeningNow(event.starts_at, event.ends_at);
   const whenLabel = formatEventWhen(event.starts_at);
 
@@ -52,7 +54,7 @@ export function EventCard({ event, className, saved }: EventCardProps) {
                   kind: "event",
                   refId: event.id,
                   title: event.title,
-                  subtitle: event.venue?.name ?? "Venue TBA",
+                  subtitle: event.venue?.name ?? t.eventCard.dancefloor,
                   time: event.starts_at,
                   endsAt: event.ends_at ?? null,
                   image: event.image_url,
@@ -95,12 +97,12 @@ export function EventCard({ event, className, saved }: EventCardProps) {
               {event.distance_km} km
             </span>
           ) : null}
-          {event.is_free ? <span className="font-medium text-emerald-200">Free</span> : null}
-          {!event.is_free && event.ticket_from_eur != null ? <span>From €{event.ticket_from_eur.toLocaleString("en-GB", { maximumFractionDigits: 2 })}</span> : null}
-          {event.ticket_status ? <span className={event.ticket_status === "available" ? "inline-flex items-center gap-1 text-sky-200" : "inline-flex items-center gap-1 text-amber-200"}><Ticket className="h-3.5 w-3.5" />{event.ticket_status === "available" ? "Tickets available" : event.ticket_status === "sold_out" ? "Sold out" : "Ticket sales closed"}</span> : null}
+          {event.is_free ? <span className="font-medium text-emerald-200">{t.actions.free}</span> : null}
+          {!event.is_free && event.ticket_from_eur != null ? <span>{t.eventCard.from} €{event.ticket_from_eur.toLocaleString("en-GB", { maximumFractionDigits: 2 })}</span> : null}
+          {event.ticket_status ? <span className={event.ticket_status === "available" ? "inline-flex items-center gap-1 text-sky-200" : "inline-flex items-center gap-1 text-amber-200"}><Ticket className="h-3.5 w-3.5" />{event.ticket_status === "available" ? t.eventCard.ticketsAvailable : event.ticket_status === "sold_out" ? t.eventCard.soldOut : t.eventCard.salesClosed}</span> : null}
           {event.reservation_spots_left != null ? (
             <span className="text-amber-200/90">
-              {event.reservation_spots_left} tables left
+              {event.reservation_spots_left} {t.eventCard.tablesLeft}
             </span>
           ) : null}
         </div>

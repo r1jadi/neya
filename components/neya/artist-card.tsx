@@ -5,6 +5,7 @@ import { FollowArtistButton } from "@/components/neya/follow-artist-button";
 import { Badge } from "@/components/ui/badge";
 import { formatEventWhen } from "@/lib/event-dates";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { Artist } from "@/types";
 
 interface ArtistCardProps {
@@ -14,6 +15,7 @@ interface ArtistCardProps {
 }
 
 export function ArtistCard({ artist, initialFollowing = false, className }: ArtistCardProps) {
+  const { t } = useI18n();
   const hasImage = Boolean(artist.profile_image);
   const genres = artist.genres.slice(0, 3);
   const gig = artist.next_gig;
@@ -47,7 +49,7 @@ export function ArtistCard({ artist, initialFollowing = false, className }: Arti
           {artist.is_verified ? (
             <Badge variant="secondary" className="border-sky-400/30 bg-black/60 text-sky-200 backdrop-blur-md">
               <BadgeCheck className="mr-1 h-3 w-3" />
-              Verified
+              {t.artistsPage.verified}
             </Badge>
           ) : null}
         </div>
@@ -69,7 +71,7 @@ export function ArtistCard({ artist, initialFollowing = false, className }: Arti
             {gig.venue_name ? <span className="text-white/45">· {gig.venue_name}</span> : null}
           </p>
         ) : (
-          <p className="text-xs text-white/30">No gigs listed yet</p>
+          <p className="text-xs text-white/30">{t.artistsPage.noGigs}</p>
         )}
         <div className="relative z-20 mt-auto pt-2">
           <FollowArtistButton

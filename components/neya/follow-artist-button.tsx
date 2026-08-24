@@ -6,6 +6,7 @@ import { useRef, useState, useTransition } from "react";
 import { toggleFollowArtist } from "@/actions/artists";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export function FollowArtistButton({
   artistId,
@@ -20,6 +21,7 @@ export function FollowArtistButton({
   className?: string;
   compact?: boolean;
 }) {
+  const { t } = useI18n();
   const [following, setFollowing] = useState(initialFollowing);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
@@ -61,10 +63,10 @@ export function FollowArtistButton({
       }}
       disabled={pending}
       aria-pressed={following}
-      aria-label={following ? `Unfollow ${artistSlug}` : `Follow ${artistSlug}`}
+      aria-label={following ? t.actions.unfollow : t.actions.follow}
     >
       {following ? <UserCheck className="h-3.5 w-3.5" /> : <UserPlus className="h-3.5 w-3.5" />}
-      {pending ? "…" : following ? "Following" : "Follow"}
+      {pending ? "…" : following ? t.actions.following : t.actions.follow}
     </Button>
   );
 }

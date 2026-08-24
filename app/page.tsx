@@ -9,10 +9,12 @@ import { happeningNowEvents, tonightEvents, upcomingEvents } from "@/lib/event-f
 import { getVenues } from "@/services/venues";
 import { getActiveHighlightsForHome } from "@/services/venue-highlights";
 import { getActiveCities } from "@/services/cities";
+import { getDictionary } from "@/lib/i18n/server";
 
 type Props = { searchParams: Promise<{ error?: string }> };
 
 export default async function Home({ searchParams }: Props) {
+  const t = await getDictionary();
   const q = await searchParams;
   const supabase = await createClient();
   const {
@@ -63,10 +65,11 @@ export default async function Home({ searchParams }: Props) {
       <SiteHeader />
       {q.error === "payment" ? (
         <p className="mx-auto mt-6 w-full max-w-6xl rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-          We couldn&apos;t start the payment — please try again from the event page.
+          {t.eventsPage.paymentError}
         </p>
       ) : null}
       <LandingSections
+        t={t}
         events={events}
         venues={venues}
         stories={stories}

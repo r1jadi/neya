@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SITE } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { getArtistsForDirectory, getFollowedArtistIds } from "@/services/artists";
+import { getDictionary } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: `Artists · ${SITE.name}`,
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ArtistsPage() {
+  const t = await getDictionary();
   const supabase = await createClient();
   const {
     data: { user },
@@ -28,11 +30,10 @@ export default async function ArtistsPage() {
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
         <div className="max-w-2xl">
           <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white sm:text-4xl">
-            Artists
+            {t.artistsPage.title}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-white/55">
-            The DJs and artists shaping Prishtina&apos;s nightlife — follow your favorites to keep
-            up with where they&apos;re playing next.
+            {t.artistsPage.description}
           </p>
         </div>
 

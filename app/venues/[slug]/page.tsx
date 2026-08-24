@@ -24,6 +24,7 @@ import { createClient } from "@/lib/supabase/server";
 import { venueJsonLd } from "@/lib/seo/json-ld";
 import { isUuid, neyaPrimaryGradient } from "@/lib/utils";
 import { isHappeningNow, isOnDayOffset, isOnThisWeekend } from "@/lib/event-dates";
+import { getDictionary } from "@/lib/i18n/server";
 import { CheckInWidget } from "@/components/neya/check-in-widget";
 import { MyNightButton } from "@/components/my-night/my-night-button";
 import { DiscoveryTracker } from "@/components/neya/discovery-tracker";
@@ -78,6 +79,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function VenuePage({ params, searchParams }: Props) {
+  const t = await getDictionary();
   const { slug } = await params;
   const q = await searchParams;
   const supabase = await createClient();
@@ -141,12 +143,12 @@ export default async function VenuePage({ params, searchParams }: Props) {
               <LiveBadge live={venue.is_live} />
               {venue.crowd_count != null && venue.crowd_count > 0 ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/25 bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-200 backdrop-blur">
-                  👥 {venue.crowd_count} here
+                  👥 {venue.crowd_count} {t.venuePage.here}
                 </span>
               ) : null}
               {venue.atmosphere_score != null && venue.atmosphere_score > 0 ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-400/25 bg-orange-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-orange-200 backdrop-blur">
-                  🔥 {venue.atmosphere_score.toFixed(1)} vibe
+                  🔥 {venue.atmosphere_score.toFixed(1)} {t.venuePage.vibe}
                 </span>
               ) : null}
             </div>
@@ -158,17 +160,17 @@ export default async function VenuePage({ params, searchParams }: Props) {
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
           {q.checkin === "1" ? (
             <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
-              You&apos;re checked in — see you tonight ✦
+              {t.venuePage.checkedIn}
             </p>
           ) : null}
           {q.checkin === "err" ? (
             <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-              We couldn&apos;t record your check-in. Please try again.
+              {t.venuePage.checkInFailed}
             </p>
           ) : null}
           {q.checkin === "rate" ? (
             <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
-              You&apos;ve checked in recently — take a breath and try again in a bit.
+              {t.venuePage.checkInRated}
             </p>
           ) : null}
 
@@ -192,8 +194,8 @@ export default async function VenuePage({ params, searchParams }: Props) {
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-sky-400/30 bg-sky-500/10 px-3 py-2 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20 sm:flex-none"
               >
                 <MapPin className="h-4 w-4 shrink-0" />
-                <span className="sm:hidden">Directions</span>
-                <span className="hidden whitespace-nowrap sm:inline">Get directions</span>
+                <span className="sm:hidden">{t.venuePage.directions}</span>
+                <span className="hidden whitespace-nowrap sm:inline">{t.venuePage.getDirections}</span>
               </a>
             ) : null}
           </div>
@@ -233,9 +235,9 @@ export default async function VenuePage({ params, searchParams }: Props) {
                   config={venueMeta.reservation}
                 />
               ) : venueMeta ? (
-                <p className="text-xs text-white/45">Table reservations are closed for this venue.</p>
+                <p className="text-xs text-white/45">{t.venuePage.tablesClosed}</p>
               ) : (
-                <p className="text-xs text-white/45">Table reservations open when the venue is live on NEYA.</p>
+                <p className="text-xs text-white/45">{t.venuePage.tablesSoon}</p>
               )}
             </div>
           </div>
@@ -244,7 +246,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
           <section className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]">
             <div className="flex items-center justify-between gap-3 border-b border-white/[0.07] px-5 py-4">
               <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white sm:text-xl">
-                Tonight at {venue.name}
+                {t.venuePage.tonightAt.replace("{name}", venue.name)}
               </h2>
               <LiveBadge live={tonightEvents.some((e) => isHappeningNow(e.starts_at, e.ends_at))} />
             </div>
@@ -260,7 +262,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                       >
                         <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-white/10 bg-black/30 py-2">
                           <span className={playing ? "text-[10px] font-bold uppercase tracking-widest text-emerald-300" : "text-[10px] font-bold uppercase tracking-widest text-sky-300"}>
-                            {playing ? "Now" : "At"}
+                            {playing ? t.venuePage.now : t.venuePage.at}
                           </span>
                           <span className="text-sm font-bold tabular-nums text-white">{eventStartTime(event.starts_at)}</span>
                         </div>
@@ -268,7 +270,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                           <p className="truncate text-sm font-semibold text-white group-hover:text-sky-100">{event.title}</p>
                           <p className="mt-0.5 line-clamp-1 text-xs text-white/50">
                             {event.category ? <span className="capitalize">{event.category.replace(/_/g, " ")}</span> : null}
-                            {event.is_free ? " · Free" : null}
+                            {event.is_free ? ` · ${t.venuePage.free}` : null}
                             {event.ticket_from_eur != null && event.ticket_from_eur > 0 ? ` · €${event.ticket_from_eur}` : null}
                           </p>
                         </div>
@@ -281,16 +283,16 @@ export default async function VenuePage({ params, searchParams }: Props) {
             ) : (
               <div className="px-5 py-8 text-center">
                 <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-white">
-                  Nothing scheduled tonight
+                  {t.venuePage.nothingTonight}
                 </p>
                 <p className="mx-auto mt-1 max-w-sm text-sm text-white/50">
-                  The room might still light up — keep an eye on {venue.name}, or check what else is on in the city.
+                  {t.venuePage.nothingTonightDesc.replace("{name}", venue.name)}
                 </p>
                 <Link
                   href="/events"
                   className={`mt-4 inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition ${neyaPrimaryGradient}`}
 >
-                  Browse upcoming events
+                  {t.venuePage.browseUpcoming}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -301,10 +303,10 @@ export default async function VenuePage({ params, searchParams }: Props) {
             <section>
               <div className="flex items-end justify-between gap-4">
                 <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white sm:text-xl">
-                  Tomorrow at {venue.name}
+                  {t.venuePage.tomorrowAt.replace("{name}", venue.name)}
                 </h2>
                 <Link href="/events" className="text-sm font-semibold text-sky-300 hover:text-sky-200">
-                  View all
+                  {t.actions.viewAll}
                 </Link>
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -317,10 +319,10 @@ export default async function VenuePage({ params, searchParams }: Props) {
             <section>
               <div className="flex items-end justify-between gap-4">
                 <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white sm:text-xl">
-                  This weekend at {venue.name}
+                  {t.venuePage.weekendAt.replace("{name}", venue.name)}
                 </h2>
                 <Link href="/events" className="text-sm font-semibold text-sky-300 hover:text-sky-200">
-                  View all
+                  {t.actions.viewAll}
                 </Link>
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -342,7 +344,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                   />
                 ) : null}
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300/90">This week</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300/90">{t.venuePage.thisWeek}</p>
                   <h2 className="mt-1 text-xl font-semibold text-white">{highlight.title}</h2>
                   <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-white/70">
                     {highlight.content}
@@ -352,7 +354,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                       href={`/events/${highlight.event.slug}`}
                       className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-sky-300 hover:text-sky-200 hover:underline"
                     >
-                      View event
+                      {t.venuePage.viewEvent}
                       <span aria-hidden>→</span>
                     </Link>
                   ) : null}
@@ -364,7 +366,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
           {/* Venue pulse — real aggregated reviews across the venue's nights. */}
           {pulse && (pulse.overall != null || pulse.samples > 0) ? (
             <section className="max-w-2xl">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-white/45">Venue pulse</h2>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-white/45">{t.venuePage.venuePulse}</h2>
               <VenuePulsePanel pulse={pulse} crowdCount={venue.crowd_count} />
             </section>
           ) : null}
@@ -372,21 +374,21 @@ export default async function VenuePage({ params, searchParams }: Props) {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="space-y-8">
               <section>
-                <h2 className="text-lg font-semibold text-white">About {venue.name}</h2>
+                <h2 className="text-lg font-semibold text-white">{t.venuePage.about.replace("{name}", venue.name)}</h2>
                 {venue.description ? (
                   <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-white/65">{venue.description}</p>
                 ) : (
-                  <p className="mt-3 text-sm text-white/45">Details for this venue are coming soon.</p>
+                  <p className="mt-3 text-sm text-white/45">{t.venuePage.detailsComing}</p>
                 )}
               </section>
 
               {gallery.length ? (
                 <section>
-                  <h2 className="text-lg font-semibold text-white">Gallery</h2>
+                  <h2 className="text-lg font-semibold text-white">{t.venuePage.gallery}</h2>
                   <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                     {gallery.map((url, index) => (
                       <div key={`${url}-${index}`} className="relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
-                        <Image src={url} alt={`${venue.name} gallery image ${index + 1}`} fill className="object-cover" sizes="(max-width: 640px) 50vw, 25vw" />
+                        <Image src={url} alt={t.venuePage.galleryImage.replace("{name}", venue.name).replace("{index}", String(index + 1))} fill className="object-cover" sizes="(max-width: 640px) 50vw, 25vw" />
                       </div>
                     ))}
                   </div>
@@ -394,7 +396,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
               ) : null}
 
               <section>
-                <h2 className="text-lg font-semibold text-white">Location</h2>
+                <h2 className="text-lg font-semibold text-white">{t.venuePage.location}</h2>
                 {mapUrl ? (
                   <a
                     href={directionsUrl ?? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery ?? "")}`}
@@ -403,7 +405,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                     className="block"
                   >
                     <iframe
-                      title={`Map of ${venue.name}`}
+                      title={t.venuePage.mapOf.replace("{name}", venue.name)}
                       src={mapUrl}
                       className="h-72 w-full rounded-2xl border border-white/10 bg-white/[0.03]"
                       loading="lazy"
@@ -411,13 +413,13 @@ export default async function VenuePage({ params, searchParams }: Props) {
                     />
                   </a>
                 ) : (
-                  <p className="mt-3 text-sm text-white/45">Location details are coming soon.</p>
+                  <p className="mt-3 text-sm text-white/45">{t.venuePage.locationComing}</p>
                 )}
               </section>
             </div>
 
             <aside className="h-fit space-y-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
-              <h2 className="text-lg font-semibold text-white">Venue details</h2>
+              <h2 className="text-lg font-semibold text-white">{t.venuePage.venueDetails}</h2>
               {venue.address ? (
                 <p className="flex items-start gap-3 text-sm text-white/65"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" />{venue.address}</p>
               ) : null}
@@ -429,11 +431,11 @@ export default async function VenuePage({ params, searchParams }: Props) {
                   className="inline-flex w-fit items-center gap-2 rounded-xl border border-sky-400/30 bg-sky-500/10 px-3 py-2 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20"
                 >
                   <MapPin className="h-4 w-4" />
-                  Get directions
+                  {t.venuePage.getDirections}
                 </a>
               ) : null}
               {venue.capacity != null ? (
-                <p className="flex items-center gap-3 text-sm text-white/65"><Users className="h-4 w-4 shrink-0 text-sky-300" />Capacity {venue.capacity.toLocaleString()}</p>
+                <p className="flex items-center gap-3 text-sm text-white/65"><Users className="h-4 w-4 shrink-0 text-sky-300" />{t.venuePage.capacity} {venue.capacity.toLocaleString()}</p>
               ) : null}
               {venue.music_genres?.length ? (
                 <div className="flex items-start gap-3 text-sm text-white/65">
@@ -442,7 +444,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
                 </div>
               ) : null}
               {websiteUrl ? (
-                <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-sky-300 hover:text-sky-200 hover:underline"><Globe className="h-4 w-4" />Website <ExternalLink className="h-3.5 w-3.5" /></a>
+                <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-sky-300 hover:text-sky-200 hover:underline"><Globe className="h-4 w-4" />{t.venuePage.website} <ExternalLink className="h-3.5 w-3.5" /></a>
               ) : null}
               {venue.contact_email ? (
                 <a href={`mailto:${venue.contact_email}`} className="flex items-center gap-3 text-sm text-white/65 hover:text-white"><Mail className="h-4 w-4 text-sky-300" />{venue.contact_email}</a>
@@ -452,7 +454,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
               ) : null}
               {socialLinks.length ? (
                 <div className="border-t border-white/10 pt-4">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Follow</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-white/40">{t.venuePage.follow}</p>
                   <div className="mt-3 flex flex-wrap gap-3">
                     {socialLinks.map(([name, url]) => <a key={name} href={url} target="_blank" rel="noopener noreferrer" className="text-sm capitalize text-sky-300 hover:text-sky-200 hover:underline">{name}</a>)}
                   </div>
@@ -462,7 +464,7 @@ export default async function VenuePage({ params, searchParams }: Props) {
           </div>
           {lineupArtists.length ? (
             <section>
-              <h2 className="text-lg font-semibold text-white">Who&apos;s playing</h2>
+              <h2 className="text-lg font-semibold text-white">{t.venuePage.whosPlaying}</h2>
               <div className="mt-4 flex flex-wrap gap-3">
                 {lineupArtists.map((artist) => (
                   <Link
@@ -490,9 +492,9 @@ export default async function VenuePage({ params, searchParams }: Props) {
             {laterEvents.length ? (
               <section>
                 <div className="flex items-end justify-between gap-4">
-                  <h2 className="text-lg font-semibold text-white">Coming up at {venue.name}</h2>
+                  <h2 className="text-lg font-semibold text-white">{t.venuePage.comingUpAt.replace("{name}", venue.name)}</h2>
                   <Link href="/events" className="text-sm font-semibold text-sky-300 hover:text-sky-200">
-                    View all
+                    {t.actions.viewAll}
                   </Link>
                 </div>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -503,14 +505,14 @@ export default async function VenuePage({ params, searchParams }: Props) {
             {!events.length ? (
               <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-8 text-center">
                 <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-white">
-                  Nothing scheduled here yet
+                  {t.venuePage.nothingHere}
                 </p>
-                <p className="mt-1 text-sm text-white/45">No upcoming nights listed — check back or browse the rest of the city tonight.</p>
+                <p className="mt-1 text-sm text-white/45">{t.venuePage.nothingHereDesc}</p>
                 <Link
                   href="/events"
                   className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 hover:underline"
                 >
-                  Browse upcoming events
+                  {t.venuePage.browseUpcoming}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>

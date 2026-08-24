@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getVenues } from "@/services/venues";
 import { getDiscoveryEvents } from "@/services/events";
 import { tonightEvents } from "@/lib/event-filters";
+import { getDictionary } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: `Venues · ${SITE.name}`,
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function VenuesPage() {
+  const t = await getDictionary();
   const supabase = await createClient();
   const [venues, events] = await Promise.all([getVenues(), getDiscoveryEvents({ city: "prishtina" }, supabase)]);
 
@@ -44,17 +46,17 @@ export default async function VenuesPage() {
       <SiteHeader />
       <main className="flex-1 px-4 py-10 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">Prishtina</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">{t.venueList.eyebrow}</p>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-bold text-white sm:text-4xl">
-            Venues
+            {t.venueList.title}
           </h1>
           <p className="mt-2 max-w-xl text-sm text-white/55">
-            Rooftops, clubs, hidden rooms and live-music spots — see what&apos;s on before you go.
+            {t.venueList.description}
           </p>
           <VenueDirectory venues={venues} tonightByVenue={tonightByVenue} savedVenueIds={savedVenueIds} />
           <p className="mt-12 text-center text-sm text-white/45">
             <Link href="/" className="text-sky-300 hover:underline">
-              ← Back home
+              {t.venueList.backHome}
             </Link>
           </p>
         </div>

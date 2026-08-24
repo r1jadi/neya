@@ -2,15 +2,17 @@ import { TrendingCarousel } from "@/components/neya/trending-carousel";
 import { matchGenres, uniqueBySlug } from "@/lib/event-filters";
 import { MUSIC_GENRES, VENUE_CATEGORIES } from "@/types";
 import type { Event } from "@/types";
+import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 
 interface ForYouRailProps {
+  t: Dictionary;
   events: Event[];
   musicGenres: string[];
   venueInterests: string[];
   savedEventIds?: string[];
 }
 
-export function ForYouRail({ events, musicGenres, venueInterests, savedEventIds }: ForYouRailProps) {
+export function ForYouRail({ t, events, musicGenres, venueInterests, savedEventIds }: ForYouRailProps) {
   const byMusic = matchGenres(events, musicGenres);
   const byVenue =
     venueInterests.length > 0
@@ -28,12 +30,12 @@ export function ForYouRail({ events, musicGenres, venueInterests, savedEventIds 
   });
   const labels = [...genreLabels, ...venueLabels];
   const subtitle = labels.length
-    ? `Because you like ${labels.slice(0, 3).join(" · ")}`
-    : "Based on your taste";
+    ? t.homeFeed.becauseYouLike.replace("{labels}", labels.slice(0, 3).join(" · "))
+    : t.homeFeed.basedOnTaste;
 
   return (
     <TrendingCarousel
-      title="✨ Picked for you"
+      title={t.homeFeed.pickedForYou}
       subtitle={subtitle}
       events={picks}
       savedEventIds={savedEventIds}

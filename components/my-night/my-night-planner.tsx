@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CITY_TZ, formatEventWhen } from "@/lib/event-dates";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { MyNightPlan, NightStopDisplay } from "@/types";
 
 type Range = { start: number; end: number };
@@ -55,6 +56,7 @@ function findConflicts(stops: NightStopDisplay[]): Map<number, string[]> {
 }
 
 export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | null }) {
+  const { t } = useI18n();
   const { hydrated, title, stops, rename, share, clear, moveStop, removeStop } = useMyNight();
   const [shareState, setShareState] = useState<"idle" | "sharing" | "copied" | "error">("idle");
   const [editingTitle, setEditingTitle] = useState(false);
@@ -63,7 +65,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
   const shareTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const displayStops = useMemo(() => (hydrated ? stops : (initialPlan?.stops ?? [])), [hydrated, stops, initialPlan]);
-  const displayTitle = hydrated ? title : (initialPlan?.title ?? "My Night");
+  const displayTitle = hydrated ? title : (initialPlan?.title ?? t.myNight.titleDefault);
   const [todayLabel] = useState(() =>
     new Date().toLocaleDateString("en-GB", { weekday: "long" }),
   );
@@ -79,7 +81,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
     }
     try {
       if (navigator.share) {
-        await navigator.share({ title: displayTitle, text: "My night plan on NEYA", url });
+        await navigator.share({ title: displayTitle, text: t.myNight.shareText, url });
         setShareState("idle");
         return;
       }
@@ -131,11 +133,11 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                 value={titleDraft}
                 onChange={(e) => setTitleDraft(e.target.value)}
                 maxLength={40}
-                aria-label="Plan title"
+                aria-label={t.myNight.planTitleLabel}
                 autoFocus
                 className="w-56"
               />
-              <Button type="submit" size="sm">Save</Button>
+              <Button type="submit" size="sm">{t.actions.save}</Button>
               <Button type="button" size="sm" variant="ghost" onClick={() => setEditingTitle(false)}>
                 <X className="h-4 w-4" />
               </Button>
@@ -151,7 +153,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                   setTitleDraft(displayTitle);
                   setEditingTitle(true);
                 }}
-                aria-label="Edit plan title"
+                aria-label={t.myNight.editTitle}
                 className="rounded-lg p-1.5 text-white/40 transition hover:bg-white/5 hover:text-white"
               >
                 <Pencil className="h-3.5 w-3.5" />
@@ -161,27 +163,29 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
           <p className="mt-1 text-sm text-white/55">
             {todayLabel} ·{" "}
             {displayStops.length >= 3
-              ? "your night is full — time to go out"
-              : `plan your night in ${3 - displayStops.length} more stop${3 - displayStops.length === 1 ? "" : "s"}`}
+              ? t.myNight.planFull
+              : t.myNight.planHint
+                  .replace("{count}", String(3 - displayStops.length))
+                  .replace("{plural}", 3 - displayStops.length === 1 ? t.myNight.stop : t.myNight.stops)}
           </p>
         </div>
         {displayStops.length ? (
           <div className="flex flex-wrap gap-2">
             <Button type="button" size="sm" variant="secondary" onClick={handleShare} disabled={shareState === "sharing"}>
               {shareState === "sharing" ? (
-                "Sharing…"
+                t.myNight.sharing
               ) : shareState === "copied" ? (
                 <>
-                  <Check className="h-3.5 w-3.5" /> Link copied!
+                  <Check className="h-3.5 w-3.5" /> {t.myNight.linkCopied}
                 </>
               ) : (
                 <>
-                  <Share2 className="h-3.5 w-3.5" /> Share My Night
+                  <Share2 className="h-3.5 w-3.5" /> {t.myNight.share}
                 </>
               )}
             </Button>
             <Button type="button" size="sm" variant="ghost" onClick={clear} className="text-white/60 hover:text-red-200">
-              <Trash2 className="h-3.5 w-3.5" /> Clear
+              <Trash2 className="h-3.5 w-3.5" /> {t.myNight.clear}
             </Button>
           </div>
         ) : null}
@@ -189,14 +193,14 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
 
       {shareState === "error" ? (
         <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-          Couldn&apos;t create a share link — try again in a moment.
+          {t.myNight.shareError}
         </p>
       ) : null}
 
       {hasConflicts ? (
         <p className="mt-4 flex items-center gap-2 rounded-xl border border-amber-400/30 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-100">
           <AlertTriangle className="h-4 w-4 shrink-0" />
-          Some stops overlap in time — you can still keep both, just know you&apos;ll be moving fast.
+          {t.myNight.overlapWarning}
         </p>
       ) : null}
 
@@ -266,8 +270,8 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                         <p className="mt-1.5 flex items-start gap-1.5 rounded-lg border border-amber-400/25 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-100">
                           <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                           <span>
-                            Overlaps with {stopConflicts[0]}
-                            {stopConflicts.length > 1 ? ` (+${stopConflicts.length - 1} more)` : ""}
+                            {t.myNight.overlapsWith.replace("{name}", stopConflicts[0])}
+                            {stopConflicts.length > 1 ? ` ${t.myNight.moreCount.replace("{count}", String(stopConflicts.length - 1))}` : ""}
                           </span>
                         </p>
                       ) : null}
@@ -277,7 +281,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                         type="button"
                         onClick={() => moveStop(index, index - 1)}
                         disabled={index === 0}
-                        aria-label={`Move ${stop.title} up`}
+                        aria-label={t.myNight.moveUp.replace("{name}", stop.title)}
                         className="rounded-lg p-1.5 text-white/50 transition hover:bg-white/5 hover:text-white disabled:opacity-20"
                       >
                         <ArrowUp className="h-4 w-4" />
@@ -285,7 +289,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                       <button
                         type="button"
                         onClick={() => removeStop(index)}
-                        aria-label={`Remove ${stop.title}`}
+                        aria-label={t.myNight.removeStop.replace("{name}", stop.title)}
                         className="rounded-lg p-1.5 text-white/50 transition hover:bg-red-500/10 hover:text-red-200"
                       >
                         <X className="h-4 w-4" />
@@ -294,7 +298,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
                         type="button"
                         onClick={() => moveStop(index, index + 1)}
                         disabled={index === displayStops.length - 1}
-                        aria-label={`Move ${stop.title} down`}
+                        aria-label={t.myNight.moveDown.replace("{name}", stop.title)}
                         className="rounded-lg p-1.5 text-white/50 transition hover:bg-white/5 hover:text-white disabled:opacity-20"
                       >
                         <ArrowDown className="h-4 w-4" />
@@ -310,9 +314,9 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
           </ul>
 
           <section>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">Your route</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-white/45">{t.myNight.yourRoute}</h2>
             <p className="mt-1 text-xs text-white/40">
-              Drag cards to reorder, or use the arrows. The route follows your order.
+              {t.myNight.routeHint}
             </p>
             <NightMap stops={mapStops} className="mt-3" />
           </section>
@@ -320,24 +324,25 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
           {displayStops.length < 3 ? (
             <p className="flex items-center gap-2 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-white/50">
               <Sparkles className="h-4 w-4 text-fuchsia-300" />
-              Add up to {3 - displayStops.length} more stop{3 - displayStops.length === 1 ? "" : "s"} from
-              any event or venue — the + My Night button is right on the cards.
+              {t.myNight.addMore
+                .replace("{count}", String(3 - displayStops.length))
+                .replace("{plural}", 3 - displayStops.length === 1 ? t.myNight.stop : t.myNight.stops)}
             </p>
           ) : null}
         </div>
       ) : (
         <div className="mt-10">
           <EmptyState
-            title="Plan your night"
-            description="Pick up to 3 venues or events and build your perfect night — then share the plan with friends."
+            title={t.myNight.planYourNight}
+            description={t.myNight.planYourNightDesc}
             icon={<Sparkles className="h-8 w-8" />}
           />
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button asChild>
-              <Link href="/events">Explore events</Link>
+              <Link href="/events">{t.myNight.exploreEvents}</Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link href="/#venues">Explore venues</Link>
+              <Link href="/#venues">{t.myNight.exploreVenues}</Link>
             </Button>
           </div>
         </div>
@@ -345,7 +350,7 @@ export function MyNightPlanner({ initialPlan }: { initialPlan: MyNightPlan | nul
 
       {displayStops.length ? (
         <p className="mt-8 text-center text-xs text-white/35">
-          Tip: drag a card to reorder — the route updates automatically.
+          {t.myNight.tipReorder}
         </p>
       ) : null}
     </div>

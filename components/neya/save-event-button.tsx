@@ -6,6 +6,7 @@ import { useRef, useState, useTransition } from "react";
 import { toggleSaveEvent } from "@/actions/saved-events";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export function SaveEventButton({
   eventId,
@@ -18,6 +19,7 @@ export function SaveEventButton({
   initialSaved: boolean;
   className?: string;
 }) {
+  const { t } = useI18n();
   const [saved, setSaved] = useState(initialSaved);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
@@ -59,10 +61,10 @@ export function SaveEventButton({
       }}
       disabled={pending}
       aria-pressed={saved}
-      aria-label={saved ? "Remove from saved events" : "Save event"}
+      aria-label={saved ? t.actions.removeFromMyNight : t.actions.save}
     >
       <Bookmark className={cn("h-3.5 w-3.5", saved && "fill-current")} />
-      {pending ? "…" : saved ? "Saved" : "Save"}
+      {pending ? "…" : saved ? t.actions.saved : t.actions.save}
     </Button>
   );
 }

@@ -6,6 +6,7 @@ import { ArtistCard } from "@/components/neya/artist-card";
 import { EmptyState } from "@/components/neya/empty-state";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { Artist } from "@/types";
 
 interface ArtistDirectoryProps {
@@ -15,6 +16,7 @@ interface ArtistDirectoryProps {
 }
 
 export function ArtistDirectory({ artists, followedIds, className }: ArtistDirectoryProps) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [genre, setGenre] = useState<string | null>(null);
   const followed = useMemo(() => new Set(followedIds), [followedIds]);
@@ -54,15 +56,15 @@ export function ArtistDirectory({ artists, followedIds, className }: ArtistDirec
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search DJs and artists…"
-            aria-label="Search DJs and artists"
+            placeholder={t.artistsPage.searchPlaceholder}
+            aria-label={t.artistsPage.searchLabel}
             className="pl-10"
           />
         </div>
         {filtered.length > 0 ? (
           <p className="text-xs text-white/45">
-            {filtered.length} artist{filtered.length === 1 ? "" : "s"}
-            {genre ? ` in ${genre}` : ""}
+            {filtered.length} {filtered.length === 1 ? t.artistsPage.artist : t.artistsPage.artists}
+            {genre ? ` ${t.artistsPage.inGenre.replace("{genre}", genre)}` : ""}
           </p>
         ) : null}
       </div>
@@ -79,7 +81,7 @@ export function ArtistDirectory({ artists, followedIds, className }: ArtistDirec
                 : "border-white/15 text-white/60 hover:text-white",
             )}
           >
-            All
+            {t.actions.all}
           </button>
           {genreCounts.map(([g, count]) => (
             <button
@@ -113,12 +115,8 @@ export function ArtistDirectory({ artists, followedIds, className }: ArtistDirec
       ) : (
         <EmptyState
           icon={<SearchX className="h-8 w-8" />}
-          title={hasFilters ? "No artists match your search" : "No artists yet"}
-          description={
-            hasFilters
-              ? "Try a different name or genre, or clear the filters to see everyone."
-              : "The directory is filling up — check back soon for the DJs and artists shaping Prishtina nights."
-          }
+          title={hasFilters ? t.artistsPage.noMatch : t.artistsPage.noArtists}
+          description={hasFilters ? t.artistsPage.noMatchDesc : t.artistsPage.noArtistsDesc}
         />
       )}
     </div>
