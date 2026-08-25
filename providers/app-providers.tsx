@@ -14,7 +14,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}
-      themes={["dark", "light"]}
+      themes={["dark", "light", "neobrutal"]}
     >
       <PostHogAnalytics>
         <QueryClientProvider client={client}>

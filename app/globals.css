@@ -52,12 +52,256 @@ html.light {
   --color-yellow-100: #ca8a04;
 }
 
-html.light input[type="range"].neya-slider {
-  background: rgba(10, 10, 15, 0.14);
+/**
+ * Neo-Brutalist theme — a third, independent theme.
+ *
+ * Kapodalim-inspired flat, high-contrast paper-and-ink look: warm off-white
+ * surfaces, near-black text, chunky black borders, hard offset shadows and
+ * vivid flat accent fills. It re-uses the exact same `--color-*` override
+ * mechanics as `html.light` (Tailwind v4 resolves these at use-time), so the
+ * whole app re-themes without touching a single component. Structural
+ * utilities (rounded corners, shadows) are flattened by the escort rules
+ * below, scoped so Default/Light are untouched.
+ */
+html.neobrutal {
+  --background: #efebe3;
+  --foreground: #141414;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --muted: #6b6862;
+  --ring: #141414;
+  --bg-glow: rgba(37, 99, 235, 0.16);
+  --scrim: rgba(20, 20, 20, 0.65);
+
+  /* Surface/text inversion — same workhorse mechanics as light */
+  --color-white: #141414;
+  --color-black: #fbf8f1;
+  --color-zinc-950: #fbf8f1;
+  --color-zinc-900: #f4f0e8;
+  --color-zinc-800: #ebe6dc;
+  --color-zinc-700: #d9d2c5;
+
+  /* Accent text — deeper, punchier equivalents of the dark accents */
+  --color-sky-100: #1d4ed8;
+  --color-sky-200: #1d4ed8;
+  --color-sky-300: #1e40af;
+  --color-fuchsia-100: #be185d;
+  --color-fuchsia-200: #be185d;
+  --color-fuchsia-300: #c026d3;
+  --color-violet-300: #6d28d9;
+  --color-amber-100: #a16207;
+  --color-amber-200: #a16207;
+  --color-amber-300: #b45309;
+  --color-red-200: #dc2626;
+  --color-red-300: #dc2626;
+  --color-emerald-100: #047857;
+  --color-emerald-200: #047857;
+  --color-emerald-300: #047857;
+  --color-orange-200: #c2410c;
+  --color-yellow-100: #a16207;
+  --color-slate-100: #1f2937;
+  --color-slate-200: #1f2937;
+  --color-slate-300: #374151;
 }
 
-html.light [color-scheme="dark"] {
+html.neobrutal body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Brutalist spacing layering — hard offset shadows on cards/blocks */
+html.neobrutal .shadow-2xl,
+html.neobrutal .shadow-xl,
+html.neobrutal .shadow-lg,
+html.neobrutal .shadow-md {
+  box-shadow: 7px 7px 0 0 rgba(20, 20, 20, 0.9);
+}
+
+/* Flatten soft radii into sharp, intentional corners */
+html.neobrutal .rounded-2xl,
+html.neobrutal .rounded-xl,
+html.neobrutal .rounded-lg,
+html.neobrutal .rounded-md,
+html.neobrutal .rounded-sm {
+  border-radius: 0;
+}
+html.neobrutal .rounded-3xl {
+  border-radius: 4px;
+}
+
+/* Hard 2px borders on the primary interactive building blocks */
+html.neobrutal button,
+html.neobrutal input,
+html.neobrutal select,
+html.neobrutal textarea,
+html.neobrutal [role="dialog"],
+html.neobrutal [role="menu"],
+html.neobrutal header,
+html.neobrutal footer,
+html.neobrutal article,
+html.neobrutal aside,
+html.neobrutal form {
+  border-width: 2px;
+  border-style: solid;
+}
+/* Buttons — chunky, uppercase, pressable with real depth */
+html.neobrutal button {
+  border-radius: 0;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 0 rgba(20, 20, 20, 0.85);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+html.neobrutal button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 rgba(20, 20, 20, 0.9);
+}
+html.neobrutal button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 rgba(20, 20, 20, 0.9);
+}
+html.neobrutal button:focus-visible {
+  outline: 3px solid #141414;
+  outline-offset: 2px;
+}
+html.neobrutal a {
+  color: #1e40af;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* Distinctive chrome: header + footer get their own surface, not the page bg */
+html.neobrutal header {
+  border-bottom: 2px solid #141414;
+}
+html.neobrutal footer {
+  border-top: 2px solid #141414;
+}
+html.neobrutal footer {
+  background: #141414;
+  color: #f4f1ea;
+}
+
+/* Section headings feel editorial — small caps labels stay label-ish */
+html.neobrutal h1,
+html.neobrutal h2 {
+  letter-spacing: -0.02em;
+}
+html.neobrutal h1,
+html.neobrutal h2,
+html.neobrutal h3 {
+  font-weight: 800;
+}
+
+/* Forms — inputs become solid blocks with obvious focus */
+html.neobrutal input,
+html.neobrutal select,
+html.neobrutal textarea {
+  background: #fbf8f1;
+  border: 2px solid #141414;
+  border-radius: 0;
+}
+html.neobrutal input:focus,
+html.neobrutal select:focus,
+html.neobrutal textarea:focus {
+  outline: 3px solid #141414;
+  outline-offset: 2px;
+}
+
+/* Cards — paper blocks with a hard edge + offset shadow */
+html.neobrutal article {
+  background: #ffffff;
+  border: 2px solid #141414;
+  box-shadow: 6px 6px 0 0 rgba(20, 20, 20, 0.9);
+}
+html.neobrutal article:hover {
+  box-shadow: 8px 8px 0 0 rgba(20, 20, 20, 0.9);
+  transform: translate(-1px, -1px);
+}
+
+/* Modals/dialogs/menus — solid blocks */
+html.neobrutal [role="dialog"],
+html.neobrutal [role="menu"],
+html.neobrutal [role="listbox"] {
+  border: 2px solid #141414;
+  border-radius: 0;
+  box-shadow: 8px 8px 0 0 rgba(20, 20, 20, 0.9);
+}
+
+/* Gradients keep their direction but lose the neon — flat, confident accents */
+html.neobrutal .bg-gradient-to-r,
+html.neobrutal .bg-gradient-to-br,
+html.neobrutal .bg-gradient-to-t,
+html.neobrutal .bg-gradient-to-b,
+html.neobrutal .bg-gradient-to-tr {
+  background-image: none !important;
+  background-color: #2563eb !important;
+  color: #ffffff;
+}
+
+/* Neon signs — the NEYA neon becomes a flat ink-on-paper poster */
+html.neobrutal .shadow-\[0_0_20px_rgba\(56\,189\,248\,0\.35\)\] {
+  box-shadow: 5px 5px 0 0 rgba(20, 20, 20, 0.85);
+}
+
+/* Keep light form widgets */
+html.neobrutal [color-scheme="dark"] {
   color-scheme: light;
+}
+
+html.neobrutal input[type="range"].neya-slider {
+  background: rgba(20, 20, 20, 0.16);
+  border: 2px solid #141414;
+  border-radius: 0;
+}
+html.neobrutal input[type="range"].neya-slider::-webkit-slider-thumb {
+  border-radius: 0;
+  border: 3px solid #141414;
+  background: #facc15;
+  box-shadow: 2px 2px 0 #141414;
+}
+html.neobrutal input[type="range"].neya-slider::-moz-range-thumb {
+  border-radius: 0;
+  border: 3px solid #141414;
+  background: #facc15;
+  box-shadow: 2px 2px 0 #141414;
+}
+
+/* Selection — bold ink-on-paper, not a soft wash */
+html.neobrutal ::selection {
+  background: #facc15;
+  color: #141414;
+}
+
+html.neobrutal input::placeholder {
+  color: rgba(20, 20, 20, 0.45);
+}
+
+/* Decorative detail: a hard diagonal accent bar under page-heading areas */
+html.neobrutal .font-\[family-name\:var\(--font-display\)\] {
+  position: relative;
+}
+html.neobrutal .font-\[family-name\:var\(--font-display\)\]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 34px;
+  height: 6px;
+  background: #2563eb;
+}
+
+/* Layered offset detail on the site footer wordmark */
+html.neobrutal footer p.font-\[family-name\:var\(--font-display\)\] {
+  display: inline-block;
+  box-shadow: 4px 4px 0 0 #2563eb;
+  background: #141414;
+  padding: 2px 8px;
+  color: #f4f1ea;
+  transform: translate(-2px, -2px);
 }
 
 @theme inline {

@@ -85,6 +85,9 @@ export async function saveVenue(formData: FormData) {
     image_url: String(formData.get("image_url") ?? "").trim().slice(0, 2000) || null,
     gallery_urls: parseJsonArray(String(formData.get("gallery_urls") ?? "")),
     music_genres: parseJsonArray(String(formData.get("music_genres") ?? "")),
+    day_parts: parseJsonArray(String(formData.get("day_parts") ?? "")).filter((part) =>
+      ["morning", "daytime", "evening", "late_night"].includes(part),
+    ),
     social_links: parseSocialLinks(String(formData.get("social_links") ?? "")),
     website_url: String(formData.get("website_url") ?? "").trim().slice(0, 2000) || null,
     contact_email: String(formData.get("contact_email") ?? "").trim().slice(0, 320) || null,

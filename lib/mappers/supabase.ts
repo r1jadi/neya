@@ -73,6 +73,7 @@ export function mapVenueRow(row: {
   contact_email?: string | null;
   contact_phone?: string | null;
   capacity?: number | null;
+  day_parts?: string[] | null;
 }): Venue {
   const price = Math.min(4, Math.max(1, Math.round(num(row.price_level, 2)))) as Venue["price_level"];
   return {
@@ -99,6 +100,11 @@ export function mapVenueRow(row: {
     contact_email: row.contact_email?.trim() || undefined,
     contact_phone: row.contact_phone?.trim() || undefined,
     capacity: row.capacity ?? undefined,
+    day_parts: Array.isArray(row.day_parts)
+      ? row.day_parts
+          .map((d) => (typeof d === "string" ? d.trim() : ""))
+          .filter(Boolean)
+      : undefined,
   };
 }
 

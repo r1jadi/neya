@@ -148,6 +148,8 @@ export interface Venue {
   contact_email?: string;
   contact_phone?: string;
   capacity?: number;
+  /** Day parts when this venue is open for Places (morning/daytime/evening/late_night). */
+  day_parts?: string[];
 }
 
 export type EventVenue = Pick<

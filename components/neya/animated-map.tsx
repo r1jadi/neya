@@ -138,6 +138,9 @@ export function AnimatedMap({
   const callbacksRef = useRef({ onBoundsChange, onSelectMarker });
   const { resolvedTheme } = useTheme();
   const themeRef = useRef(resolvedTheme);
+  /** Initial camera position — captured once. The map instance must never be
+   * re-created when the parent re-renders (see lifecycle effect below). */
+  const initialCenterRef = useRef(center);
 
   useEffect(() => {
     callbacksRef.current = { onBoundsChange, onSelectMarker };
@@ -154,7 +157,13 @@ export function AnimatedMap({
     map.setStyle(themeRef.current === "light" ? LIGHT_STYLE : DARK_STYLE);
   }, [resolvedTheme]);
 
-  // Map lifecycle
+  // Map lifecycle — create ONCE on mount.
+  // Do NOT depend on `center`: parents frequently pass an inline array literal
+  // (e.g. <AnimatedMap center={[21.16, 42.66]} … />), so it changes identity on
+  // every render. Depending on it made this effect tear down and re-create the
+  // whole Mapbox instance on any parent state change (typing a filter, or even
+  // panning -> moveend -> setBounds), which reset the camera and reloaded tiles.
+  // Programmatic camera moves go through `flyTo` instead.
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     if (!token || !containerRef.current) return;
@@ -164,7 +173,7 @@ export function AnimatedMap({
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: themeRef.current === "light" ? LIGHT_STYLE : DARK_STYLE,
-      center,
+      center: initialCenterRef.current,
       zoom: 12.2,
       pitch: 45,
       antialias: true,
@@ -186,7 +195,7 @@ export function AnimatedMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [center]);
+  }, []);
 
   // Fly-to (geolocation / selected-day pills)
   useEffect(() => {

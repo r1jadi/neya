@@ -608,6 +608,7 @@ function DiscoveryPanel({ cities }: { cities: AdminCityRow[] }) {
 function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: () => void }) {
   const gallery = Array.isArray(venue?.gallery_urls) ? venue.gallery_urls.join(", ") : "";
   const genres = venue?.music_genres?.join(", ") ?? "";
+  const dayParts = venue?.day_parts?.join(", ") ?? "";
   const social = venue?.social_links ? JSON.stringify(venue.social_links) : "";
 
   return (
@@ -646,6 +647,7 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
         <ImageUploadField name="image_url" label="Cover image" defaultUrl={venue?.image_url ?? ""} folder="venues" />
         <Input name="gallery_urls" placeholder="Gallery URLs (comma-separated)" defaultValue={gallery} className="sm:col-span-2" />
         <Input name="music_genres" placeholder="Music genres (comma-separated)" defaultValue={genres} />
+        <Input name="day_parts" placeholder="Day parts: morning, daytime, evening, late_night" defaultValue={dayParts} className="sm:col-span-2" />
         <Input name="capacity" type="number" min={0} placeholder="Venue capacity" defaultValue={venue?.capacity ?? ""} />
         <Input name="website_url" type="url" placeholder="Website URL" defaultValue={venue?.website_url ?? ""} />
         <Input name="contact_email" type="email" placeholder="Contact email" defaultValue={venue?.contact_email ?? ""} />

@@ -19,6 +19,7 @@ const navLinks = [
   { href: "/events", key: "discover" },
   { href: "/my-night", key: "myNight" },
   { href: "/artists", key: "artists" },
+  { href: "/places", key: "places" },
   { href: "/guides", key: "guides" },
   { href: "/map", key: "map" },
   { href: "/#business", key: "forVenues" },

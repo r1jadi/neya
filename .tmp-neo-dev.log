@@ -1,0 +1,114 @@
+
+> neya@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3456
+- Network:       http://172.19.224.1:3456
+- Environments: .env.local
+✓ Ready in 464ms
+✓ Running next.config.ts took 47ms
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "50mb"
+  · serverActions
+
+ GET / 200 in 2.5s (next.js: 326ms, proxy.ts: 394ms, application-code: 1764ms)
+ GET /places 200 in 503ms (next.js: 62ms, proxy.ts: 8ms, application-code: 432ms)
+[browser] Image with src "https://phiffyihjnpqhahfxrsz.supabase.co/storage/v1/object/public/neya-media/venues/1783779722085-384e1a43.jpeg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[neya] getVenues Could not find a relationship between 'venues' and 'venue_day_parts' in the schema cache
+ GET /places 200 in 441ms (next.js: 13ms, proxy.ts: 12ms, application-code: 416ms)
+[neya] getVenues column venues.day_parts does not exist
+ GET /places 200 in 291ms (next.js: 12ms, proxy.ts: 6ms, application-code: 273ms)
+⨯ ./app/page.tsx:9:1
+Error: Module not found: Can't resolve '@/services/venues'
+  [90m 7 |[0m [36mimport[0m { getStoriesForCity } [36mfrom[0m [32m"@/services/stories"[0m;
+  [90m 8 |[0m [36mimport[0m { happeningNowEvents, tonightEvents, upcomingEvents } [36mfrom[0m [32m"@/lib/event-filters"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m { getVenues } [36mfrom[0m [32m"@/services/venues"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { getActiveHighlightsForHome } [36mfrom[0m [32m"@/services/venue-highlights"[0m;
+  [90m11 |[0m [36mimport[0m { getActiveCities } [36mfrom[0m [32m"@/services/cities"[0m;
+  [90m12 |[0m [36mimport[0m { getDictionary } [36mfrom[0m [32m"@/lib/i18n/server"[0m;
+
+Import map: aliased to relative './services/venues' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/page.tsx:9:1
+Error: Module not found: Can't resolve '@/services/venues'
+  [90m 7 |[0m [36mimport[0m { getStoriesForCity } [36mfrom[0m [32m"@/services/stories"[0m;
+  [90m 8 |[0m [36mimport[0m { happeningNowEvents, tonightEvents, upcomingEvents } [36mfrom[0m [32m"@/lib/event-filters"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m { getVenues } [36mfrom[0m [32m"@/services/venues"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { getActiveHighlightsForHome } [36mfrom[0m [32m"@/services/venue-highlights"[0m;
+  [90m11 |[0m [36mimport[0m { getActiveCities } [36mfrom[0m [32m"@/services/cities"[0m;
+  [90m12 |[0m [36mimport[0m { getDictionary } [36mfrom[0m [32m"@/lib/i18n/server"[0m;
+
+Import map: aliased to relative './services/venues' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/places/page.tsx:8:1
+Error: Module not found: Can't resolve '@/services/venues'
+  [90m 6 |[0m [36mimport[0m { [33mSITE[0m } [36mfrom[0m [32m"@/lib/constants"[0m;
+  [90m 7 |[0m [36mimport[0m { createClient } [36mfrom[0m [32m"@/lib/supabase/server"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m { getVenuesForCity } [36mfrom[0m [32m"@/services/venues"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { getDiscoveryEvents } [36mfrom[0m [32m"@/services/events"[0m;
+  [90m10 |[0m [36mimport[0m { tonightEvents } [36mfrom[0m [32m"@/lib/event-filters"[0m;
+  [90m11 |[0m [36mimport[0m { getDictionary } [36mfrom[0m [32m"@/lib/i18n/server"[0m;
+
+Import map: aliased to relative './services/venues' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/places/page.tsx:8:1
+Error: Module not found: Can't resolve '@/services/venues'
+  [90m 6 |[0m [36mimport[0m { [33mSITE[0m } [36mfrom[0m [32m"@/lib/constants"[0m;
+  [90m 7 |[0m [36mimport[0m { createClient } [36mfrom[0m [32m"@/lib/supabase/server"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m { getVenuesForCity } [36mfrom[0m [32m"@/services/venues"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { getDiscoveryEvents } [36mfrom[0m [32m"@/services/events"[0m;
+  [90m10 |[0m [36mimport[0m { tonightEvents } [36mfrom[0m [32m"@/lib/event-filters"[0m;
+  [90m11 |[0m [36mimport[0m { getDictionary } [36mfrom[0m [32m"@/lib/i18n/server"[0m;
+
+Import map: aliased to relative './services/venues' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ GET /places 200 in 695ms (next.js: 10ms, proxy.ts: 5ms, application-code: 680ms)
+[browser] Image with src "https://phiffyihjnpqhahfxrsz.supabase.co/storage/v1/object/public/neya-media/venues/1783779722085-384e1a43.jpeg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /places 200 in 940ms (next.js: 9ms, proxy.ts: 10ms, application-code: 921ms)
+[browser] Image with src "https://phiffyihjnpqhahfxrsz.supabase.co/storage/v1/object/public/neya-media/venues/1783779722085-384e1a43.jpeg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /places 200 in 540ms (next.js: 3ms, proxy.ts: 5ms, application-code: 531ms)
+ GET / 200 in 1123ms (next.js: 8ms, proxy.ts: 9ms, application-code: 1106ms)
+ GET / 200 in 457ms (next.js: 10ms, proxy.ts: 11ms, application-code: 436ms)
+ GET / 200 in 427ms (next.js: 3ms, proxy.ts: 7ms, application-code: 418ms)
+ GET / 200 in 384ms (next.js: 2ms, proxy.ts: 8ms, application-code: 373ms)
+ GET / 200 in 419ms (next.js: 2ms, proxy.ts: 4ms, application-code: 412ms)
+ GET / 200 in 416ms (next.js: 3ms, proxy.ts: 5ms, application-code: 408ms)
+ GET / 200 in 498ms (next.js: 8ms, proxy.ts: 8ms, application-code: 482ms)
+ GET / 200 in 531ms (next.js: 18ms, proxy.ts: 11ms, application-code: 502ms)
+ GET / 200 in 530ms (next.js: 15ms, proxy.ts: 9ms, application-code: 505ms)
+ GET / 200 in 445ms (next.js: 3ms, proxy.ts: 7ms, application-code: 435ms)
+ GET / 200 in 445ms (next.js: 3ms, proxy.ts: 9ms, application-code: 433ms)
+ GET / 200 in 428ms (next.js: 3ms, proxy.ts: 6ms, application-code: 419ms)
+ GET / 200 in 418ms (next.js: 6ms, proxy.ts: 10ms, application-code: 402ms)
+ GET / 200 in 525ms (next.js: 4ms, proxy.ts: 7ms, application-code: 515ms)
+ GET / 200 in 547ms (next.js: 9ms, proxy.ts: 8ms, application-code: 530ms)
+ GET / 200 in 404ms (next.js: 2ms, proxy.ts: 5ms, application-code: 397ms)
+ GET / 200 in 387ms (next.js: 6ms, proxy.ts: 4ms, application-code: 376ms)
+ GET / 200 in 505ms (next.js: 6ms, proxy.ts: 5ms, application-code: 493ms)
+ GET / 200 in 479ms (next.js: 6ms, proxy.ts: 14ms, application-code: 459ms)
+ GET / 200 in 564ms (next.js: 7ms, proxy.ts: 8ms, application-code: 549ms)
+[browser] Unable to perform style diff: Unimplemented: setSprite.. Rebuilding the style from scratch.

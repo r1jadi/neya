@@ -24,6 +24,7 @@ export type AdminVenueRow = {
   image_url: string | null;
   gallery_urls: string[];
   music_genres: string[];
+  day_parts?: string[];
   opening_hours: Record<string, unknown> | null;
   social_links: Record<string, string>;
   reservations_enabled: boolean;
@@ -123,7 +124,7 @@ export async function getAdminDashboardData() {
     admin
       .from("venues")
       .select(
-        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, opening_hours, social_links, website_url, contact_email, contact_phone, capacity, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
+        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, day_parts, opening_hours, social_links, website_url, contact_email, contact_phone, capacity, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
       )
       .order("created_at", { ascending: false }),
     admin

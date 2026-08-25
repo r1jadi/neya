@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createVenueEvent, requestVenueListing } from "@/actions/business";
+import { payVenueListing } from "@/actions/pay-venue-listing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
-import { SITE } from "@/lib/constants";
+import { SITE, LISTING_FEE_CENTS, LISTING_FEE_DAYS } from "@/lib/constants";
 import { MUSIC_GENRES, VENUE_CATEGORIES } from "@/types";
 import { EVENT_CATEGORIES } from "@/lib/discovery";
 
@@ -14,7 +15,31 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type Props = { searchParams: Promise<{ error?: string; created?: string; event?: string }> };
+type Props = {
+  searchParams: Promise<{
+    error?: string;
+    created?: string;
+    event?: string;
+    listing_paid?: string;
+    listing_cancelled?: string;
+  }>;
+};
+
+function formatListingFee(cents: number): string {
+  return (cents / 100).toLocaleString("en-GB", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+  });
+}
+
+/** Reference "now" for paid-through checks (server module scope, not render). */
+const paidCheckNow = Date.now();
+
+function isPaidThrough(until: string | null | undefined): boolean {
+  if (!until) return false;
+  return new Date(until).getTime() > paidCheckNow;
+}
 
 export default async function BusinessPage({ searchParams }: Props) {
   const q = await searchParams;
@@ -26,7 +51,7 @@ export default async function BusinessPage({ searchParams }: Props) {
 
   const { data: venues } = await supabase
     .from("venues")
-    .select("id, name, slug, approved, city_slug")
+    .select("id, name, slug, approved, city_slug, listing_fee_cents, listing_paid_until")
     .eq("owner_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -50,6 +75,16 @@ export default async function BusinessPage({ searchParams }: Props) {
       {q.error ? (
         <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
           Something went wrong ({q.error}). Try again.
+        </p>
+      ) : null}
+      {q.listing_paid ? (
+        <p className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100">
+          Payment received — your NEYA Places listing is paid for the next {LISTING_FEE_DAYS} days.
+        </p>
+      ) : null}
+      {q.listing_cancelled ? (
+        <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          Payment cancelled — your listing stays free until you choose to pay.
         </p>
       ) : null}
 
@@ -106,6 +141,58 @@ export default async function BusinessPage({ searchParams }: Props) {
           </ul>
         ) : (
           <p className="text-sm text-white/45">No venues linked yet — submit a listing above.</p>
+        )}
+      </section>
+
+      <section className="mt-10 space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        <h2 className="text-lg font-semibold text-white">Pay for your listing</h2>
+        <p className="text-sm text-white/55">
+          Keep your NEYA Places listing visible with a simple online payment — {formatListingFee(LISTING_FEE_CENTS)}/{LISTING_FEE_DAYS} days. No subscription, cancel anytime.
+        </p>
+        {(venues ?? []).some((v) => v.approved) ? (
+          <ul className="space-y-3">
+            {(venues ?? [])
+              .filter((v) => v.approved)
+              .map((v) => {
+                const paidUntil = v.listing_paid_until ? new Date(v.listing_paid_until) : null;
+                const isActive = isPaidThrough(v.listing_paid_until);
+                const fee = typeof v.listing_fee_cents === "number" && v.listing_fee_cents > 0 ? v.listing_fee_cents : LISTING_FEE_CENTS;
+                return (
+                  <li
+                    key={v.id}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-white">{v.name}</p>
+                      <p className="mt-0.5 text-xs text-white/50">
+                        {isActive ? (
+                          <span className="text-emerald-300">Paid through {paidUntil?.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
+                        ) : paidUntil ? (
+                          <span className="text-amber-300">Expired {paidUntil.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
+                        ) : (
+                          <span>Not paid yet — listing is free until you pay</span>
+                        )}
+                      </p>
+                    </div>
+                    {isActive ? (
+                      <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">
+                        Active
+                      </span>
+                    ) : (
+                      <form action={payVenueListing} className="flex items-center gap-2">
+                        <input type="hidden" name="venue_id" value={v.id} />
+                        <span className="text-sm font-semibold text-white">{formatListingFee(fee)}</span>
+                        <Button type="submit" size="sm">
+                          Pay Online
+                        </Button>
+                      </form>
+                    )}
+                  </li>
+                );
+              })}
+          </ul>
+        ) : (
+          <p className="text-sm text-white/45">Approved venues appear here — pay to keep your listing visible.</p>
         )}
       </section>
 
