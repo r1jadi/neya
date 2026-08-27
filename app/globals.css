@@ -66,9 +66,9 @@ html.light {
 html.neobrutal {
   --background: #efebe3;
   --foreground: #141414;
-  --primary: #2563eb;
+  --primary: #7c8a3a;
   --primary-foreground: #ffffff;
-  --accent: #2563eb;
+  --accent: #7c8a3a;
   --accent-fg: #ffffff;
   --muted: #6b6862;
   --ring: #141414;
@@ -84,9 +84,9 @@ html.neobrutal {
   --color-zinc-700: #d9d2c5;
 
   /* Accent text — deeper, punchier equivalents of the dark accents */
-  --color-sky-100: #1d4ed8;
-  --color-sky-200: #1d4ed8;
-  --color-sky-300: #1e40af;
+  --color-sky-100: #68752f;
+  --color-sky-200: #68752f;
+  --color-sky-300: #536021;
   --color-fuchsia-100: #be185d;
   --color-fuchsia-200: #be185d;
   --color-fuchsia-300: #c026d3;
@@ -168,7 +168,7 @@ html.neobrutal button:focus-visible {
   outline-offset: 2px;
 }
 html.neobrutal a {
-  color: #1e40af;
+  color: #536021;
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
@@ -238,7 +238,7 @@ html.neobrutal .bg-gradient-to-t,
 html.neobrutal .bg-gradient-to-b,
 html.neobrutal .bg-gradient-to-tr {
   background-image: none !important;
-  background-color: #2563eb !important;
+  background-color: #7c8a3a !important;
   color: #ffffff;
 }
 
@@ -291,13 +291,13 @@ html.neobrutal .font-\[family-name\:var\(--font-display\)\]::after {
   bottom: -6px;
   width: 34px;
   height: 6px;
-  background: #2563eb;
+  background: #7c8a3a;
 }
 
 /* Layered offset detail on the site footer wordmark */
 html.neobrutal footer p.font-\[family-name\:var\(--font-display\)\] {
   display: inline-block;
-  box-shadow: 4px 4px 0 0 #2563eb;
+  box-shadow: 4px 4px 0 0 #7c8a3a;
   background: #141414;
   padding: 2px 8px;
   color: #f4f1ea;
