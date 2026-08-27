@@ -8,6 +8,7 @@ export const sr: Dictionary = {
   common: {
     discover: "Otkrij",
     myNight: "Moja noć",
+    friends: "Prijatelji",
     artists: "Umetnici",
     places: "Mesta",
     guides: "Vodiči",

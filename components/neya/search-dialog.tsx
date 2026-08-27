@@ -67,6 +67,7 @@ export function SearchDialog({ compact = false }: { compact?: boolean }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const requestId = useRef(0);
   const [data, setData] = useState<SearchResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -116,18 +117,21 @@ export function SearchDialog({ compact = false }: { compact?: boolean }) {
 
   const trimmed = debounced.trim();
   const fetchSearch = useCallback(async (value: string) => {
+    const currentRequest = ++requestId.current;
     setLoading(true);
     setError(false);
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
       if (!res.ok) throw new Error(String(res.status));
       const json = (await res.json()) as SearchResponse;
+      if (currentRequest !== requestId.current) return;
       setData(json);
     } catch {
+      if (currentRequest !== requestId.current) return;
       setError(true);
       setData(null);
     } finally {
-      setLoading(false);
+      if (currentRequest === requestId.current) setLoading(false);
     }
   }, []);
 

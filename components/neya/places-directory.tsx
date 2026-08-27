@@ -91,15 +91,7 @@ function categoryMatchesDayPart(category: VenueCategory, part: DayPart): boolean
   return part === "lateNight";
 }
 
-const DAY_PART_FOR_CONTEXT: Record<ContextId, DayPart[]> = {
-  breakfast: ["morning"],
-  coffee: ["morning", "daytime"],
-  lunch: ["daytime"],
-  workStudy: ["morning", "daytime"],
-  dinner: ["evening"],
-  drinks: ["evening", "lateNight"],
-  nightlife: ["lateNight"],
-};
+const DAY_PART_FOR_CONTEXT = CONTEXT_DAY_PARTS;
 
 const CONTEXT_TYPE_ID: Record<ContextId, string> = {
   breakfast: "breakfast",

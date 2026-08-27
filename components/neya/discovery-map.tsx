@@ -649,8 +649,8 @@ function cityHour(iso: string): number {
   const part = new Intl.DateTimeFormat("en-GB", { timeZone: CITY_TZ, hour: "numeric", hour12: false })
     .formatToParts(new Date(iso))
     .find((p) => p.type === "hour")?.value;
-  const n = parseInt(part ?? "0", 10);
-  return n === 24 ? 0 : n;
+  const hour = Number.parseInt(part ?? "0", 10);
+  return hour === 24 ? 0 : hour;
 }
 
 function venueGlyph(category: string): string {

@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/events", key: "discover" },
   { href: "/my-night", key: "myNight" },
+  { href: "/friends", key: "friends" },
   { href: "/artists", key: "artists" },
   { href: "/places", key: "places" },
   { href: "/guides", key: "guides" },

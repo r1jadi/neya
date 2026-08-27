@@ -8,6 +8,7 @@ export const tr: Dictionary = {
   common: {
     discover: "Keşfet",
     myNight: "Benim Gecem",
+    friends: "Arkadaşlar",
     artists: "Sanatçılar",
     places: "Mekanlar",
     guides: "Rehberler",

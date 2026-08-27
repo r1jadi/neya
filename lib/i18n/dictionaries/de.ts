@@ -8,6 +8,7 @@ export const de: Dictionary = {
   common: {
     discover: "Entdecken",
     myNight: "Meine Nacht",
+    friends: "Freunde",
     artists: "Künstler",
     places: "Orte",
     guides: "Guides",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   createVenueAccount,
@@ -29,11 +29,10 @@ export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    queueMicrotask(() => setAccounts(initialAccounts));
-  }, [initialAccounts]);
+  const refreshRequest = useRef(0);
 
   const refreshAccounts = useCallback(async () => {
+    const requestId = ++refreshRequest.current;
     setLoading(true);
     setLoadError(null);
     try {
@@ -42,6 +41,7 @@ export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
         credentials: "same-origin",
       });
       const body = (await res.json()) as { accounts?: VenueAccountRow[]; error?: string | null };
+      if (requestId !== refreshRequest.current) return;
       if (!res.ok) {
         setLoadError(body.error ?? `Request failed (${res.status})`);
         return;
@@ -49,9 +49,11 @@ export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
       setAccounts(body.accounts ?? []);
       if (body.error) setLoadError(body.error);
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : "Could not load venue accounts");
+      if (requestId === refreshRequest.current) {
+        setLoadError(err instanceof Error ? err.message : "Could not load venue accounts");
+      }
     } finally {
-      setLoading(false);
+      if (requestId === refreshRequest.current) setLoading(false);
     }
   }, []);
 
@@ -62,10 +64,9 @@ export function VenueAccountsPanel({ initialAccounts = [], venues }: Props) {
 
   useEffect(() => {
     if (!shouldRefreshFromMutation) return;
-    queueMicrotask(() => {
-      router.refresh();
-      void refreshAccounts();
-    });
+    router.refresh();
+    const refreshId = window.setTimeout(() => void refreshAccounts(), 0);
+    return () => window.clearTimeout(refreshId);
   }, [shouldRefreshFromMutation, router, refreshAccounts]);
 
   return (

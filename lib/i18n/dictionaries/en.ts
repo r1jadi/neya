@@ -6,6 +6,7 @@ export const en = {
   common: {
     discover: "Discover",
     myNight: "My Night",
+    friends: "Friends",
     artists: "Artists",
     places: "Places",
     guides: "Guides",

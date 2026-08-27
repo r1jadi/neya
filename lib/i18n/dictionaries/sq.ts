@@ -8,6 +8,7 @@ export const sq: Dictionary = {
   common: {
     discover: "Zbulo",
     myNight: "Nata Ime",
+    friends: "Miqtë",
     artists: "Artistët",
     places: "Vende",
     guides: "Udhëzuesit",

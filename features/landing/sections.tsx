@@ -8,7 +8,9 @@ import { FomoTicker } from "@/components/neya/fomo-ticker";
 import { ForYouRail } from "@/features/landing/for-you-rail";
 import { VenueHighlightCard } from "@/components/neya/venue-highlight-card";
 import { MyNightEntry } from "@/components/my-night/my-night-entry";
+import { TonightRecommendations } from "@/components/neya/tonight-recommendations";
 import { TonightTimeline } from "@/components/neya/tonight-timeline";
+import { LiveNowPanel } from "@/components/neya/live-now-panel";
 import { getTimeOfDay, timeOfDayCopy } from "@/lib/event-dates";
 import { LandingHero } from "./hero";
 import { HomeFeed } from "./home-feed";
@@ -144,6 +146,7 @@ export function LandingSections({
         <div className="mx-auto mt-10 w-full min-w-0 max-w-6xl px-4 sm:px-6">
           <TonightTimeline events={events} />
         </div>
+        <LiveNowPanel />
       </div>
 
       {activityItems.length ? (
@@ -227,6 +230,8 @@ export function LandingSections({
           <ForYouRail t={t} events={events} musicGenres={musicGenres} venueInterests={venueInterests} savedEventIds={savedEventIds} />
         </section>
       ) : null}
+
+      <TonightRecommendations />
 
       <MyNightEntry />
 

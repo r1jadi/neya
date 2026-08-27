@@ -24,6 +24,7 @@ export function ImageUploadField({ name, label, defaultUrl = "", folder = "venue
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const uploadGeneration = useRef(0);
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -33,20 +34,28 @@ export function ImageUploadField({ name, label, defaultUrl = "", folder = "venue
       e.target.value = "";
       return;
     }
+    const generation = ++uploadGeneration.current;
     setUploading(true);
     setError(null);
     const fd = new FormData();
     fd.set("file", file);
     fd.set("folder", folder);
-    const res = await (uploader ?? uploadAdminImage)(fd);
-    setUploading(false);
-    if (res.error) {
-      setError(res.error);
-      return;
-    }
-    if (res.url) {
-      setUrl(res.url);
-      onUrlChange?.(res.url);
+    try {
+      const res = await (uploader ?? uploadAdminImage)(fd);
+      // A later upload or a manually entered URL wins over an older response.
+      if (generation !== uploadGeneration.current) return;
+      if (res.error) {
+        setError(res.error);
+        return;
+      }
+      if (res.url) {
+        setUrl(res.url);
+        onUrlChange?.(res.url);
+      }
+    } catch {
+      if (generation === uploadGeneration.current) setError("Upload failed. Please try again.");
+    } finally {
+      if (generation === uploadGeneration.current) setUploading(false);
     }
   }
 
@@ -57,6 +66,7 @@ export function ImageUploadField({ name, label, defaultUrl = "", folder = "venue
       <Input
         value={url}
         onChange={(e) => {
+          ++uploadGeneration.current;
           setUrl(e.target.value);
           onUrlChange?.(e.target.value);
         }}
