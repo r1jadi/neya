@@ -9,6 +9,7 @@ const eventSelect = `
         slug,
         title,
         description,
+        venue_name,
         starts_at,
         ends_at,
         genre,
@@ -50,7 +51,8 @@ const eventSelect = `
           lat,
           lng,
           is_trending,
-          approved
+          approved,
+          capacity
         )
       `;
 

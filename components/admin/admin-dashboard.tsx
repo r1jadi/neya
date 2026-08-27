@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   approveVenue,
@@ -40,7 +40,7 @@ import type {
   AdminEventSourceRow,
   AdminCityRow,
 } from "@/services/admin";
-import { VENUE_CATEGORIES } from "@/types";
+import { PLACES_TYPES, VENUE_CATEGORIES } from "@/types";
 import type { GuestlistRequestWithEvent } from "@/types/guestlist";
 import type { VenueAccountRow } from "@/types/auth";
 import { formatEventWhen, getThisWeekYmdRange, todayYmdInTz, utcIsoToDatetimeLocal } from "@/lib/event-dates";
@@ -58,6 +58,8 @@ type Tab = "overview" | "venues" | "events" | "artists" | "venue-highlights" | "
 
 interface AdminDashboardProps {
   initialTab: Tab;
+  /** "ok" query param value — used to close forms after a save redirect. */
+  initialSaveStamp?: string;
   hideNav?: boolean;
   venueAccounts: VenueAccountRow[];
   eventSources: AdminEventSourceRow[];
@@ -110,6 +112,7 @@ function venueName(ev: AdminEventRow) {
 
 export function AdminDashboard({
   initialTab,
+  initialSaveStamp,
   hideNav,
   venueAccounts,
   eventSources,
@@ -129,6 +132,24 @@ export function AdminDashboard({
   const [editingEvent, setEditingEvent] = useState<AdminEventRow | "new" | null>(null);
   const [editingArtist, setEditingArtist] = useState<Artist | "new" | null>(null);
   const [editingHighlight, setEditingHighlight] = useState<VenueHighlight | "new" | null>(null);
+  // Server-action saves redirect back to /admin?tab=…&ok=1. That soft
+  // navigation keeps this client component mounted, so without this the just-
+  // used form would stay open and the next "Create event" click would recycle
+  // a stale form (previous title/prices/checkbox states). Closing on a new
+  // save stamp guarantees every save starts from a clean form.
+  const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+  useEffect(() => {
+    if (initialSaveStamp !== saveStamp) {
+      setSaveStamp(initialSaveStamp);
+      setEditingVenue(null);
+      setEditingEvent(null);
+      setEditingArtist(null);
+      setEditingHighlight(null);
+    }
+  }, [initialSaveStamp, saveStamp]);
+  // A fresh key per "Create" click so a second create never reuses the
+  // previous (possibly abandoned) form's DOM state.
+  const [createNonce, setCreateNonce] = useState(0);
   const tab = initialTab;
 
   return (
@@ -250,16 +271,25 @@ export function AdminDashboard({
         <section className="space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-lg font-semibold text-white">Events</h2>
-            <Button type="button" size="sm" onClick={() => setEditingEvent("new")}>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                setCreateNonce((n) => n + 1);
+                setEditingEvent("new");
+              }}
+            >
               Create event
             </Button>
           </div>
 
           {editingEvent ? (
             <EventForm
+              key={editingEvent === "new" ? `new-${createNonce}` : editingEvent.id}
               event={editingEvent === "new" ? null : editingEvent}
               venues={venues.filter((v) => v.approved)}
               artists={artists}
+              tickets={tickets}
               initialArtistIds={
                 editingEvent === "new" ? [] : (eventArtistIds[editingEvent.id] ?? [])
               }
@@ -508,13 +538,23 @@ function TriStateSelect({
   label,
   value,
   className,
+  hideInherit = false,
 }: {
   name: string;
   label: string;
   value: boolean | null | undefined;
   className?: string;
+  /** Hide "Inherit from venue" — used when no venue is selected (nothing to inherit). */
+  hideInherit?: boolean;
 }) {
-  const selected = value === true ? "true" : value === false ? "false" : "";
+  // Venue-less events have nothing to inherit, so the select's default is the
+  // concrete fallback saveEvent applies when the value is unset (reservations
+  // open, online payment optional, pay-at-venue allowed). Venue-linked events
+  // default to "Inherit from venue". Call sites pass a key that remounts the
+  // select when a venue is picked/unpicked, so a default picked while
+  // venue-less can never leak into a venue-linked save and vice versa.
+  const venueLessDefault = name === "requires_online_payment" ? "false" : "true";
+  const selected = value === true ? "true" : value === false ? "false" : hideInherit ? venueLessDefault : "";
   return (
     <label className={cn("block text-sm text-white/80", className)}>
       <span className="mb-1 block text-xs text-white/45">{label}</span>
@@ -523,7 +563,7 @@ function TriStateSelect({
         defaultValue={selected}
         className="h-11 w-full rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white"
       >
-        <option value="">Inherit from venue</option>
+        {hideInherit ? null : <option value="">Inherit from venue</option>}
         <option value="true">Yes</option>
         <option value="false">No</option>
       </select>
@@ -609,6 +649,7 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
   const gallery = Array.isArray(venue?.gallery_urls) ? venue.gallery_urls.join(", ") : "";
   const genres = venue?.music_genres?.join(", ") ?? "";
   const dayParts = venue?.day_parts?.join(", ") ?? "";
+  const placesTypes = venue?.places_types ?? [];
   const social = venue?.social_links ? JSON.stringify(venue.social_links) : "";
 
   return (
@@ -648,6 +689,29 @@ function VenueForm({ venue, onClose }: { venue: AdminVenueRow | null; onClose: (
         <Input name="gallery_urls" placeholder="Gallery URLs (comma-separated)" defaultValue={gallery} className="sm:col-span-2" />
         <Input name="music_genres" placeholder="Music genres (comma-separated)" defaultValue={genres} />
         <Input name="day_parts" placeholder="Day parts: morning, daytime, evening, late_night" defaultValue={dayParts} className="sm:col-span-2" />
+        <div className="rounded-xl border border-white/10 bg-black/20 p-4 sm:col-span-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Places sections</p>
+          <p className="mt-1 text-xs text-white/40">
+            This place appears on /places under every section selected here (&quot;All&quot; always includes it). Leave empty to keep automatic inference from day parts and category.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {PLACES_TYPES.map((type) => (
+              <label
+                key={type.id}
+                className="flex cursor-pointer items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/70 transition hover:border-white/30 hover:text-white"
+              >
+                <input
+                  type="checkbox"
+                  name="places_types"
+                  value={type.id}
+                  defaultChecked={placesTypes.includes(type.id)}
+                  className="h-3.5 w-3.5"
+                />
+                {type.label}
+              </label>
+            ))}
+          </div>
+        </div>
         <Input name="capacity" type="number" min={0} placeholder="Venue capacity" defaultValue={venue?.capacity ?? ""} />
         <Input name="website_url" type="url" placeholder="Website URL" defaultValue={venue?.website_url ?? ""} />
         <Input name="contact_email" type="email" placeholder="Contact email" defaultValue={venue?.contact_email ?? ""} />
@@ -701,15 +765,70 @@ function EventForm({
   venues,
   artists,
   initialArtistIds,
+  tickets,
   onClose,
 }: {
   event: AdminEventRow | null;
   venues: AdminVenueRow[];
   artists: Artist[];
   initialArtistIds: string[];
+  tickets: AdminTicketRow[];
   onClose: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const eventTickets = event?.id ? tickets.filter((t) => t.event_id === event.id) : [];
+  const originalTicketIds = eventTickets.map((t) => t.id);
+  const [tiers, setTiers] = useState<EventTicketDraft[]>(() =>
+    eventTickets.map((t) => ({
+      key: t.id,
+      id: t.id,
+      tier_name: t.tier_name,
+      price_eur: String(t.price_cents / 100),
+      quantity_total: t.quantity_total != null ? String(t.quantity_total) : "",
+      description: t.description ?? "",
+    })),
+  );
+  const cheapestTierEur = (() => {
+    const prices = tiers
+      .map((t) => Number(t.price_eur))
+      .filter((n) => Number.isFinite(n) && n >= 0);
+    return prices.length ? Math.min(...prices) : null;
+  })();
+  // Single source of truth for entry pricing: "Free" and ticket types are
+  // mutually exclusive in the form. Switching to Free clears the ticket
+  // types; switching to paid adds a first (empty) ticket type. The hidden
+  // is_free field mirrors the choice; the server additionally normalizes
+  // legacy rows where paid tiers and is_free=on coexist.
+  // Prefill: paid tiers already configured always win over a stale Free flag.
+  const [isFree, setIsFree] = useState<boolean>(() =>
+    eventTickets.some((t) => t.price_cents > 0) ? false : (event?.is_free ?? eventTickets.length === 0),
+  );
+  const [formError, setFormError] = useState<string | null>(null);
+  const [capacitySource, setCapacitySource] = useState<"venue" | "custom">(() =>
+    event?.capacity != null && event.capacity > 0 ? "custom" : "venue",
+  );
+  const addTier = () => {
+    setTiers((previous) => [
+      ...previous,
+      {
+        key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        tier_name: "",
+        price_eur: "",
+        quantity_total: "",
+        description: "",
+      },
+    ]);
+    setFormError(null);
+  };
+  const ticketsJson = JSON.stringify(
+    tiers.map((t) => ({
+      id: t.id || undefined,
+      tier_name: t.tier_name.trim(),
+      price_cents: Math.round((Number(t.price_eur) || 0) * 100),
+      quantity_total: t.quantity_total.trim() === "" ? null : Number(t.quantity_total),
+      description: t.description.trim(),
+    })),
+  );
   const performers = event?.performers?.length
     ? event.performers
     : event?.dj_lineup?.map((name) => ({ name })) ?? [];
@@ -725,49 +844,151 @@ function EventForm({
     : "other";
   const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
   const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
+  const initialImageUrl = event?.image_url ?? "";
+  const [generatedPosterUrl, setGeneratedPosterUrl] = useState<string | null>(null);
+  const [manualImageUrl, setManualImageUrl] = useState(initialImageUrl);
+  const [selectedVenueId, setSelectedVenueId] = useState(event?.venue_id ?? "");
+  const hasVenue = Boolean(selectedVenueId);
+  const selectedVenue = venues.find((v) => v.id === selectedVenueId);
+  // A generated poster becomes the event's poster unless the admin manually
+  // picked a different image in the Poster / cover field.
+  const useGeneratedPoster = Boolean(generatedPosterUrl && manualImageUrl === initialImageUrl);
+
+  async function handleEventSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = formRef.current;
+    if (!form) return;
+
+    // A ticket type needs a name and a price — otherwise it is silently
+    // dropped server-side today, which loses the admin's configuration.
+    const invalid = tiers.some((tier) => {
+      const errs = tierFieldErrors(tier);
+      return Boolean(errs.name || errs.price);
+    });
+    if (invalid) {
+      setFormError("Fix the highlighted ticket types — each needs a name and a price (€0 allowed).");
+      const firstBad = [...form.querySelectorAll<HTMLElement>('[data-tier-field="name"]')].find((el) => {
+        const index = Number(el.getAttribute("data-tier-index"));
+        return Boolean(tierFieldErrors(tiers[index] ?? { tier_name: "", price_eur: "", quantity_total: "", description: "" }).name);
+      });
+      firstBad?.scrollIntoView({ block: "center", behavior: "smooth" });
+      firstBad?.focus();
+      return;
+    }
+    // Duplicate tier names confuse users (two "GA" cards). The backend also
+    // rejects this; mirror the check here for a clear inline error.
+    const lowerNames = tiers.map((t) => t.tier_name.trim().toLowerCase()).filter(Boolean);
+    const dup = lowerNames.some((name, i) => lowerNames.indexOf(name) !== i);
+    if (dup) {
+      setFormError("Two ticket types share the same name — give each a unique name.");
+      return;
+    }
+    setFormError(null);
+
+    const fd = new FormData(form);
+    // Paid ticket types always win over a stale "Free" flag (legacy rows).
+    fd.set("is_free", tiers.some((tier) => (Number(tier.price_eur) || 0) * 100 > 0) ? "off" : isFree ? "on" : "off");
+    // When inheriting the venue's capacity, the DB stores NULL (venue default).
+    // Venue-less events have nothing to inherit, so the typed value is kept.
+    if (hasVenue && capacitySource === "venue") fd.set("capacity", "");
+    if (useGeneratedPoster && generatedPosterUrl) {
+      fd.set("image_url", generatedPosterUrl);
+    }
+    // Venue-less events need a custom location: without one, users would see
+    // an event with no place. The backend also rejects this.
+    if (!hasVenue && !String(fd.get("venue_name") ?? "").trim()) {
+      setFormError("Add a custom location (or pick a venue) — an event with no location can\u2019t be saved.");
+      return;
+    }
+    // An end before the start is nonsensical. The backend also rejects it.
+    const startsVal = String(fd.get("starts_at") ?? "").trim();
+    const endsVal = String(fd.get("ends_at") ?? "").trim();
+    if (startsVal && endsVal) {
+      const s = new Date(startsVal).getTime();
+      const en = new Date(endsVal).getTime();
+      if (Number.isFinite(s) && Number.isFinite(en) && en <= s) {
+        setFormError("The end time must be after the start time.");
+        return;
+      }
+    }
+    await saveEvent(fd);
+  }
+
   const getPosterEventData = (): PosterEventData => {
     const form = formRef.current;
     const values = form ? new FormData(form) : new FormData();
     const venueId = String(values.get("venue_id") ?? "");
     const selectedVenue = venues.find((venue) => venue.id === venueId);
-    const ticketFrom = String(values.get("ticket_from_eur") ?? "").trim();
-    const ticketValue = Number(ticketFrom);
+    const customLocation = String(values.get("venue_name") ?? "").trim();
+    // The poster reflects the same price the event page shows: the cheapest
+    // ticket type when types exist, otherwise the manual listing price.
+    const ticketInfo =
+      cheapestTierEur != null
+        ? `Tickets from €${cheapestTierEur.toLocaleString("en-GB", { maximumFractionDigits: 2 })}`
+        : (() => {
+            const manual = String(values.get("ticket_from_eur") ?? "").trim();
+            const parsed = Number(manual);
+            return manual && Number.isFinite(parsed) ? `Tickets from €${parsed.toLocaleString("en-GB", { maximumFractionDigits: 2 })}` : undefined;
+          })();
 
     return {
       title: String(values.get("title") ?? "").trim(),
       startsAt: String(values.get("starts_at") ?? "").trim(),
-      venue: selectedVenue?.name,
-      location: selectedVenue?.address ?? undefined,
-      ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketValue.toLocaleString("en-GB", { maximumFractionDigits: 2 })}` : undefined,
+      venue: selectedVenue?.name ?? (customLocation || undefined),
+      location: selectedVenue?.address ?? (customLocation || undefined),
+      ticketInfo,
       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
     };
   };
 
   return (
-    <form ref={formRef} action={saveEvent} className="space-y-4 rounded-xl border border-sky-500/30 bg-sky-950/10 p-6">
+    <form ref={formRef} action={saveEvent} onSubmit={handleEventSubmit} className="space-y-4 rounded-xl border border-sky-500/30 bg-sky-950/10 p-6">
       {event?.id ? <input type="hidden" name="id" value={event.id} /> : null}
+      <input type="hidden" name="tickets_json" value={ticketsJson} />
+      <input type="hidden" name="tickets_original_ids" value={originalTicketIds.join(",")} />
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-white">{event ? "Edit event" : "New event"}</h3>
         <Button type="button" variant="ghost" size="sm" onClick={onClose}>
           Close
         </Button>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+
+      <FormSection title="Basics" hint="Where and what this night is.">
         <Input name="title" placeholder="Event title" defaultValue={event?.title} required className="sm:col-span-2" />
         <select
           name="venue_id"
-          defaultValue={event?.venue_id ?? ""}
+          value={selectedVenueId}
+          onChange={(e) => setSelectedVenueId(e.target.value)}
           className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white sm:col-span-2"
         >
-          <option value="">No venue</option>
+          <option value="">No venue — use a custom location below</option>
           {venues.map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}
             </option>
           ))}
         </select>
+        {!hasVenue ? (
+          <div className="sm:col-span-2">
+            <Input
+              name="venue_name"
+              placeholder="Custom location (e.g. Prishtina City Park)"
+              defaultValue={event?.venue_name ?? ""}
+              maxLength={160}
+            />
+            <p className="mt-1 text-xs text-white/40">
+              Shown to users as the event&apos;s location. No NEYA Venue record is created.
+            </p>
+          </div>
+        ) : null}
+      </FormSection>
+
+      <FormSection title="Date &amp; time" hint="Local Prishtina time — users see the same start time everywhere.">
         <Input name="starts_at" type="datetime-local" required defaultValue={startsLocal} />
         <Input name="ends_at" type="datetime-local" defaultValue={endsLocal} />
+      </FormSection>
+
+      <FormSection title="Details" hint="Genre, category and tags shape discovery filters.">
         <select
           name="genre"
           defaultValue={selectedGenre}
@@ -779,79 +1000,396 @@ function EventForm({
             </option>
           ))}
         </select>
-        <Input name="city_slug" placeholder="City slug" defaultValue={event?.city_slug ?? "prishtina"} required />
         <select name="category" defaultValue={event?.category ?? "nightlife"} className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white">
           {EVENT_CATEGORIES.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
         </select>
-        <Input name="capacity" type="number" placeholder="Capacity" defaultValue={event?.capacity ?? ""} />
-        <PerformerFields initialPerformers={performers} />
-        <ArtistPicker artists={artists} initialIds={initialArtistIds} className="sm:col-span-2" />
-        <Input name="ticket_from_eur" type="number" step="0.01" placeholder="From price (EUR)" defaultValue={event?.ticket_from_eur ?? ""} />
+        <Input name="city_slug" placeholder="City slug" defaultValue={event?.city_slug ?? "prishtina"} required />
         <Input name="tags" placeholder="Tags (comma-separated)" defaultValue={event?.tags?.join(", ") ?? ""} />
-        <ImageUploadField name="image_url" label="Poster / cover" defaultUrl={event?.image_url ?? ""} folder="events" />
+        <div className="sm:col-span-2">
+          <PerformerFields initialPerformers={performers} />
+        </div>
+        <ArtistPicker artists={artists} initialIds={initialArtistIds} className="sm:col-span-2" />
+      </FormSection>
+
+      <FormSection
+        title="Entry &amp; pricing"
+        hint="Choose how people get in. This single decision drives every surface: homepage cards, the event page and the checkout all show the same price."
+      >
+        <div className="sm:col-span-2">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsFree(true);
+                if (tiers.length && !window.confirm("Switching to a free event removes all configured ticket types. Continue?")) {
+                  setIsFree(false);
+                  return;
+                }
+                if (tiers.length) setTiers([]);
+                setFormError(null);
+              }}
+              aria-pressed={isFree}
+              className={cn(
+                "rounded-xl border p-3 text-left transition",
+                isFree ? "border-emerald-400/60 bg-emerald-500/10" : "border-white/10 bg-white/[0.02] hover:border-white/25",
+              )}
+            >
+              <span className="block text-sm font-semibold text-white">Free event</span>
+              <span className="mt-0.5 block text-xs text-white/50">No tickets — users just show up. Shown as “Free” on cards and the event page.</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsFree(false);
+                if (!tiers.length) addTier();
+                setFormError(null);
+              }}
+              aria-pressed={!isFree}
+              className={cn(
+                "rounded-xl border p-3 text-left transition",
+                !isFree ? "border-sky-400/60 bg-sky-500/10" : "border-white/10 bg-white/[0.02] hover:border-white/25",
+              )}
+            >
+              <span className="block text-sm font-semibold text-white">Paid event with tickets</span>
+              <span className="mt-0.5 block text-xs text-white/50">Users pick a ticket type below and pay its exact price online.</span>
+            </button>
+          </div>
+          <input type="hidden" name="is_free" value={isFree ? "on" : "off"} />
+        </div>
+
+        {isFree && tiers.length ? (
+          <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100 sm:col-span-2">
+            This event is marked Free but already has paid ticket types — saving it will keep the tickets and treat it as a paid event
+            (ticket prices always win on the event page). Switch to “Paid event with tickets” to keep pricing explicit.
+          </p>
+        ) : null}
+
+        {!isFree ? (
+          tiers.length ? (
+            <div className="space-y-2 sm:col-span-2">
+              <TicketTiersEditor tiers={tiers} onChange={setTiers} onAdd={addTier} clearError={() => setFormError(null)} />
+              <p className="text-xs text-white/40">
+                The listing price (“From €…” on cards) is derived from the cheapest ticket type automatically — no separate field to keep in sync.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2 sm:col-span-2">
+              <Input
+                name="ticket_from_eur"
+                type="number"
+                step="0.01"
+                min={0}
+                placeholder="Listing price (EUR)"
+                defaultValue={event?.ticket_from_eur ?? ""}
+              />
+              <p className="text-xs text-white/40">
+                No ticket types yet — cards show this price. Add ticket types above to sell tickets online.
+              </p>
+            </div>
+          )
+        ) : null}
+      </FormSection>
+
+      <FormSection
+        title="Reservations &amp; capacity"
+        hint={
+          hasVenue
+            ? "\u201CInherit\u201D uses the venue's defaults; picking Yes/No overrides them for this event only."
+            : "Same settings as venue events — apply directly to this event. An empty reservation price means Free."
+        }
+      >
+        <TriStateSelect
+          key={`res-enabled-${hasVenue ? "venue" : "none"}`}
+          name="reservations_enabled"
+          label="Reservations open"
+          value={event?.reservations_enabled}
+          hideInherit={!hasVenue}
+        />
+        <Input
+          name="reservation_price_eur"
+          type="number"
+          step="0.01"
+          min={0}
+          placeholder={hasVenue ? "Price EUR (empty = venue)" : "Price EUR (0 = free)"}
+          defaultValue={hasVenue ? event?.reservation_price_eur ?? "" : (event?.reservation_price_eur ?? 0)}
+        />
+        <TriStateSelect
+          key={`res-online-${hasVenue ? "venue" : "none"}`}
+          name="requires_online_payment"
+          label="Require online payment"
+          value={event?.requires_online_payment}
+          hideInherit={!hasVenue}
+        />
+        <TriStateSelect
+          key={`res-pav-${hasVenue ? "venue" : "none"}`}
+          name="allows_pay_at_venue"
+          label="Allow pay at venue"
+          value={event?.allows_pay_at_venue}
+          hideInherit={!hasVenue}
+        />
+        <div className="sm:col-span-2">
+          <span className="mb-1 block text-xs text-white/45">Maximum guests (optional)</span>
+          {hasVenue ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCapacitySource("venue")}
+                aria-pressed={capacitySource === "venue"}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                  capacitySource === "venue"
+                    ? "border-sky-400/60 bg-sky-500/10 text-white"
+                    : "border-white/15 text-white/60 hover:border-white/30 hover:text-white",
+                )}
+              >
+                Use venue&apos;s capacity
+              </button>
+              <button
+                type="button"
+                onClick={() => setCapacitySource("custom")}
+                aria-pressed={capacitySource === "custom"}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                  capacitySource === "custom"
+                    ? "border-sky-400/60 bg-sky-500/10 text-white"
+                    : "border-white/15 text-white/60 hover:border-white/30 hover:text-white",
+                )}
+              >
+                Set a number
+              </button>
+            </div>
+          ) : null}
+          {!hasVenue || capacitySource === "custom" ? (
+            <Input
+              name="capacity"
+              type="number"
+              min={1}
+              placeholder={hasVenue ? "e.g. 400" : "e.g. 400 (blank = unknown)"}
+              defaultValue={event?.capacity ?? ""}
+              className="mt-2"
+              aria-label="Maximum guests"
+            />
+          ) : (
+            <input type="hidden" name="capacity" value="" />
+          )}
+          <p className="mt-2 text-xs text-white/40">
+            {hasVenue && capacitySource === "venue"
+              ? `Guests are limited to the venue's capacity (${selectedVenue?.capacity != null ? `${selectedVenue.capacity} people` : "not set on the venue yet"}). Ticket sales and reservations are capped by it.`
+              : "Guests are limited to this number: ticket sales and reservations are capped by it. Shown on the event page."}
+          </p>
+        </div>
+      </FormSection>
+
+      <FormSection title="Poster &amp; description" hint="The poster is the hero image on the event page.">
+        <div className="sm:col-span-2">
+          <ImageUploadField
+            name="image_url"
+            label="Poster / cover"
+            defaultUrl={initialImageUrl}
+            folder="events"
+            onUrlChange={setManualImageUrl}
+          />
+        </div>
+        {useGeneratedPoster ? (
+          <div className="flex items-center gap-3 rounded-xl border border-emerald-500/25 bg-emerald-950/20 px-3 py-2 sm:col-span-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={generatedPosterUrl ?? ""} alt="Generated poster" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+            <p className="text-xs leading-5 text-emerald-100/90">
+              Generated poster will be saved as the event poster. Upload a different image in &ldquo;Poster / cover&rdquo; to override it.
+            </p>
+          </div>
+        ) : null}
         <textarea
           name="description"
           placeholder="Description"
           defaultValue={event?.description ?? ""}
-          rows={2}
+          rows={3}
           className="sm:col-span-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
         />
-      </div>
-      <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Reservation overrides</p>
-        <p className="mt-1 text-xs text-white/40">
-          {event?.venue_id ? "Leave inherit to use venue defaults." : "No venue — event settings are used directly (reservations default to on)."}
-        </p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <TriStateSelect
-            name="reservations_enabled"
-            label="Reservations open"
-            value={event?.reservations_enabled}
-          />
-          <Input
-            name="reservation_price_eur"
-            type="number"
-            step="0.01"
-            min={0}
-            placeholder="Price EUR (empty = venue)"
-            defaultValue={event?.reservation_price_eur ?? ""}
-          />
-          <TriStateSelect
-            name="requires_online_payment"
-            label="Require online payment"
-            value={event?.requires_online_payment}
-          />
-          <TriStateSelect
-            name="allows_pay_at_venue"
-            label="Allow pay at venue"
-            value={event?.allows_pay_at_venue}
-            className="sm:col-span-2"
-          />
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-4 text-sm text-white/80">
-        <label className="flex items-center gap-2">
+      </FormSection>
+
+      <FormSection title="Publishing" hint="When the event is live and who sees it.">
+        <label className="flex items-center gap-2 text-sm text-white/80">
+          {/* The hidden field guarantees an "off" value when the box is
+              unchecked (a bare checkbox contributes NOTHING to FormData, so
+              the server would otherwise always publish). Order matters: when
+              checked, the checkbox's "on" must be the FIRST value so
+              formData.get() reads it; an unchecked box leaves only "off". */}
+          <input type="checkbox" name="is_listed_public" defaultChecked={event?.is_listed_public !== false} /> Published (visible on the site)
+          <input type="hidden" name="is_listed_public" value="off" />
+        </label>
+        <label className="flex items-center gap-2 text-sm text-white/80">
           <input type="checkbox" name="is_featured" defaultChecked={event?.is_featured} /> Featured
         </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="is_free" defaultChecked={event?.is_free} /> Free event
+        <label className="flex items-center gap-2 text-sm text-white/80 sm:col-span-2">
+          <input type="checkbox" name="is_hidden_premium" defaultChecked={event?.is_hidden_premium} /> Premium-only (hidden from free listings)
         </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="is_listed_public" defaultChecked={event?.is_listed_public !== false} /> Published
-        </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="is_hidden_premium" defaultChecked={event?.is_hidden_premium} /> Premium-only
-        </label>
-      </div>
+      </FormSection>
+
+      {formError ? (
+        <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          {formError}
+        </p>
+      ) : null}
+
       <div className="flex flex-wrap gap-3">
         <Button type="submit">Save event</Button>
         <EventPosterGenerator
           eventId={event?.id}
           posterUrl={event?.poster_url}
           getEventData={getPosterEventData}
+          onPosterGenerated={(url) => setGeneratedPosterUrl(url)}
         />
       </div>
     </form>
+  );
+}
+
+type EventTicketDraft = {
+  key: string;
+  id?: string;
+  tier_name: string;
+  price_eur: string;
+  quantity_total: string;
+  description: string;
+};
+
+function tierFieldErrors(tier: EventTicketDraft): { name?: string; price?: string } {
+  const errors: { name?: string; price?: string } = {};
+  if (!tier.tier_name.trim()) errors.name = "Ticket type needs a name.";
+  const price = tier.price_eur.trim() === "" ? Number.NaN : Number(tier.price_eur);
+  if (!Number.isFinite(price) || price < 0) errors.price = "Enter a price (0 allowed).";
+  return errors;
+}
+
+function TicketTiersEditor({
+  tiers,
+  onChange,
+  onAdd,
+  clearError,
+}: {
+  tiers: EventTicketDraft[];
+  onChange: (tiers: EventTicketDraft[]) => void;
+  onAdd: () => void;
+  clearError: () => void;
+}) {
+  function update(index: number, patch: Partial<EventTicketDraft>) {
+    onChange(tiers.map((tier, i) => (i === index ? { ...tier, ...patch } : tier)));
+  }
+  function remove(index: number) {
+    onChange(tiers.filter((_, i) => i !== index));
+  }
+  function add() {
+    onAdd();
+  }
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-white/45">Ticket types</p>
+      <p className="mt-1 text-xs text-white/40">
+        {tiers.length
+          ? `${tiers.length} tier${tiers.length === 1 ? "" : "s"} — users pick one of these and pay its exact price online.`
+          : "No ticket types yet — add one below."}
+      </p>
+      {tiers.length ? (
+        <ul className="mt-3 space-y-2">
+          {tiers.map((tier, index) => {
+            const fieldErrors = tierFieldErrors(tier);
+            return (
+              <li
+                key={tier.key}
+                className={
+                  fieldErrors.name || fieldErrors.price
+                    ? "grid gap-2 rounded-lg border border-red-500/40 bg-red-950/10 p-3 sm:grid-cols-[minmax(0,1fr)_110px_110px_auto]"
+                    : "grid gap-2 rounded-lg border border-white/10 bg-white/[0.02] p-3 sm:grid-cols-[minmax(0,1fr)_110px_110px_auto]"
+                }
+              >
+                <div>
+                  <Input
+                    value={tier.tier_name}
+                    onChange={(e) => {
+                      update(index, { tier_name: e.target.value });
+                      clearError();
+                    }}
+                    placeholder="Tier name (e.g. Early Bird)"
+                    aria-label={`Tier ${index + 1} name`}
+                    aria-invalid={Boolean(fieldErrors.name)}
+                    data-tier-field="name"
+                    data-tier-index={index}
+                  />
+                  {fieldErrors.name ? <p className="mt-1 text-xs text-red-300" data-tier-error>Missing a name</p> : null}
+                </div>
+                <div>
+                  <Input
+                    value={tier.price_eur}
+                    onChange={(e) => {
+                      update(index, { price_eur: e.target.value });
+                      clearError();
+                    }}
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    placeholder="€ price"
+                    aria-label={`Tier ${index + 1} price`}
+                    aria-invalid={Boolean(fieldErrors.price)}
+                    data-tier-field="price"
+                    data-tier-index={index}
+                    className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-sm text-white"
+                  />
+                  {fieldErrors.price ? <p className="mt-1 text-xs text-red-300">Needs a price (0 allowed)</p> : null}
+                </div>
+                <Input
+                  value={tier.quantity_total}
+                  onChange={(e) => update(index, { quantity_total: e.target.value })}
+                  type="number"
+                  min={0}
+                  placeholder="Qty (blank = ∞)"
+                  aria-label={`Tier ${index + 1} quantity`}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => remove(index)}
+                  className="text-red-300"
+                  aria-label={`Remove tier ${index + 1}`}
+                >
+                  Remove
+                </Button>
+                <Input
+                  value={tier.description}
+                  onChange={(e) => update(index, { description: e.target.value })}
+                  placeholder="Description (optional)"
+                  className="sm:col-span-4"
+                  aria-label={`Tier ${index + 1} description`}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+      <Button type="button" size="sm" variant="secondary" onClick={add} className="mt-3">
+        + Add ticket type
+      </Button>
+    </div>
+  );
+}
+
+function FormSection({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-white/45">{title}</p>
+      {hint ? <p className="mt-1 text-xs text-white/40">{hint}</p> : null}
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">{children}</div>
+    </div>
   );
 }
 

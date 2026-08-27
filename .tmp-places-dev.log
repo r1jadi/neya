@@ -1,0 +1,719 @@
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.19.224.1:3000
+- Environments: .env.local
+✓ Ready in 557ms
+✓ Running next.config.ts took 48ms
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "50mb"
+  · serverActions
+
+ GET /login 200 in 1261ms (next.js: 343ms, proxy.ts: 282ms, application-code: 636ms)
+ GET /login 200 in 110ms (next.js: 11ms, proxy.ts: 7ms, application-code: 91ms)
+ GET /login 200 in 96ms (next.js: 3ms, proxy.ts: 7ms, application-code: 86ms)
+ GET /login 200 in 119ms (next.js: 5ms, proxy.ts: 9ms, application-code: 106ms)
+ GET /forgot-password 200 in 104ms (next.js: 33ms, proxy.ts: 6ms, application-code: 65ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /forgot-password?sent=1 200 in 67ms (next.js: 7ms, proxy.ts: 6ms, application-code: 54ms)
+ POST /forgot-password 200 in 1083ms (next.js: 4ms, proxy.ts: 9ms, application-code: 1070ms)
+  └─ ƒ requestPasswordReset({}) in 977ms actions/auth-account.ts
+✓ Compiled in 420ms
+ GET /login 200 in 146ms (next.js: 4ms, proxy.ts: 4ms, application-code: 138ms)
+ GET /login 200 in 423ms (next.js: 14ms, proxy.ts: 21ms, application-code: 387ms)
+ GET /events 200 in 1933ms (next.js: 115ms, proxy.ts: 242ms, application-code: 1576ms)
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+○ Compiling /admin ...
+ GET /admin 200 in 7.4s (next.js: 4.1s, proxy.ts: 377ms, application-code: 2.9s)
+ GET /admin?tab=events 200 in 2.2s (next.js: 40ms, proxy.ts: 329ms, application-code: 1840ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /admin?tab=events 200 in 1690ms (next.js: 11ms, proxy.ts: 755ms, application-code: 924ms)
+  └─ ƒ uploadEventPosterImage({}) in 880ms actions/admin-posters.ts
+ POST /admin?tab=events 200 in 1072ms (next.js: 9ms, proxy.ts: 479ms, application-code: 585ms)
+  └─ ƒ uploadEventPosterImage({}) in 566ms actions/admin-posters.ts
+ GET /admin?tab=events&ok=1 200 in 1949ms (next.js: 5ms, proxy.ts: 211ms, application-code: 1733ms)
+ POST /admin?tab=events 200 in 3.3s (next.js: 9ms, proxy.ts: 795ms, application-code: 2.5s)
+  └─ ƒ saveEvent({}) in 561ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1945ms (next.js: 7ms, proxy.ts: 233ms, application-code: 1705ms)
+ GET /events/posterflow-test-event-ab3b45e0 200 in 2.6s (next.js: 727ms, proxy.ts: 466ms, application-code: 1420ms)
+ POST /events/posterflow-test-event-ab3b45e0 200 in 305ms (next.js: 24ms, proxy.ts: 101ms, application-code: 180ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"7a0cb150-2008-45e4-a9a4-4af2365ab74f"}) in 168ms actions/discovery-analytics.ts
+ POST /events/posterflow-test-event-ab3b45e0 200 in 203ms (next.js: 7ms, proxy.ts: 94ms, application-code: 102ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"7a0cb150-2008-45e4-a9a4-4af2365ab74f"}) in 93ms actions/discovery-analytics.ts
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ GET /admin?tab=events 200 in 1818ms (next.js: 9ms, proxy.ts: 475ms, application-code: 1334ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Tue, 15 Sept, 21:00
+-                                 Tue 15 Sept, 21:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Tue, 15 Sept, 21)
+    at <unknown> (-                                 Tue 15 Sept, 21)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:286:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:282:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  284 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  285 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 286 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  287 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  288 |                     <td className="px-4 py-3">
+  289 |                       <div className="flex flex-wrap gap-2">
+ POST /admin?tab=events 200 in 1696ms (next.js: 6ms, proxy.ts: 868ms, application-code: 822ms)
+  └─ ƒ uploadEventPosterImage({}) in 808ms actions/admin-posters.ts
+ GET /admin?tab=events&ok=1 200 in 1562ms (next.js: 7ms, proxy.ts: 221ms, application-code: 1334ms)
+ POST /admin?tab=events 200 in 2.6s (next.js: 7ms, proxy.ts: 383ms, application-code: 2.2s)
+  └─ ƒ saveEvent({}) in 589ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1572ms (next.js: 6ms, proxy.ts: 237ms, application-code: 1328ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /admin?tab=events&ok=1 200 in 838ms (next.js: 10ms, proxy.ts: 576ms, application-code: 252ms)
+ GET /admin?tab=events&ok=1 200 in 718ms (next.js: 14ms, proxy.ts: 279ms, application-code: 424ms)
+✓ Compiled in 253ms
+ GET /admin?tab=events&ok=1 200 in 517ms (next.js: 15ms, proxy.ts: 276ms, application-code: 226ms)
+✓ Compiled in 122ms
+ GET /admin?tab=events&ok=1 200 in 679ms (next.js: 16ms, proxy.ts: 412ms, application-code: 251ms)
+✓ Compiled in 161ms
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+✓ Compiled in 234ms
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+[browser] ./components/admin/admin-dashboard.tsx:789:17
+Error: Nullish coalescing operator(??) requires parens when mixing with logical operators
+  787 |       startsAt: String(values.get("starts_at") ?? "").trim(),
+  788 |       venue: selectedVenue?.name ?? customLocation || undefined,
+> 789 |       location: selectedVenue?.address ?? customLocation || undefined,
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  790 |       ticketInfo: ticketFrom && Number.isFinite(ticketValue) ? `Tickets from €${ticketVal...
+  791 |       imageUrl: String(values.get("image_url") ?? "").trim() || undefined,
+  792 |     };
+
+Parsing ecmascript source code failed
+
+Import trace:
+  Server Component:
+    ./components/admin/admin-dashboard.tsx
+    ./app/admin/page.tsx 
+✓ Compiled in 742ms
+ GET /admin?tab=events&ok=1 200 in 1420ms (next.js: 26ms, proxy.ts: 650ms, application-code: 744ms)
+ GET /login 200 in 427ms (next.js: 30ms, proxy.ts: 18ms, application-code: 379ms)
+[?25h

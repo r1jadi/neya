@@ -15,9 +15,11 @@ interface ImageUploadFieldProps {
   folder?: string;
   /** Override the server action used to upload (defaults to the admin upload). */
   uploader?: (fd: FormData) => Promise<UploadResult>;
+  /** Called whenever the field's URL value changes (manual override tracking). */
+  onUrlChange?: (url: string) => void;
 }
 
-export function ImageUploadField({ name, label, defaultUrl = "", folder = "venues", uploader }: ImageUploadFieldProps) {
+export function ImageUploadField({ name, label, defaultUrl = "", folder = "venues", uploader, onUrlChange }: ImageUploadFieldProps) {
   const [url, setUrl] = useState(defaultUrl);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,14 +44,25 @@ export function ImageUploadField({ name, label, defaultUrl = "", folder = "venue
       setError(res.error);
       return;
     }
-    if (res.url) setUrl(res.url);
+    if (res.url) {
+      setUrl(res.url);
+      onUrlChange?.(res.url);
+    }
   }
 
   return (
     <div className="space-y-2">
       <label className="text-xs font-medium text-white/60">{label}</label>
       <input type="hidden" name={name} value={url} />
-      <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Image URL" className="font-mono text-xs" />
+      <Input
+        value={url}
+        onChange={(e) => {
+          setUrl(e.target.value);
+          onUrlChange?.(e.target.value);
+        }}
+        placeholder="Image URL"
+        className="font-mono text-xs"
+      />
       <div className="flex flex-wrap items-center gap-2">
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
         <Button type="button" size="sm" variant="secondary" disabled={uploading} onClick={() => fileRef.current?.click()}>

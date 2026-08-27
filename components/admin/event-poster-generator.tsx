@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Download, RefreshCw, Sparkles } from "lucide-react";
-import { saveEventPoster } from "@/actions/admin-posters";
+import { saveEventPoster, uploadEventPosterImage } from "@/actions/admin-posters";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -90,6 +90,16 @@ function posterImageUrl(value?: string): string | undefined {
 
 function hasPosterTitle(data: PosterEventData) {
   return Boolean(data.title?.trim());
+}
+
+/** Converts a canvas data URL to a Blob (avoids a fetch round-trip). */
+function dataUrlToBlob(dataUrl: string): Blob {
+  const separator = dataUrl.indexOf(",");
+  const mime = /^data:([^;]+);/i.exec(dataUrl)?.[1] ?? "image/png";
+  const binary = atob(dataUrl.slice(separator + 1));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
 }
 
 /** Creates the locally generated, full-resolution PNG used by Download PNG. */
@@ -250,10 +260,13 @@ export function EventPosterGenerator({
   eventId,
   posterUrl,
   getEventData,
+  onPosterGenerated,
 }: {
   eventId?: string;
   posterUrl?: string | null;
   getEventData: () => PosterEventData;
+  /** Called with the uploaded URL whenever a poster is generated, so the event form can use it as the default poster. */
+  onPosterGenerated?: (url: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [template, setTemplate] = useState<PosterTemplate>("nightlife");
@@ -275,6 +288,20 @@ export function EventPosterGenerator({
     setOpen(true);
   }
 
+  /** Uploads the freshly generated PNG so it can be used as the event's poster when the form saves. */
+  async function attachGeneratedPoster(poster: string): Promise<string | null> {
+    try {
+      const fd = new FormData();
+      fd.set("poster", new File([dataUrlToBlob(poster)], "event-poster.png", { type: "image/png" }));
+      const result = await uploadEventPosterImage(fd);
+      if (result.error || !result.url) return null;
+      return result.url;
+    } catch (error) {
+      console.error("[neya] poster attach failed", error);
+      return null;
+    }
+  }
+
   async function regeneratePoster(): Promise<string | null> {
     const latestData = getEventData();
     setEventData(latestData);
@@ -287,6 +314,15 @@ export function EventPosterGenerator({
     try {
       const poster = await renderPosterPng(latestData, template, format);
       setGeneratedPoster(poster);
+      // Auto-attach: the generated poster becomes the event's default poster
+      // unless the admin later picks a different image in the event form.
+      const uploadedUrl = await attachGeneratedPoster(poster);
+      if (uploadedUrl) {
+        setSaveError(null);
+        onPosterGenerated?.(uploadedUrl);
+      } else {
+        setSaveError("The poster could not be attached to the event automatically. Create/save the event, then use “Save poster” to attach it.");
+      }
       return poster;
     } catch (error) {
       console.error("[neya] poster generation failed", error);
@@ -299,15 +335,23 @@ export function EventPosterGenerator({
 
   async function downloadPoster() {
     setIsDownloading(true);
+    setGenerationError(null);
     try {
-      const image = await regeneratePoster();
+      // Use the current render when available; otherwise generate one first.
+      const image = generatedPoster ?? (await regeneratePoster());
       if (!image) return;
+      // Anchor clicks on large base64 data: URLs silently no-op in several
+      // browsers (notably iOS Safari). Blob object URLs download reliably on
+      // desktop and mobile — the same approach as the saved-poster download.
+      const objectUrl = URL.createObjectURL(dataUrlToBlob(image));
       const link = document.createElement("a");
-      link.href = image;
+      link.href = objectUrl;
       link.download = `neya-${format === "post" ? "instagram-post" : "instagram-story"}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      // Revoke after the download starts; revoking synchronously can abort it on Safari.
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 2000);
     } catch (error) {
       console.error("[neya] poster download failed", error);
       setGenerationError("The poster could not be downloaded. Please try again.");

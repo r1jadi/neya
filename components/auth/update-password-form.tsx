@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n";
@@ -13,44 +12,46 @@ export function UpdatePasswordForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  const supabase = useMemo(() => {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!url || !key) return null;
-    return createClient(url, key, { auth: { detectSessionInUrl: true, persistSession: true } });
-  }, []);
-
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setMessage(null);
-    if (!supabase) {
-      setError(t.auth.signInUnavailable);
-      return;
-    }
     setPending(true);
     const fd = new FormData(e.currentTarget);
     const p1 = String(fd.get("password") ?? "");
     const p2 = String(fd.get("confirm") ?? "");
     if (p1.length < 6) {
       setError(t.auth.minChars);
+      setPending(false);
       return;
     }
     if (p1 !== p2) {
       setError(t.auth.passwordsDoNotMatch);
+      setPending(false);
       return;
     }
-    const { error: err } = await supabase.auth.updateUser({ password: p1 });
-    setPending(false);
-    if (err) {
-      setError(err.message);
-      return;
-    }
-    setMessage(t.auth.passwordUpdated);
-  }
 
-  if (!supabase) {
-    return <p className="text-sm text-red-200">{t.auth.signInUnavailable}</p>;
+    // Completing the reset must run on the server: the recovery session comes
+    // from exchanging the code in the email link (Supabase PKCE), and the
+    // password update needs that session. Doing the exchange + updateUser
+    // client-side breaks session handling and fails with an auth error.
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: p1 }),
+      });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      setPending(false);
+      if (!res.ok || !data?.ok) {
+        setError(data?.error ?? t.auth.genericError);
+        return;
+      }
+      setMessage(t.auth.passwordUpdated);
+    } catch {
+      setPending(false);
+      setError(t.auth.genericError);
+    }
   }
 
   return (

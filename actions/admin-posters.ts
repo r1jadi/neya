@@ -61,3 +61,46 @@ export async function saveEventPoster(formData: FormData): Promise<{ url?: strin
     return { error: "Poster upload failed" };
   }
 }
+
+/**
+ * Uploads a generated PNG poster to storage without touching an event row.
+ *
+ * The event form's "Poster / cover" (image_url) is what the public event page
+ * actually displays, so a freshly generated poster must be attached to the
+ * event at save time — but a brand-new event has no id yet. This action stores
+ * the PNG under a generated path and returns the public URL, which the client
+ * then carries into the event save. Stale unattached files under this prefix
+ * can be cleaned up periodically; they never reference an event.
+ */
+export async function uploadEventPosterImage(formData: FormData): Promise<{ url?: string; error?: string }> {
+  await requireAdminUser();
+
+  const poster = formData.get("poster");
+  if (!(poster instanceof File) || poster.size === 0) return { error: "No poster image" };
+  if (poster.type !== "image/png") return { error: "Poster must be a PNG" };
+  if (poster.size > MAX_POSTER_BYTES) return { error: "Poster is too large (max 20MB)" };
+
+  const posterBytes = Buffer.from(await poster.arrayBuffer());
+  if (posterBytes.length < PNG_SIGNATURE.length || !posterBytes.subarray(0, PNG_SIGNATURE.length).equals(PNG_SIGNATURE)) {
+    return { error: "Poster must be a valid PNG" };
+  }
+
+  const path = `event-posters/incoming/${crypto.randomUUID()}.png`;
+  try {
+    const admin = createAdminClient();
+    const { error: uploadError } = await admin.storage.from("neya-media").upload(path, posterBytes, {
+      contentType: "image/png",
+      cacheControl: "3600",
+      upsert: false,
+    });
+    if (uploadError) {
+      console.error("[neya] generated poster upload failed", uploadError);
+      return { error: "Poster upload failed. Please try again." };
+    }
+    const { data: publicUrl } = admin.storage.from("neya-media").getPublicUrl(path);
+    return { url: publicUrl.publicUrl };
+  } catch (error) {
+    console.error("[neya] uploadEventPosterImage", error);
+    return { error: "Poster upload failed" };
+  }
+}

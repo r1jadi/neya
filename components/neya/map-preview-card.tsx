@@ -55,7 +55,7 @@ export function MapPreviewCard({
           ) : null}
           <div className="absolute bottom-3 left-3 right-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-fuchsia-300/90">
-              {event.venue?.name ?? "Venue TBA"}
+              {event.venue?.name ?? event.venue_name ?? "Venue TBA"}
             </p>
             <h3 className="mt-1 line-clamp-2 font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-white">
               {event.title}

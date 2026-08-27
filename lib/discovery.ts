@@ -23,7 +23,7 @@ export function categoryLabel(value: string | undefined) {
 export function eventMatchesQuery(event: Event, query: string) {
   const normalized = query.trim().toLowerCase();
   if (!normalized) return true;
-  return [event.title, event.description, event.venue?.name, event.venue?.address, event.genre, event.category, ...(event.tags ?? [])]
+  return [event.title, event.description, event.venue?.name, event.venue_name, event.venue?.address, event.genre, event.category, ...(event.tags ?? [])]
     .filter((value): value is string => Boolean(value))
     .some((value) => value.toLowerCase().includes(normalized));
 }

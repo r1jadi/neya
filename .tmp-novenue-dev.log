@@ -1,0 +1,1507 @@
+
+> neya@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.19.224.1:3000
+- Environments: .env.local
+✓ Ready in 639ms
+✓ Running next.config.ts took 62ms
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "50mb"
+  · serverActions
+
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 2.3s (next.js: 450ms, proxy.ts: 284ms, application-code: 1520ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 450ms (next.js: 9ms, proxy.ts: 6ms, application-code: 436ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 346ms (next.js: 4ms, proxy.ts: 4ms, application-code: 337ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1287ms (next.js: 7ms, proxy.ts: 377ms, application-code: 903ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LandingSections>
+      <div className="flex w-ful...">
+        <LandingHero>
+        <div>
+        ...
+          <section className="min-w-0 ma...">
+            <div>
+            <div ref={{current:null}} className={"flex min..."}>
+              <motion.div>
+              <motion.div initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}} ...>
+                <div className="w-[min(100..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                  <EventCard event={{id:"85416e...", ...}} saved={false}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+              ...
+        ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <unknown> (components/neya/trending-carousel.tsx:73:13)
+    at Array.map (<anonymous>)
+    at TrendingCarousel (components/neya/trending-carousel.tsx:64:17)
+    at LandingSections (features\landing\sections.tsx:172:11)
+    at Home (app\page.tsx:71:7)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /admin?tab=events 200 in 1682ms (next.js: 44ms, proxy.ts: 275ms, application-code: 1362ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1439ms (next.js: 6ms, proxy.ts: 204ms, application-code: 1228ms)
+ POST /admin?tab=events 200 in 3.0s (next.js: 4ms, proxy.ts: 713ms, application-code: 2.3s)
+  └─ ƒ saveEvent({}) in 792ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1468ms (next.js: 5ms, proxy.ts: 228ms, application-code: 1235ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/novenue-test-050285-4da3b8a8?x=1787839093 200 in 1395ms (next.js: 623ms, proxy.ts: 8ms, application-code: 764ms)
+ GET /admin?tab=events 200 in 1583ms (next.js: 6ms, proxy.ts: 316ms, application-code: 1261ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Mon, 28 Sept, 20:00
+-                                 Mon 28 Sept, 20:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Mon, 28 Sept, 20)
+    at <unknown> (-                                 Mon 28 Sept, 20)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events 200 in 1674ms (next.js: 7ms, proxy.ts: 301ms, application-code: 1366ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Mon, 28 Sept, 20:00
+-                                 Mon 28 Sept, 20:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Mon, 28 Sept, 20)
+    at <unknown> (-                                 Mon 28 Sept, 20)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1788ms (next.js: 5ms, proxy.ts: 202ms, application-code: 1582ms)
+ POST /admin?tab=events 200 in 3.0s (next.js: 5ms, proxy.ts: 339ms, application-code: 2.7s)
+  └─ ƒ saveEvent({}) in 846ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1689ms (next.js: 4ms, proxy.ts: 227ms, application-code: 1459ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/venue-test-159129-34d9267e?x=1787839194 200 in 737ms (next.js: 18ms, proxy.ts: 4ms, application-code: 715ms)
+ GET /events/novenue-test-050285-4da3b8a8?x=1787839195 200 in 600ms (next.js: 13ms, proxy.ts: 4ms, application-code: 583ms)
+ GET /events/novenue-test-050285-4da3b8a8 200 in 1146ms (next.js: 16ms, proxy.ts: 201ms, application-code: 929ms)
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <main className="flex-1">
+      <DiscoveryTracker>
+      <EventDetailsPageShell>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.45, ...}}>
+          <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+            <div>
+            <div className="mx-auto ma...">
+              <div>
+              <div>
+              <div>
+              <section className="mt-14">
+                <div>
+                <div className="mt-5 grid ...">
+                  <EventCard>
+                  <EventCard>
+                  <EventCard event={{id:"59dcd6...", ...}}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Mon, 28 Sept, 20:00
+-                             Mon 28 Sept, 20:00
+                          ...
+                  ...
+            ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Mon, 28 Sept, 20)
+    at <unknown> (-                             Mon 28 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <anonymous> (components\neya\event-details\event-details-view.tsx:507:17)
+    at Array.map (<anonymous>:1:18)
+    at EventDetailsView (components\neya\event-details\event-details-view.tsx:506:30)
+    at EventDetailPage (app\events\[slug]\page.tsx:112:11)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/novenue-test-050285-4da3b8a8 200 in 348ms (next.js: 27ms, proxy.ts: 189ms, application-code: 132ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"b97f3f40-21c3-484a-940a-58cc262de377"}) in 117ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST /events/novenue-test-050285-4da3b8a8 200 in 220ms (next.js: 6ms, proxy.ts: 112ms, application-code: 102ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"b97f3f40-21c3-484a-940a-58cc262de377"}) in 92ms actions/discovery-analytics.ts
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 354ms (next.js: 3ms, proxy.ts: 3ms, application-code: 348ms)
+ GET /events/novenue-test-050285-4da3b8a8?reservation=pending 200 in 1089ms (next.js: 5ms, proxy.ts: 96ms, application-code: 988ms)
+ POST /events/novenue-test-050285-4da3b8a8 200 in 1639ms (next.js: 17ms, proxy.ts: 172ms, application-code: 1450ms)
+  └─ ƒ createReservation({}) in 344ms actions/bookings.ts
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `59dcd63a-f55e-4572-9c7b-d82a6a98ceb2`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e9540366-5aa3-4f1b-934d-826bb8f271f5`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /events/novenue-test-050285-4da3b8a8?reservation=pending 200 in 284ms (next.js: 17ms, proxy.ts: 165ms, application-code: 102ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"b97f3f40-21c3-484a-940a-58cc262de377"}) in 90ms actions/discovery-analytics.ts
+ GET /admin 200 in 1929ms (next.js: 3ms, proxy.ts: 305ms, application-code: 1621ms)
+ GET /admin?tab=events 200 in 1735ms (next.js: 7ms, proxy.ts: 312ms, application-code: 1415ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 965ms (next.js: 3ms, proxy.ts: 5ms, application-code: 957ms)
+ GET /admin?tab=events 200 in 2.2s (next.js: 9ms, proxy.ts: 368ms, application-code: 1815ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1624ms (next.js: 7ms, proxy.ts: 290ms, application-code: 1326ms)
+ POST /admin?tab=events 200 in 3.1s (next.js: 8ms, proxy.ts: 608ms, application-code: 2.5s)
+  └─ ƒ saveEvent({}) in 886ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1653ms (next.js: 8ms, proxy.ts: 276ms, application-code: 1369ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+✓ Compiled in 288ms
+ GET /admin?tab=events&ok=1 200 in 1092ms (next.js: 20ms, proxy.ts: 758ms, application-code: 314ms)
+ GET /events/mtrx-venue-night-d1607403 200 in 991ms (next.js: 27ms, proxy.ts: 6ms, application-code: 958ms)
+ GET /events/mtrx-venue-night-d1607403 200 in 1177ms (next.js: 15ms, proxy.ts: 3ms, application-code: 1159ms)
+✓ Compiled in 339ms
+ GET /admin?tab=events&ok=1 200 in 1499ms (next.js: 12ms, proxy.ts: 1169ms, application-code: 319ms)
+✓ Compiled in 186ms
+ GET /admin?tab=events&ok=1 200 in 593ms (next.js: 21ms, proxy.ts: 348ms, application-code: 224ms)
+ GET /admin?tab=events&ok=1 200 in 491ms (next.js: 4ms, proxy.ts: 260ms, application-code: 227ms)
+ GET /admin?tab=events&ok=1 200 in 488ms (next.js: 4ms, proxy.ts: 237ms, application-code: 247ms)
+ GET /admin?tab=events&ok=1 200 in 580ms (next.js: 4ms, proxy.ts: 349ms, application-code: 227ms)
+ GET /admin?tab=events&ok=1 200 in 530ms (next.js: 10ms, proxy.ts: 265ms, application-code: 255ms)
+ GET /admin?tab=events&ok=1 200 in 509ms (next.js: 8ms, proxy.ts: 270ms, application-code: 231ms)
+ GET /admin?tab=events 200 in 1695ms (next.js: 5ms, proxy.ts: 259ms, application-code: 1430ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1403ms (next.js: 6ms, proxy.ts: 208ms, application-code: 1190ms)
+ POST /admin?tab=events 200 in 2.4s (next.js: 9ms, proxy.ts: 350ms, application-code: 2.0s)
+  └─ ƒ saveEvent({}) in 573ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1664ms (next.js: 3ms, proxy.ts: 231ms, application-code: 1430ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/mtrx-free-park-2335d8ab 200 in 804ms (next.js: 21ms, proxy.ts: 4ms, application-code: 779ms)
+ GET /events/mtrx-free-park-2335d8ab 200 in 1258ms (next.js: 22ms, proxy.ts: 156ms, application-code: 1081ms)
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <main className="flex-1">
+      <DiscoveryTracker>
+      <EventDetailsPageShell>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.45, ...}}>
+          <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+            <div>
+            <div className="mx-auto ma...">
+              <div>
+              <div>
+              <div>
+              <section className="mt-14">
+                <div>
+                <div className="mt-5 grid ...">
+                  <EventCard>
+                  <EventCard>
+                  <EventCard>
+                  <EventCard>
+                  <EventCard event={{id:"85416e...", ...}}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+                  ...
+            ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at eval (components\neya\event-details\event-details-view.tsx:514:17)
+    at Array.map (<anonymous>:1:18)
+    at EventDetailsView (components\neya\event-details\event-details-view.tsx:513:30)
+    at EventDetailPage (app\events\[slug]\page.tsx:112:11)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/mtrx-free-park-2335d8ab 200 in 321ms (next.js: 20ms, proxy.ts: 172ms, application-code: 129ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"d8d1f088-9825-48cd-b4e6-266ae991f861"}) in 117ms actions/discovery-analytics.ts
+ POST /events/mtrx-free-park-2335d8ab 200 in 211ms (next.js: 5ms, proxy.ts: 111ms, application-code: 95ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"d8d1f088-9825-48cd-b4e6-266ae991f861"}) in 88ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /events/mtrx-free-park-2335d8ab?reservation=confirmed 200 in 1030ms (next.js: 6ms, proxy.ts: 101ms, application-code: 923ms)
+ POST /events/mtrx-free-park-2335d8ab 200 in 1677ms (next.js: 17ms, proxy.ts: 158ms, application-code: 1502ms)
+  └─ ƒ createReservation({}) in 458ms actions/bookings.ts
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /events/mtrx-free-park-2335d8ab?reservation=confirmed 200 in 278ms (next.js: 35ms, proxy.ts: 141ms, application-code: 102ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"d8d1f088-9825-48cd-b4e6-266ae991f861"}) in 91ms actions/discovery-analytics.ts
+ GET /events/mtrx-venue-night-d1607403 200 in 1276ms (next.js: 17ms, proxy.ts: 336ms, application-code: 924ms)
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <main className="flex-1">
+      <DiscoveryTracker>
+      <EventDetailsPageShell>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.45, ...}}>
+          <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+            <div>
+            <div className="mx-auto ma...">
+              <div>
+              <div>
+              <div>
+              <section className="mt-14">
+                <div>
+                <div className="mt-5 grid ...">
+                  <EventCard>
+                  <EventCard>
+                  <EventCard>
+                  <EventCard>
+                  <EventCard event={{id:"85416e...", ...}}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+                  ...
+            ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at eval (components\neya\event-details\event-details-view.tsx:514:17)
+    at Array.map (<anonymous>:1:18)
+    at EventDetailsView (components\neya\event-details\event-details-view.tsx:513:30)
+    at EventDetailPage (app\events\[slug]\page.tsx:112:11)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/mtrx-venue-night-d1607403 200 in 276ms (next.js: 17ms, proxy.ts: 157ms, application-code: 102ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"2e09395c-4aa1-4f30-bc74-7fc6a27bacb6"}) in 90ms actions/discovery-analytics.ts
+ POST /events/mtrx-venue-night-d1607403 200 in 194ms (next.js: 8ms, proxy.ts: 89ms, application-code: 97ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"2e09395c-4aa1-4f30-bc74-7fc6a27bacb6"}) in 88ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /events/mtrx-venue-night-d1607403?reservation=pending 200 in 1036ms (next.js: 15ms, proxy.ts: 86ms, application-code: 935ms)
+ POST /events/mtrx-venue-night-d1607403 200 in 1809ms (next.js: 20ms, proxy.ts: 153ms, application-code: 1636ms)
+  └─ ƒ createReservation({}) in 590ms actions/bookings.ts
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /events/mtrx-venue-night-d1607403?reservation=pending 200 in 301ms (next.js: 39ms, proxy.ts: 153ms, application-code: 108ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"2e09395c-4aa1-4f30-bc74-7fc6a27bacb6"}) in 100ms actions/discovery-analytics.ts
+[neya] RaiAccept reservation checkout failed {
+  reservationId: '32675f72-38ec-472a-9bdb-ed3c4b51af38',
+  phase: 'auth',
+  code: 'AUTH_INCORRECT_USERNAME_PASSWORD'
+}
+ GET /events/mtrx-venue-night-d1607403?error=payment 200 in 979ms (next.js: 26ms, proxy.ts: 87ms, application-code: 866ms)
+ POST /events/mtrx-venue-night-d1607403?reservation=pending 200 in 3.1s (next.js: 15ms, proxy.ts: 649ms, application-code: 2.5s)
+  └─ ƒ createReservation({}) in 1462ms actions/bookings.ts
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/mtrx-venue-night-d1607403?error=payment 200 in 255ms (next.js: 15ms, proxy.ts: 136ms, application-code: 105ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"2e09395c-4aa1-4f30-bc74-7fc6a27bacb6"}) in 97ms actions/discovery-analytics.ts
+ GET /admin?tab=tickets 200 in 1881ms (next.js: 6ms, proxy.ts: 240ms, application-code: 1635ms)
+ GET /events/paid-test-night-844735ee 404 in 608ms (next.js: 16ms, proxy.ts: 161ms, application-code: 430ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+ GET /events/paid-test-night-844735ee 404 in 259ms (next.js: 13ms, proxy.ts: 3ms, application-code: 243ms)
+ GET /events/paid-test-night-b77aef51 200 in 1045ms (next.js: 18ms, proxy.ts: 135ms, application-code: 892ms)
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/paid-test-night-b77aef51 200 in 321ms (next.js: 16ms, proxy.ts: 180ms, application-code: 125ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"85416ead-becc-4506-ae35-88667d7d5883"}) in 113ms actions/discovery-analytics.ts
+ POST /events/paid-test-night-b77aef51 200 in 217ms (next.js: 5ms, proxy.ts: 114ms, application-code: 99ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"85416ead-becc-4506-ae35-88667d7d5883"}) in 93ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST /events/paid-test-night-b77aef51 200 in 265ms (next.js: 17ms, proxy.ts: 150ms, application-code: 98ms)
+  └─ ƒ trackDiscoveryMetric("ticket_click", {"dimensions":{"source":"ticket_tier"},"eventId":"85416ead-becc-4506-ae35-88667d7d5883"}) in 91ms actions/discovery-analytics.ts
+[neya] RaiAccept checkout failed {
+  phase: 'auth',
+  httpStatus: 400,
+  providerCode: 'AUTH_INCORRECT_USERNAME_PASSWORD',
+  orderId: 'd52b879f-d50d-48a6-b31c-46784c34b110',
+  merchantOrderReference: 'neya_ticket_d52b879f-d50d-48a6-b31c-46784c34b110',
+  orderIdentification: null
+}
+ GET /events/paid-test-night-b77aef51?error=payment 200 in 963ms (next.js: 33ms, proxy.ts: 116ms, application-code: 814ms)
+ POST /events/paid-test-night-b77aef51 200 in 2.8s (next.js: 5ms, proxy.ts: 95ms, application-code: 2.7s)
+  └─ ƒ createTicketCheckout({}) in 1733ms actions/bookings.ts
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /events/paid-test-night-b77aef51?error=payment 200 in 298ms (next.js: 27ms, proxy.ts: 155ms, application-code: 116ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"85416ead-becc-4506-ae35-88667d7d5883"}) in 105ms actions/discovery-analytics.ts
+ GET /events/paid-test-night-b77aef51 200 in 775ms (next.js: 11ms, proxy.ts: 4ms, application-code: 760ms)
+ GET /events/paid-test-night-b77aef51 200 in 723ms (next.js: 14ms, proxy.ts: 4ms, application-code: 705ms)
+ GET /events/paid-test-night-b77aef51 200 in 1289ms (next.js: 14ms, proxy.ts: 278ms, application-code: 997ms)
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `d8d1f088-9825-48cd-b4e6-266ae991f861`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/paid-test-night-b77aef51 200 in 273ms (next.js: 15ms, proxy.ts: 149ms, application-code: 110ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"85416ead-becc-4506-ae35-88667d7d5883"}) in 102ms actions/discovery-analytics.ts
+ POST /events/paid-test-night-b77aef51 200 in 210ms (next.js: 5ms, proxy.ts: 102ms, application-code: 103ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"85416ead-becc-4506-ae35-88667d7d5883"}) in 97ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /admin?tab=events 200 in 1821ms (next.js: 5ms, proxy.ts: 236ms, application-code: 1580ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1556ms (next.js: 5ms, proxy.ts: 181ms, application-code: 1370ms)
+ POST /admin?tab=events 200 in 2.4s (next.js: 7ms, proxy.ts: 304ms, application-code: 2.1s)
+  └─ ƒ saveEvent({}) in 512ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1509ms (next.js: 3ms, proxy.ts: 214ms, application-code: 1292ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 465ms (next.js: 11ms, proxy.ts: 4ms, application-code: 450ms)
+✓ Compiled in 155ms
+[browser] Uncaught ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components/admin/admin-dashboard.tsx:139:46)
+    at AdminPage (app\admin\page.tsx:144:13)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp);
+ GET /admin?tab=events&ok=1 200 in 914ms (next.js: 23ms, proxy.ts: 634ms, application-code: 256ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 173ms
+[browser] Uncaught ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components/admin/admin-dashboard.tsx:139:46)
+    at Set.forEach (<anonymous>)
+    at AdminPage (app\admin\page.tsx:144:13)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp);
+⨯ ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components\admin\admin-dashboard.tsx:139:46)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp); {
+  digest: '1322416228'
+}
+ GET /admin?tab=events&ok=1 500 in 2.1s (next.js: 12ms, proxy.ts: 592ms, application-code: 1448ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components/admin/admin-dashboard.tsx:139:46)
+    at AdminPage (app\admin\page.tsx:144:13)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp);
+⨯ ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components\admin\admin-dashboard.tsx:139:46)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp); {
+  digest: '2471985348'
+}
+ GET /admin?tab=events&ok=1 500 in 5.8s (next.js: 13ms, proxy.ts: 705ms, application-code: 5.1s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components/admin/admin-dashboard.tsx:139:46)
+    at AdminPage (app\admin\page.tsx:144:13)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp);
+⨯ ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components\admin\admin-dashboard.tsx:139:46)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp); {
+  digest: '2579195363'
+}
+ GET /admin?tab=events&ok=1 500 in 2.2s (next.js: 9ms, proxy.ts: 566ms, application-code: 1652ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught ReferenceError: initialSaveStamp is not defined
+    at AdminDashboard (components/admin/admin-dashboard.tsx:139:46)
+    at AdminPage (app\admin\page.tsx:144:13)
+  137 |   // a stale form (previous title/prices/checkbox states). Closing on a new
+  138 |   // save stamp guarantees every save starts from a clean form.
+> 139 |   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
+      |                                              ^
+  140 |   useEffect(() => {
+  141 |     if (initialSaveStamp !== saveStamp) {
+  142 |       setSaveStamp(initialSaveStamp);
+ GET /admin?tab=events&ok=1 200 in 1770ms (next.js: 14ms, proxy.ts: 314ms, application-code: 1441ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url={"/admin?t..."} tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <p>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" initialSaveStamp="1" hideNav={true} venueAccounts={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:316:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:312:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  314 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  315 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 316 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  317 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  318 |                     <td className="px-4 py-3">
+  319 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events 200 in 1661ms (next.js: 16ms, proxy.ts: 256ms, application-code: 1389ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" initialSaveStamp="" hideNav={true} venueAccounts={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:316:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:312:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  314 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  315 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 316 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  317 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  318 |                     <td className="px-4 py-3">
+  319 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1&t=1787840504167 200 in 1748ms (next.js: 4ms, proxy.ts: 181ms, application-code: 1564ms)
+ POST /admin?tab=events 200 in 2.5s (next.js: 7ms, proxy.ts: 269ms, application-code: 2.2s)
+  └─ ƒ saveEvent({}) in 458ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1&t=1787840504167 200 in 1881ms (next.js: 3ms, proxy.ts: 222ms, application-code: 1655ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /admin?tab=events 200 in 2.4s (next.js: 10ms, proxy.ts: 735ms, application-code: 1621ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" initialSaveStamp="" hideNav={true} venueAccounts={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:316:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:312:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  314 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  315 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 316 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  317 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  318 |                     <td className="px-4 py-3">
+  319 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1&t=1787840583513 200 in 1555ms (next.js: 5ms, proxy.ts: 195ms, application-code: 1355ms)
+ POST /admin?tab=events 200 in 2.4s (next.js: 3ms, proxy.ts: 293ms, application-code: 2.1s)
+  └─ ƒ saveEvent({}) in 494ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1&t=1787840583513 200 in 1589ms (next.js: 5ms, proxy.ts: 222ms, application-code: 1362ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+✓ Compiled in 269ms
+ GET /admin?tab=events&ok=1&t=1787840583513 200 in 539ms (next.js: 18ms, proxy.ts: 275ms, application-code: 246ms)
+ GET /admin?tab=events 200 in 1659ms (next.js: 5ms, proxy.ts: 295ms, application-code: 1358ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" initialSaveStamp="" hideNav={true} venueAccounts={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:316:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:312:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  314 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  315 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 316 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  317 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  318 |                     <td className="px-4 py-3">
+  319 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1&t=1787840628305 200 in 1434ms (next.js: 3ms, proxy.ts: 181ms, application-code: 1250ms)
+ POST /admin?tab=events 200 in 2.4s (next.js: 8ms, proxy.ts: 401ms, application-code: 2.0s)
+  └─ ƒ saveEvent({}) in 571ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1&t=1787840628305 200 in 1559ms (next.js: 5ms, proxy.ts: 208ms, application-code: 1346ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 743ms (next.js: 4ms, proxy.ts: 6ms, application-code: 732ms)
+ GET /events/mtrx-hidden-test-5-x 404 in 302ms (next.js: 14ms, proxy.ts: 3ms, application-code: 284ms)
+ GET /events/mtrx-hidden-test-5-abc 404 in 300ms (next.js: 7ms, proxy.ts: 3ms, application-code: 289ms)
+ GET /events/mtrx-hidden-test-5-03c33c81 404 in 287ms (next.js: 17ms, proxy.ts: 3ms, application-code: 266ms)
+ GET /admin?tab=events 200 in 1740ms (next.js: 5ms, proxy.ts: 378ms, application-code: 1357ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" initialSaveStamp="" hideNav={true} venueAccounts={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:316:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:312:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  314 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  315 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 316 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  317 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  318 |                     <td className="px-4 py-3">
+  319 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1756ms (next.js: 5ms, proxy.ts: 195ms, application-code: 1555ms)
+ POST /admin?tab=events 200 in 2.4s (next.js: 4ms, proxy.ts: 245ms, application-code: 2.1s)
+  └─ ƒ updateEventSubmissionStatus({}) in 327ms actions/admin-events.ts
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /admin?tab=events&ok=1&t=1787840686441 200 in 1563ms (next.js: 5ms, proxy.ts: 182ms, application-code: 1377ms)
+ POST /admin?tab=events&ok=1 200 in 2.7s (next.js: 8ms, proxy.ts: 326ms, application-code: 2.3s)
+  └─ ƒ saveEvent({}) in 749ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1&t=1787840686441 200 in 1801ms (next.js: 19ms, proxy.ts: 509ms, application-code: 1274ms)
+ GET /events/mtrx-venue-night-d1607403 404 in 272ms (next.js: 14ms, proxy.ts: 3ms, application-code: 255ms)
+✓ Compiled in 140ms
+[browser] A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://react.dev/link/controlled-components 
+ GET /admin?tab=events&ok=1&t=1787840686441 200 in 724ms (next.js: 11ms, proxy.ts: 496ms, application-code: 216ms)
+ GET /admin?tab=events 200 in 1605ms (next.js: 6ms, proxy.ts: 204ms, application-code: 1394ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" initialSaveStamp="" hideNav={true} venueAccounts={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:316:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:312:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  314 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  315 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 316 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  317 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  318 |                     <td className="px-4 py-3">
+  319 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1&t=1787840731697 200 in 1393ms (next.js: 6ms, proxy.ts: 190ms, application-code: 1197ms)
+ POST /admin?tab=events 200 in 2.5s (next.js: 19ms, proxy.ts: 267ms, application-code: 2.2s)
+  └─ ƒ saveEvent({}) in 767ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1&t=1787840731697 200 in 1523ms (next.js: 8ms, proxy.ts: 218ms, application-code: 1297ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/mtrx-venue-night-d1607403 200 in 809ms (next.js: 20ms, proxy.ts: 4ms, application-code: 785ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 438ms (next.js: 5ms, proxy.ts: 3ms, application-code: 430ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 331ms (next.js: 4ms, proxy.ts: 4ms, application-code: 323ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 388ms (next.js: 5ms, proxy.ts: 4ms, application-code: 379ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 317ms (next.js: 3ms, proxy.ts: 4ms, application-code: 310ms)
+ GET /events/mtrx-free-park-2335d8ab 200 in 1140ms (next.js: 15ms, proxy.ts: 209ms, application-code: 916ms)
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <main className="flex-1">
+      <DiscoveryTracker>
+      <EventDetailsPageShell>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.45, ...}}>
+          <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+            <div>
+            <div className="mx-auto ma...">
+              <div>
+              <div>
+              <div>
+              <section className="mt-14">
+                <div>
+                <div className="mt-5 grid ...">
+                  <EventCard>
+                  <EventCard>
+                  <EventCard>
+                  <EventCard>
+                  <EventCard event={{id:"85416e...", ...}}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+                  ...
+            ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at eval (components\neya\event-details\event-details-view.tsx:514:17)
+    at Array.map (<anonymous>:1:18)
+    at EventDetailsView (components\neya\event-details\event-details-view.tsx:513:30)
+    at EventDetailPage (app\events\[slug]\page.tsx:112:11)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Encountered two children with the same key, `e557ddb5-fb87-48cd-ad2b-fccb2615ac31`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `2e09395c-4aa1-4f30-bc74-7fc6a27bacb6`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `85416ead-becc-4506-ae35-88667d7d5883`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+ POST /events/mtrx-free-park-2335d8ab 200 in 369ms (next.js: 59ms, proxy.ts: 182ms, application-code: 128ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"d8d1f088-9825-48cd-b4e6-266ae991f861"}) in 117ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST /events/mtrx-free-park-2335d8ab 200 in 197ms (next.js: 6ms, proxy.ts: 93ms, application-code: 98ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"d8d1f088-9825-48cd-b4e6-266ae991f861"}) in 92ms actions/discovery-analytics.ts
+[?25h

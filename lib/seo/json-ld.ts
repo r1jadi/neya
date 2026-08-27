@@ -33,7 +33,9 @@ export function eventJsonLd(event: Event, ticketTypes: TicketType[] = []) {
           name: event.venue.name,
           address: event.venue.address,
         }
-      : undefined,
+      : event.venue_name
+        ? { "@type": "Place", name: event.venue_name }
+        : undefined,
     performer: event.performers?.length
       ? event.performers.map((performer) => ({ "@type": "Person", name: performer.name, image: performer.image_url, genre: performer.genre }))
       : undefined,

@@ -73,7 +73,7 @@ export function HomeEventCard({ event, className, saved, variant = "hero", style
                   kind: "event",
                   refId: event.id,
                   title: event.title,
-                  subtitle: event.venue?.name ?? "Venue TBA",
+                  subtitle: event.venue?.name ?? event.venue_name ?? "Venue TBA",
                   time: event.starts_at,
                   endsAt: event.ends_at ?? null,
                   image: event.image_url,
@@ -122,6 +122,10 @@ export function HomeEventCard({ event, className, saved, variant = "hero", style
               ) : null}
             </p>
           </div>
+        ) : event.venue_name ? (
+          <p className="min-w-0 truncate text-xs font-semibold uppercase tracking-widest text-white/50">
+            {event.venue_name}
+          </p>
         ) : null}
         <h3 className="line-clamp-2 font-[family-name:var(--font-display)] text-lg font-bold leading-snug text-white">
           {event.title}

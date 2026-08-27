@@ -143,6 +143,7 @@ export default async function AdminPage({ searchParams }: Props) {
           ) : (
             <AdminDashboard
               initialTab={tab}
+              initialSaveStamp={q.ok ?? ""}
               hideNav
               venueAccounts={data.venueAccounts}
               eventSources={data.eventSources}

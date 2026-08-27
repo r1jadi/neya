@@ -90,6 +90,11 @@ function FlashMessages({ flash }: { flash?: EventDetailsFlash }) {
           We couldn&apos;t start the payment — please try again in a moment.
         </p>
       ) : null}
+      {flash.error === "capacity" ? (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+          This event has reached its capacity — tickets and table reservations are full.
+        </p>
+      ) : null}
       {flash.error === "soldout" ? (
         <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
           That ticket just sold out — try another tier or check the door.
@@ -190,7 +195,9 @@ export function EventDetailsView({
   social,
 }: EventDetailsViewProps) {
   const description = getEventDescription(event);
-  const capacityLabel = formatCapacity(event.capacity);
+  // Effective capacity: the event's own value wins, otherwise the linked
+  // venue's (empty = inherit). Mirrors admin saveEvent + the booking gate.
+  const capacityLabel = formatCapacity(event.capacity ?? event.venue?.capacity);
   const cheapestTicketCents =
     meta?.ticketTypes.length && meta.ticketTypes.some((t) => t.status === "available")
       ? Math.min(...meta.ticketTypes.filter((t) => t.status === "available").map((t) => t.priceCents))
@@ -238,6 +245,8 @@ export function EventDetailsView({
               <Link href={`/venues/${event.venue.slug}`} className="font-medium hover:text-white hover:underline">
                 {event.venue.name}
               </Link>
+            ) : event.venue_name ? (
+              <span className="font-medium">{event.venue_name}</span>
             ) : (
               <span className="font-medium">Venue TBA</span>
             )}
@@ -268,7 +277,7 @@ export function EventDetailsView({
                 kind: "event",
                 refId: event.id,
                 title: event.title,
-                subtitle: event.venue?.name ?? "Venue TBA",
+                subtitle: event.venue?.name ?? event.venue_name ?? "Venue TBA",
                 time: event.starts_at,
                 endsAt: event.ends_at ?? null,
                 image: event.image_url,
@@ -281,7 +290,7 @@ export function EventDetailsView({
           ) : null}
           <ShareButton
             title={event.title}
-            text={`${event.title}${event.venue ? ` at ${event.venue.name}` : ""} — ${whenShort} on NEYA`}
+            text={`${event.title}${event.venue?.name || event.venue_name ? ` at ${event.venue?.name ?? event.venue_name}` : ""} — ${whenShort} on NEYA`}
             variant="solid"
             className="flex-1 sm:flex-none"
             kind="event"
@@ -319,7 +328,7 @@ export function EventDetailsView({
                 <CollapsibleText text={description} className="mt-3 text-base leading-relaxed text-white/75" />
               ) : (
                 <div className="mt-3 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-sm text-white/45">
-                  No description yet — check back closer to the night or follow {event.venue?.name ?? "the organizers"} for updates.
+                  No description yet — check back closer to the night or follow {event.venue?.name ?? event.venue_name ?? "the organizers"} for updates.
                 </div>
               )}
             </section>
@@ -425,8 +434,12 @@ export function EventDetailsView({
                 <div className="mt-3 flex items-start gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
                   <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />
                   <div>
-                    <p className="font-medium text-white">Venue to be announced</p>
-                    <p className="mt-1 text-sm text-white/55">Prishtina — follow the event for the address drop.</p>
+                    <p className="font-medium text-white">{event.venue_name ?? "Venue to be announced"}</p>
+                    <p className="mt-1 text-sm text-white/55">
+                      {event.venue_name
+                        ? "Prishtina — one-time event location, follow the event for updates."
+                        : "Prishtina — follow the event for the address drop."}
+                    </p>
                   </div>
                 </div>
               )}

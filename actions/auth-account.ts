@@ -42,9 +42,12 @@ export async function requestPasswordReset(formData: FormData) {
   if (!email) redirect("/forgot-password?error=invalid");
 
   const supabase = await createClient();
-  await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${getPublicSiteUrl()}/update-password`,
-  });
+
+  // Origin-aware so the reset link works in every environment (localhost vs
+  // production) without hardcoding a domain; the origin must be registered
+  // in Supabase Auth → Redirect URLs.
+  const redirectTo = `${getPublicSiteUrl()}/update-password`;
+  await supabase.auth.resetPasswordForEmail(email, { redirectTo });
   redirect("/forgot-password?sent=1");
 }
 

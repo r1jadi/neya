@@ -119,6 +119,19 @@ export function isVenueCategory(value: string): value is VenueCategory {
   return value === "club" || VENUE_CATEGORIES.some((category) => category.id === value);
 }
 
+/** The assignable /places sections for a venue ("All" is implicit and not stored). */
+export const PLACES_TYPES = [
+  { id: "breakfast", label: "Breakfast" },
+  { id: "coffee", label: "Coffee" },
+  { id: "lunch", label: "Lunch" },
+  { id: "work_study", label: "Work & Study" },
+  { id: "dinner", label: "Dinner" },
+  { id: "drinks", label: "Drinks" },
+  { id: "nightlife", label: "Nightlife" },
+] as const;
+
+export type PlacesTypeId = (typeof PLACES_TYPES)[number]["id"];
+
 export type LiveVibe = "packed" | "chill" | "energetic" | "vip";
 
 export type PriceLevel = 1 | 2 | 3 | 4;
@@ -150,11 +163,13 @@ export interface Venue {
   capacity?: number;
   /** Day parts when this venue is open for Places (morning/daytime/evening/late_night). */
   day_parts?: string[];
+  /** Places sections this venue is explicitly assigned to (breakfast/coffee/lunch/work_study/dinner/drinks/nightlife). Empty = legacy inference. */
+  places_types?: string[];
 }
 
 export type EventVenue = Pick<
   Venue,
-  "id" | "slug" | "name" | "image_url" | "category" | "address" | "city_slug" | "lat" | "lng" | "is_trending"
+  "id" | "slug" | "name" | "image_url" | "category" | "address" | "city_slug" | "lat" | "lng" | "is_trending" | "capacity"
 >;
 
 export type EventPerformer = {
@@ -169,6 +184,8 @@ export interface Event {
   slug: string;
   title: string;
   venue: EventVenue | null;
+  /** Free-text location for venue-less events (no NEYA Venue record). */
+  venue_name?: string | null;
   starts_at: string;
   ends_at?: string;
   genre: MusicGenre;

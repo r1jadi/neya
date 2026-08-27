@@ -74,6 +74,7 @@ export function mapVenueRow(row: {
   contact_phone?: string | null;
   capacity?: number | null;
   day_parts?: string[] | null;
+  places_types?: string[] | null;
 }): Venue {
   const price = Math.min(4, Math.max(1, Math.round(num(row.price_level, 2)))) as Venue["price_level"];
   return {
@@ -105,6 +106,11 @@ export function mapVenueRow(row: {
           .map((d) => (typeof d === "string" ? d.trim() : ""))
           .filter(Boolean)
       : undefined,
+    places_types: Array.isArray(row.places_types)
+      ? row.places_types
+          .map((t) => (typeof t === "string" ? t.trim() : ""))
+          .filter(Boolean)
+      : undefined,
   };
 }
 
@@ -113,6 +119,7 @@ export function mapEventRow(row: {
   slug: string;
   title: string;
   description?: string | null;
+  venue_name?: string | null;
   starts_at: string;
   ends_at?: string | null;
   genre?: string | null;
@@ -156,6 +163,7 @@ export function mapEventRow(row: {
         lng?: number | null;
         is_trending?: boolean | null;
         approved?: boolean | null;
+        capacity?: number | null;
       }
     | Array<{
         id: string;
@@ -170,6 +178,7 @@ export function mapEventRow(row: {
         lng?: number | null;
         is_trending?: boolean | null;
         approved?: boolean | null;
+        capacity?: number | null;
       }>
     | null;
 }): Event | null {
@@ -206,12 +215,14 @@ export function mapEventRow(row: {
           lat: v.lat ?? undefined,
           lng: v.lng ?? undefined,
           is_trending: Boolean(v.is_trending),
+          capacity: v.capacity ?? undefined,
         }
       : null,
     starts_at: row.starts_at,
     ends_at: row.ends_at ?? undefined,
     genre: normalizeGenre(row.genre),
     image_url: img,
+    venue_name: row.venue_name?.trim() || null,
     dj_lineup: djLineup?.length ? djLineup : undefined,
     performers,
     capacity: row.capacity ?? undefined,

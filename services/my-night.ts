@@ -23,6 +23,7 @@ type EventRow = {
   id: string;
   slug: string;
   title: string;
+  venue_name?: string | null;
   starts_at: string;
   ends_at?: string | null;
   image_url: string | null;
@@ -77,7 +78,7 @@ export async function resolveStopsForDisplay(rows: StopRow[]): Promise<NightStop
     eventIds.length
       ? supabase
           .from("events")
-          .select("id, slug, title, starts_at, ends_at, image_url, venues(id, slug, name, image_url, lat, lng)")
+          .select("id, slug, title, venue_name, starts_at, ends_at, image_url, venues(id, slug, name, image_url, lat, lng)")
           .in("id", eventIds)
           .eq("is_listed_public", true)
       : Promise.resolve({ data: [] as unknown[] }),
@@ -115,7 +116,7 @@ export async function resolveStopsForDisplay(rows: StopRow[]): Promise<NightStop
         kind: "event",
         refId: event.id,
         title: event.title,
-        subtitle: venue?.name ?? "Venue TBA",
+        subtitle: venue?.name ?? event.venue_name ?? "Venue TBA",
         time: event.starts_at,
         endsAt: event.ends_at ?? null,
         image: event.image_url,

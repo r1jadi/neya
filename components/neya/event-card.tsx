@@ -54,7 +54,7 @@ export function EventCard({ event, className, saved }: EventCardProps) {
                   kind: "event",
                   refId: event.id,
                   title: event.title,
-                  subtitle: event.venue?.name ?? t.eventCard.dancefloor,
+                  subtitle: event.venue?.name ?? event.venue_name ?? t.eventCard.dancefloor,
                   time: event.starts_at,
                   endsAt: event.ends_at ?? null,
                   image: event.image_url,
@@ -83,7 +83,7 @@ export function EventCard({ event, className, saved }: EventCardProps) {
       </div>
       <div className="space-y-3 p-4">
         <div>
-          {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.city_slug ? <p className="text-xs uppercase tracking-widest text-white/45">{event.city_slug.replace(/-/g, " ")}</p> : null}
+          {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue_name}</p> : event.city_slug ? <p className="text-xs uppercase tracking-widest text-white/45">{event.city_slug.replace(/-/g, " ")}</p> : null}
           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
         </div>

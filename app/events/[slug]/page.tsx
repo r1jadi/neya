@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!event) return { title: "Event not found" };
   const description =
     getEventDescription(event) ??
-    `${event.title}${event.venue ? ` at ${event.venue.name}` : ""} — ${event.genre} in Prishtina.`;
+    `${event.title}${event.venue?.name || event.venue_name ? ` at ${event.venue?.name ?? event.venue_name}` : ""} — ${event.genre} in Prishtina.`;
   return {
     title: `${event.title} · ${SITE.name}`,
     description,

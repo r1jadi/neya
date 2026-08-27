@@ -4,7 +4,7 @@ import type { Venue } from "@/types";
 
 const venueSelect =
   "id, slug, name, city_slug, category, address, lat, lng, image_url, price_level, atmosphere_score, crowd_count, is_live, is_featured, is_trending, description, gallery_urls, music_genres, social_links, website_url, contact_email, contact_phone, capacity";
-const venueSelectWithDayParts = `${venueSelect}, day_parts`;
+const venueSelectWithDayParts = `${venueSelect}, day_parts, places_types`;
 
 export async function getVenues(): Promise<Venue[]> {
   return getVenuesForCity("prishtina");

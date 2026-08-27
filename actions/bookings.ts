@@ -24,6 +24,7 @@ function safeRedirectPath(raw: string | null): string {
 /** Map create_reservation() exception messages to the existing UI error codes. */
 function reservationErrorParam(message: string | undefined): string {
   const m = message ?? "";
+  if (m.includes("capacity")) return "capacity";
   if (m.includes("missing-venue")) return "missing-venue";
   if (m.includes("reservations-closed")) return "reservations-closed";
   if (m.includes("payment-method")) return "payment-method";
@@ -290,7 +291,9 @@ export async function createTicketCheckout(formData: FormData) {
   if (oErr || !orderId) {
     const inProgress =
       typeof oErr?.message === "string" && oErr.message.toLowerCase().includes("already in progress");
-    redirect(`${redirectTo}?error=${inProgress ? "in-progress" : "soldout"}`);
+    const capacityExceeded =
+      typeof oErr?.message === "string" && oErr.message.toLowerCase().includes("capacity");
+    redirect(`${redirectTo}?error=${inProgress ? "in-progress" : capacityExceeded ? "capacity" : "soldout"}`);
   }
 
   const { data: order } = await supabase

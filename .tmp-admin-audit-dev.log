@@ -1,0 +1,1187 @@
+
+> neya@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.3.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.19.224.1:3000
+- Environments: .env.local
+✓ Ready in 813ms
+✓ Running next.config.ts took 159ms
+- Experiments (use with caution):
+  · proxyClientMaxBodySize: "50mb"
+  · serverActions
+
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 5.9s (next.js: 1053ms, proxy.ts: 719ms, application-code: 4.2s)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 904ms (next.js: 28ms, proxy.ts: 18ms, application-code: 857ms)
+ GET /admin 200 in 5.3s (next.js: 548ms, proxy.ts: 953ms, application-code: 3.8s)
+ GET /events/paid-test-night-b77aef51 200 in 4.0s (next.js: 1842ms, proxy.ts: 18ms, application-code: 2.2s)
+ GET /events/free-test-night-40e0207e 200 in 1151ms (next.js: 48ms, proxy.ts: 20ms, application-code: 1083ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1102ms (next.js: 12ms, proxy.ts: 15ms, application-code: 1075ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1227ms (next.js: 9ms, proxy.ts: 10ms, application-code: 1208ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1877ms (next.js: 17ms, proxy.ts: 437ms, application-code: 1423ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LandingSections>
+      <div className="flex w-ful...">
+        <LandingHero>
+        <div>
+        ...
+          <section className="min-w-0 ma...">
+            <div>
+            <div ref={{current:null}} className={"flex min..."}>
+              <motion.div>
+              <motion.div initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}} ...>
+                <div className="w-[min(100..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                  <EventCard event={{id:"85416e...", ...}} saved={false}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+              ...
+        ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <unknown> (components/neya/trending-carousel.tsx:73:13)
+    at Array.map (<anonymous>)
+    at TrendingCarousel (components/neya/trending-carousel.tsx:64:17)
+    at LandingSections (features\landing\sections.tsx:172:11)
+    at Home (app\page.tsx:71:7)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1145ms (next.js: 11ms, proxy.ts: 21ms, application-code: 1113ms)
+ GET /login 200 in 880ms (next.js: 87ms, proxy.ts: 160ms, application-code: 633ms)
+ GET /admin?tab=events 200 in 2.4s (next.js: 12ms, proxy.ts: 314ms, application-code: 2.1s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+[browser] You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`. 
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1804ms (next.js: 33ms, proxy.ts: 220ms, application-code: 1551ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LandingSections>
+      <div className="flex w-ful...">
+        <LandingHero>
+        <div>
+        ...
+          <section className="min-w-0 ma...">
+            <div>
+            <div ref={{current:null}} className={"flex min..."}>
+              <motion.div>
+              <motion.div initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}} ...>
+                <div className="w-[min(100..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                  <EventCard event={{id:"85416e...", ...}} saved={false}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+              ...
+        ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <unknown> (components/neya/trending-carousel.tsx:73:13)
+    at Array.map (<anonymous>)
+    at TrendingCarousel (components/neya/trending-carousel.tsx:64:17)
+    at LandingSections (features\landing\sections.tsx:172:11)
+    at Home (app\page.tsx:71:7)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /admin?tab=events 200 in 3.2s (next.js: 21ms, proxy.ts: 1002ms, application-code: 2.2s)
+ GET /admin?tab=events&ok=1 200 in 2.4s (next.js: 9ms, proxy.ts: 218ms, application-code: 2.2s)
+ POST /admin?tab=events 200 in 4.0s (next.js: 11ms, proxy.ts: 488ms, application-code: 3.5s)
+  └─ ƒ saveEvent({}) in 1031ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 2.8s (next.js: 12ms, proxy.ts: 628ms, application-code: 2.2s)
+ GET /events/audit-paid-738653-91ebfb4a 200 in 1549ms (next.js: 61ms, proxy.ts: 10ms, application-code: 1478ms)
+ GET /admin?tab=events&ok=1 200 in 2.2s (next.js: 12ms, proxy.ts: 244ms, application-code: 1933ms)
+ POST /admin?tab=events&ok=1 200 in 4.5s (next.js: 11ms, proxy.ts: 1192ms, application-code: 3.3s)
+  └─ ƒ saveEvent({}) in 1096ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 2.4s (next.js: 15ms, proxy.ts: 391ms, application-code: 1962ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1059ms (next.js: 8ms, proxy.ts: 14ms, application-code: 1037ms)
+ GET /events/audit-contradiction-791274-f8ba2740 200 in 1317ms (next.js: 44ms, proxy.ts: 13ms, application-code: 1261ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+[browser] You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`. 
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 3.6s (next.js: 4ms, proxy.ts: 1130ms, application-code: 2.5s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LandingSections>
+      <div className="flex w-ful...">
+        <LandingHero>
+        <div>
+        ...
+          <section className="min-w-0 ma...">
+            <div>
+            <div ref={{current:null}} className={"flex min..."}>
+              <motion.div>
+              <motion.div initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}} ...>
+                <div className="w-[min(100..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                  <EventCard event={{id:"85416e...", ...}} saved={false}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 12 Sept, 20:00
+-                             Sat 12 Sept, 20:00
+                          ...
+              ...
+        ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 12 Sept, 20)
+    at <unknown> (-                             Sat 12 Sept, 20)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <unknown> (components/neya/trending-carousel.tsx:73:13)
+    at Array.map (<anonymous>)
+    at TrendingCarousel (components/neya/trending-carousel.tsx:64:17)
+    at LandingSections (features\landing\sections.tsx:172:11)
+    at Home (app\page.tsx:71:7)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1397ms (next.js: 5ms, proxy.ts: 7ms, application-code: 1386ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 838ms (next.js: 15ms, proxy.ts: 435ms, application-code: 387ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 581ms (next.js: 12ms, proxy.ts: 167ms, application-code: 402ms)
+✓ Compiled in 383ms
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 504ms (next.js: 15ms, proxy.ts: 162ms, application-code: 328ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 751ms (next.js: 12ms, proxy.ts: 167ms, application-code: 572ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 546ms (next.js: 16ms, proxy.ts: 161ms, application-code: 370ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 521ms (next.js: 7ms, proxy.ts: 139ms, application-code: 374ms)
+✓ Compiled in 201ms
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 545ms (next.js: 10ms, proxy.ts: 197ms, application-code: 338ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 534ms (next.js: 13ms, proxy.ts: 153ms, application-code: 367ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 521ms (next.js: 33ms, proxy.ts: 152ms, application-code: 336ms)
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[browser] ./actions/admin-crud.ts:292:7
+Error: Unexpected token `ident`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+  290 |     ticket_from_eur: formData.get("ticket_from_eur") ? Number(formData.get("ticket_from_e...
+  291 |
+> 292 |   let eventId = id;
+      |       ^^^^^^^
+  293 |   if (id) {
+  294 |     const { error } = await admin.from("events").update(payload).eq("id", id);
+  295 |     if (error) adminRedirect("tab=events&error=update");
+
+Parsing ecmascript source code failed 
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1582ms (next.js: 18ms, proxy.ts: 567ms, application-code: 998ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1956ms (next.js: 19ms, proxy.ts: 853ms, application-code: 1085ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1055ms (next.js: 13ms, proxy.ts: 337ms, application-code: 704ms)
+ GET /admin?tab=events 200 in 3.7s (next.js: 55ms, proxy.ts: 655ms, application-code: 3.0s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 20 Sept, 22:00
+-                                 Sun 20 Sept, 22:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 20 Sept, 22)
+    at <unknown> (-                                 Sun 20 Sept, 22)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 2.6s (next.js: 10ms, proxy.ts: 233ms, application-code: 2.3s)
+ POST /admin?tab=events 200 in 4.5s (next.js: 15ms, proxy.ts: 473ms, application-code: 4.0s)
+  └─ ƒ saveEvent({}) in 1383ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 3.0s (next.js: 13ms, proxy.ts: 812ms, application-code: 2.1s)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/audit-fixedflow-731534-83013cb7 200 in 2.2s (next.js: 80ms, proxy.ts: 17ms, application-code: 2.1s)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1622ms (next.js: 10ms, proxy.ts: 12ms, application-code: 1601ms)
+ GET /events/audit-fixedflow-731534-83013cb7 200 in 1990ms (next.js: 50ms, proxy.ts: 15ms, application-code: 1925ms)
+ GET /admin?tab=events&ok=1 200 in 1711ms (next.js: 9ms, proxy.ts: 251ms, application-code: 1451ms)
+ POST /admin?tab=events&ok=1 200 in 3.3s (next.js: 7ms, proxy.ts: 916ms, application-code: 2.4s)
+  └─ ƒ saveEvent({}) in 650ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1678ms (next.js: 3ms, proxy.ts: 258ms, application-code: 1417ms)
+ GET /events/audit-freeonly-810422-5d4da816 200 in 967ms (next.js: 21ms, proxy.ts: 4ms, application-code: 941ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 608ms (next.js: 3ms, proxy.ts: 6ms, application-code: 599ms)
+ GET /admin?tab=events 200 in 2.0s (next.js: 7ms, proxy.ts: 499ms, application-code: 1508ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sat, 26 Sept, 22:00
+-                                 Sat 26 Sept, 22:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sat, 26 Sept, 22)
+    at <unknown> (-                                 Sat 26 Sept, 22)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1807ms (next.js: 6ms, proxy.ts: 212ms, application-code: 1589ms)
+ POST /admin?tab=events 200 in 3.1s (next.js: 6ms, proxy.ts: 296ms, application-code: 2.8s)
+  └─ ƒ saveEvent({}) in 970ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1972ms (next.js: 5ms, proxy.ts: 236ms, application-code: 1732ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/audit-fixedflow-731534-83013cb7 200 in 815ms (next.js: 16ms, proxy.ts: 8ms, application-code: 792ms)
+✓ Compiled in 304ms
+ GET /admin?tab=events&ok=1 200 in 534ms (next.js: 22ms, proxy.ts: 281ms, application-code: 230ms)
+✓ Compiled in 120ms
+ GET /admin?tab=events&ok=1 200 in 524ms (next.js: 12ms, proxy.ts: 267ms, application-code: 246ms)
+ GET /events/audit-fixedflow-731534-83013cb7?x=1787838000 200 in 1378ms (next.js: 14ms, proxy.ts: 3ms, application-code: 1360ms)
+ GET /admin?tab=events&ok=1 200 in 1448ms (next.js: 9ms, proxy.ts: 188ms, application-code: 1251ms)
+ POST /admin?tab=events&ok=1 200 in 2.5s (next.js: 8ms, proxy.ts: 411ms, application-code: 2.1s)
+  └─ ƒ saveEvent({}) in 640ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 1639ms (next.js: 9ms, proxy.ts: 258ms, application-code: 1372ms)
+ GET /events/audit-fixedflow-731534-83013cb7?x=1787838031 200 in 784ms (next.js: 13ms, proxy.ts: 5ms, application-code: 766ms)
+ GET /admin?tab=events 200 in 1696ms (next.js: 5ms, proxy.ts: 286ms, application-code: 1405ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sat, 26 Sept, 22:00
+-                                 Sat 26 Sept, 22:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sat, 26 Sept, 22)
+    at <unknown> (-                                 Sat 26 Sept, 22)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 1528ms (next.js: 8ms, proxy.ts: 185ms, application-code: 1335ms)
+ POST /admin?tab=events 200 in 2.1s (next.js: 9ms, proxy.ts: 256ms, application-code: 1838ms)
+  └─ ƒ updateEventSubmissionStatus({}) in 294ms actions/admin-events.ts
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /admin?tab=tickets 200 in 2.0s (next.js: 4ms, proxy.ts: 263ms, application-code: 1744ms)
+ GET /admin?tab=tickets&ok=1 200 in 1695ms (next.js: 11ms, proxy.ts: 195ms, application-code: 1489ms)
+ POST /admin?tab=tickets 200 in 2.5s (next.js: 4ms, proxy.ts: 266ms, application-code: 2.2s)
+  └─ ƒ saveTicket({}) in 529ms actions/admin-crud.ts
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /admin?tab=tickets&ok=1 200 in 2.5s (next.js: 15ms, proxy.ts: 197ms, application-code: 2.3s)
+ POST /admin?tab=tickets&ok=1 200 in 3.3s (next.js: 15ms, proxy.ts: 467ms, application-code: 2.9s)
+  └─ ƒ deleteTicket({}) in 347ms actions/admin-crud.ts
+✓ Compiled in 781ms
+ GET /admin?tab=tickets&ok=1 200 in 1208ms (next.js: 40ms, proxy.ts: 318ms, application-code: 851ms)
+ GET /admin?tab=tickets 200 in 6.1s (next.js: 32ms, proxy.ts: 2.7s, application-code: 3.3s)
+ GET /admin?tab=tickets&ok=1 200 in 2.6s (next.js: 14ms, proxy.ts: 220ms, application-code: 2.4s)
+ POST /admin?tab=tickets 200 in 4.3s (next.js: 11ms, proxy.ts: 590ms, application-code: 3.7s)
+  └─ ƒ saveTicket({}) in 1066ms actions/admin-crud.ts
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /admin?tab=tickets&ok=1 200 in 2.6s (next.js: 15ms, proxy.ts: 204ms, application-code: 2.4s)
+ POST /admin?tab=tickets&ok=1 200 in 3.7s (next.js: 15ms, proxy.ts: 337ms, application-code: 3.3s)
+  └─ ƒ deleteTicket({}) in 683ms actions/admin-crud.ts
+ GET /events/audit-fixedflow-731534-83013cb7 200 in 3.4s (next.js: 97ms, proxy.ts: 377ms, application-code: 2.9s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <main className="flex-1">
+      <DiscoveryTracker>
+      <EventDetailsPageShell>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.45, ...}}>
+          <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+            <div>
+            <div className="mx-auto ma...">
+              <div>
+              <div>
+              <div>
+              <section className="mt-14">
+                <div>
+                <div className="mt-5 grid ...">
+                  <EventCard>
+                  <EventCard event={{id:"504d31...", ...}}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 26 Sept, 22:00
+-                             Sat 26 Sept, 22:00
+                          ...
+                  ...
+            ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 26 Sept, 22)
+    at <unknown> (-                             Sat 26 Sept, 22)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <anonymous> (components\neya\event-details\event-details-view.tsx:507:17)
+    at Array.map (<anonymous>:1:18)
+    at EventDetailsView (components\neya\event-details\event-details-view.tsx:506:30)
+    at EventDetailPage (app\events\[slug]\page.tsx:112:11)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+ POST /events/audit-fixedflow-731534-83013cb7 200 in 438ms (next.js: 63ms, proxy.ts: 200ms, application-code: 175ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"c1f4788e-bc08-45c5-94e0-e957115c9e43"}) in 125ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST /events/audit-fixedflow-731534-83013cb7 200 in 272ms (next.js: 22ms, proxy.ts: 124ms, application-code: 126ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"c1f4788e-bc08-45c5-94e0-e957115c9e43"}) in 96ms actions/discovery-analytics.ts
+ GET /admin?tab=events 200 in 3.6s (next.js: 15ms, proxy.ts: 293ms, application-code: 3.3s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sat, 26 Sept, 22:00
+-                                 Sat 26 Sept, 22:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sat, 26 Sept, 22)
+    at <unknown> (-                                 Sat 26 Sept, 22)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+✓ Compiled in 846ms
+ GET /admin?tab=events 200 in 1205ms (next.js: 30ms, proxy.ts: 352ms, application-code: 823ms)
+ GET /admin?tab=events 200 in 3.0s (next.js: 12ms, proxy.ts: 258ms, application-code: 2.8s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sat, 26 Sept, 22:00
+-                                 Sat 26 Sept, 22:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sat, 26 Sept, 22)
+    at <unknown> (-                                 Sat 26 Sept, 22)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+ GET /admin?tab=events&ok=1 200 in 2.8s (next.js: 10ms, proxy.ts: 206ms, application-code: 2.6s)
+ POST /admin?tab=events 200 in 3.8s (next.js: 39ms, proxy.ts: 297ms, application-code: 3.5s)
+  └─ ƒ saveEvent({}) in 654ms actions/admin-crud.ts
+ GET /admin?tab=events&ok=1 200 in 3.2s (next.js: 45ms, proxy.ts: 786ms, application-code: 2.3s)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /events/audit-contradiction-791274-f8ba2740?x=1787838372 200 in 2.1s (next.js: 79ms, proxy.ts: 22ms, application-code: 1968ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1883ms (next.js: 23ms, proxy.ts: 24ms, application-code: 1836ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1397ms (next.js: 11ms, proxy.ts: 15ms, application-code: 1372ms)
+[neya] getVenues column venues.places_types does not exist
+ GET / 200 in 1285ms (next.js: 11ms, proxy.ts: 14ms, application-code: 1259ms)
+ GET /events/audit-fixedflow-731534-83013cb7 200 in 3.1s (next.js: 51ms, proxy.ts: 394ms, application-code: 2.6s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <main className="flex-1">
+      <DiscoveryTracker>
+      <EventDetailsPageShell>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.45, ...}}>
+          <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+            <div>
+            <div className="mx-auto ma...">
+              <div>
+              <div>
+              <div>
+              <section className="mt-14">
+                <div>
+                <div className="mt-5 grid ...">
+                  <EventCard>
+                  <EventCard event={{id:"504d31...", ...}}>
+                    <motion.article whileHover={{y:-4}} transition={{type:"spring", ...}} className="group rela...">
+                      <article className="group rela..." style={{}} ref={function useMotionRef.useCallback}>
+                        <LinkComponent>
+                        <div>
+                        <div className="space-y-3 p-4">
+                          <div>
+                            <p>
+                            <h3>
+                            <p className="mt-1 inlin...">
+                              <CalendarDays>
++                             Sat, 26 Sept, 22:00
+-                             Sat 26 Sept, 22:00
+                          ...
+                  ...
+            ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                             Sat, 26 Sept, 22)
+    at <unknown> (-                             Sat 26 Sept, 22)
+    at p (<anonymous>)
+    at EventCard (components/neya/event-card.tsx:88:11)
+    at <anonymous> (components\neya\event-details\event-details-view.tsx:507:17)
+    at Array.map (<anonymous>:1:18)
+    at EventDetailsView (components\neya\event-details\event-details-view.tsx:506:30)
+    at EventDetailPage (app\events\[slug]\page.tsx:112:11)
+  86 |           {event.venue ? <p className="text-xs uppercase tracking-widest text-white/45">{event.venue.name}{event.city_slug ? ` · ${event.city_slug.replace(/-/g, " ")}` : ""}</p> : event.venue_name ? <p className="text-xs uppercase...
+  87 |           <h3 className="mt-1 text-lg font-semibold leading-tight text-white">{event.title}</h3>
+> 88 |           <p className="mt-1 inline-flex items-center gap-1 text-xs text-sky-300/90"><CalendarDays className="h-3.5 w-3.5" />{whenLabel}</p>
+     |           ^
+  89 |         </div>
+  90 |         {event.fomo_line ? (
+  91 |           <p className="text-xs font-medium text-fuchsia-300/90">{event.fomo_line}</p>
+ POST /events/audit-fixedflow-731534-83013cb7 200 in 381ms (next.js: 54ms, proxy.ts: 181ms, application-code: 146ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"c1f4788e-bc08-45c5-94e0-e957115c9e43"}) in 116ms actions/discovery-analytics.ts
+[browser] Image with src "/placeholder.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST /events/audit-fixedflow-731534-83013cb7 200 in 284ms (next.js: 24ms, proxy.ts: 133ms, application-code: 128ms)
+  └─ ƒ trackDiscoveryMetric("event_view", {"dimensions":{"category":"nightlife","city":"prishtina"},"eventId":"c1f4788e-bc08-45c5-94e0-e957115c9e43"}) in 98ms actions/discovery-analytics.ts
+ GET /events/paid-test-night-b77aef51?x=1787838562 200 in 2.3s (next.js: 50ms, proxy.ts: 15ms, application-code: 2.3s)
+ GET /admin?tab=events 200 in 3.4s (next.js: 10ms, proxy.ts: 425ms, application-code: 3.0s)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/admin?tab..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="admin/page...">
+          <SegmentTrieNode>
+          <AdminPage>
+            <div className="flex min-h...">
+              <SiteHeaderClient>
+              <main className="mx-auto w-...">
+                <h1>
+                <p>
+                <LinkComponent>
+                <div className="mt-8">
+                  <nav>
+                  <AdminDashboard initialTab="events" hideNav={true} venueAccounts={[...]} eventSources={[...]} ...>
+                    <div className="space-y-8">
+                      <section className="space-y-6">
+                        <div>
+                        <div className="overflow-x...">
+                          <table className="w-full min...">
+                            <thead>
+                            <tbody>
+                              <tr className="border-b b...">
+                                <td>
+                                <td>
+                                <td className="px-4 py-3 text-xs text-white/50">
++                                 Sun, 13 Sept, 19:00
+-                                 Sun 13 Sept, 19:00
+                                ...
+                              ...
+                ...
+              ...
+        ...
+      ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at <unknown> (+                                 Sun, 13 Sept, 19)
+    at <unknown> (-                                 Sun 13 Sept, 19)
+    at td (<anonymous>)
+    at <unknown> (components/admin/admin-dashboard.tsx:288:21)
+    at Array.map (<anonymous>)
+    at AdminDashboard (components/admin/admin-dashboard.tsx:284:25)
+    at AdminPage (app\admin\page.tsx:144:13)
+  286 |                     <td className="px-4 py-3 font-medium text-white">{ev.title}</td>
+  287 |                     <td className="px-4 py-3 text-white/60">{venueName(ev)}</td>
+> 288 |                     <td className="px-4 py-3 text-xs text-white/50">{formatEventWhen(ev.starts_at)}</td>
+      |                     ^
+  289 |                     <td className="px-4 py-3 text-xs text-white/50"><form action={updateEventSubmissionStatus} className="flex items-center gap-2"><input type="hidden" name="event_id" value={ev.id} /><select name="submission_stat...
+  290 |                     <td className="px-4 py-3">
+  291 |                       <div className="flex flex-wrap gap-2">
+[?25h

@@ -101,16 +101,29 @@ const DAY_PART_FOR_CONTEXT: Record<ContextId, DayPart[]> = {
   nightlife: ["lateNight"],
 };
 
+const CONTEXT_TYPE_ID: Record<ContextId, string> = {
+  breakfast: "breakfast",
+  coffee: "coffee",
+  lunch: "lunch",
+  workStudy: "work_study",
+  dinner: "dinner",
+  drinks: "drinks",
+  nightlife: "nightlife",
+};
+
 function venueInContext(venue: Venue, context: ContextId): boolean {
-  // DB day_parts are the source of truth for when a venue is open for Places.
-  // When present, a venue belongs to every context whose day window overlaps
-  // its day parts — no hardcoded category mapping needed.
+  // Explicit Places section assignments from Admin are the source of truth:
+  // a venue appears under exactly the sections it was assigned to.
+  if (venue.places_types && venue.places_types.length > 0) {
+    return venue.places_types.includes(CONTEXT_TYPE_ID[context]);
+  }
+  // Legacy fallback (venues without places_types yet): day_parts, then
+  // category-based inference — unchanged behaviour for unassigned venues.
   if (venue.day_parts && venue.day_parts.length > 0) {
     return DAY_PART_FOR_CONTEXT[context].some((part) =>
       venue.day_parts!.includes(part === "lateNight" ? "late_night" : part),
     );
   }
-  // Legacy fallback (venues without day_parts yet): category-based map.
   const cats = CONTEXT_CATEGORIES[context];
   if (!cats.includes(venue.category)) return false;
   // Double-check the category's time window overlaps the context's window.

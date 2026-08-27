@@ -69,7 +69,7 @@ async function loadEvents(
   const { data, error } = await admin
     .from("events")
     .select(
-      "id, slug, title, description, starts_at, ends_at, genre, image_url, ticket_url, crowd_count, atmosphere_rating, is_featured, reservation_spots_left, ticket_from_eur, venues(id, slug, name, category, approved, image_url, reservations_enabled)",
+      "id, slug, title, description, venue_name, starts_at, ends_at, genre, image_url, ticket_url, crowd_count, atmosphere_rating, is_featured, reservation_spots_left, ticket_from_eur, venues(id, slug, name, category, approved, image_url, reservations_enabled)",
     )
     .eq("is_listed_public", true)
     .gte("starts_at", fridayStartUtc)

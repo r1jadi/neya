@@ -32,7 +32,7 @@ function eventCard(e: RankedEvent, data: DigestEmailData): string {
   const dayTime = formatDayTime(ev.starts_at);
   const genre = ev.genre ? capitalize(ev.genre.replace(/_/g, " ")) : null;
   const price = formatPrice(ev);
-  const venueLine = venue?.name ? escapeHtml(venue.name) : "Venue TBA";
+  const venueLine = venue?.name ? escapeHtml(venue.name) : ev.venue_name ? escapeHtml(ev.venue_name) : "Venue TBA";
 
   const imageHtml = image
     ? `<a href="${data.siteUrl}/events/${ev.slug}" style="display:block"><img src="${escapeHtml(image)}" alt="" width="548" style="display:block;width:100%;height:180px;object-fit:cover;border-radius:14px 14px 0 0" /></a>`

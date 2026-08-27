@@ -25,6 +25,7 @@ export type AdminVenueRow = {
   gallery_urls: string[];
   music_genres: string[];
   day_parts?: string[];
+  places_types?: string[];
   opening_hours: Record<string, unknown> | null;
   social_links: Record<string, string>;
   reservations_enabled: boolean;
@@ -50,6 +51,7 @@ export type AdminEventRow = {
   title: string;
   description: string | null;
   venue_id: string | null;
+  venue_name?: string | null;
   starts_at: string;
   ends_at: string | null;
   genre: string | null;
@@ -116,21 +118,30 @@ export type AdminReservationRow = {
 export type AdminEventSourceRow = { id: string; event_id: string; source_type: string; label: string | null; url: string; is_verified: boolean; verification_note: string | null };
 export type AdminCityRow = { slug: string; name: string; country_slug: string; country_name: string; region_slug: string; region_name: string; latitude: number | null; longitude: number | null; is_active: boolean };
 
+const VENUE_SELECT_FULL =
+  "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, day_parts, places_types, opening_hours, social_links, website_url, contact_email, contact_phone, capacity, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at";
+const VENUE_SELECT_LEGACY = VENUE_SELECT_FULL.replace(", places_types", "");
+
 export async function getAdminDashboardData() {
   const admin = createAdminClient();
 
   const [venuesRes, eventsRes, ticketsRes, guestlistsRes, reservationsRes, analyticsRes, venueAccountsRes, sourcesRes, citiesRes] =
     await Promise.all([
-    admin
-      .from("venues")
-      .select(
-        "id, slug, name, city_slug, category, description, address, lat, lng, image_url, gallery_urls, music_genres, day_parts, opening_hours, social_links, website_url, contact_email, contact_phone, capacity, reservations_enabled, reservation_price_eur, requires_online_payment, allows_pay_at_venue, vip_enabled, approved, rejected, is_featured, is_trending, price_level, created_at",
-      )
-      .order("created_at", { ascending: false }),
+    (async (): Promise<{ data: AdminVenueRow[] | null; error: { message: string } | null }> => {
+      const full = await admin.from("venues").select(VENUE_SELECT_FULL).order("created_at", { ascending: false });
+      if (full.error) {
+        // Pre-migration fallback: places_types may not exist in the DB yet.
+        const legacy = await admin.from("venues").select(VENUE_SELECT_LEGACY).order("created_at", { ascending: false });
+        return legacy.error
+          ? { data: null, error: full.error }
+          : (legacy as unknown as { data: AdminVenueRow[] | null; error: { message: string } | null });
+      }
+      return full as unknown as { data: AdminVenueRow[] | null; error: { message: string } | null };
+    })(),
     admin
       .from("events")
       .select(
-        "id, slug, title, description, venue_id, starts_at, ends_at, genre, city_slug, category, tags, is_free, submission_status, organizer_name, organizer_email, source_url, image_url, poster_url, poster_generated_at, dj_lineup, performers, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, reservations_enabled, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
+        "id, slug, title, description, venue_id, venue_name, starts_at, ends_at, genre, city_slug, category, tags, is_free, submission_status, organizer_name, organizer_email, source_url, image_url, poster_url, poster_generated_at, dj_lineup, performers, capacity, is_featured, is_listed_public, is_hidden_premium, ticket_from_eur, reservation_price_eur, reservations_enabled, requires_online_payment, allows_pay_at_venue, venues(name, slug)",
       )
       .order("starts_at", { ascending: false })
       .limit(200),

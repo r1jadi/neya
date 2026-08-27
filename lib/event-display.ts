@@ -78,8 +78,13 @@ export function isEventLiveNow(event: Event): boolean {
   return isHappeningNow(event.starts_at, event.ends_at) && event.live_status;
 }
 
+/**
+ * Location label for an event: the linked venue's address when available,
+ * otherwise the venue name — or the free-text custom location on venue-less
+ * events ("one-time" locations that have no NEYA Venue record).
+ */
 export function getVenueLocationLabel(event: Event): string | null {
-  if (!event.venue) return null;
+  if (!event.venue) return event.venue_name ?? null;
   if (event.venue.address) return event.venue.address;
   const city = event.venue.city_slug === "prishtina" ? "Prishtina" : event.venue.city_slug;
   return city ? `${event.venue.name}, ${city}` : event.venue.name;
