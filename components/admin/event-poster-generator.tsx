@@ -346,6 +346,7 @@ export function EventPosterGenerator({
     try {
       const poster = await renderPosterPng(latestData, template, format);
       setGeneratedPoster(poster);
+      setSaveError(null);
       // Auto-attach: the generated poster becomes the event's default poster
       // unless the admin later picks a different image in the event form.
       const uploadedUrl = await attachGeneratedPoster(poster);
