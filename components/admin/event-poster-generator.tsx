@@ -14,6 +14,17 @@ import {
 
 type PosterTemplate = "nightlife" | "festival" | "minimal";
 type PosterFormat = "post" | "story";
+type PosterLayout = "editorial" | "split" | "frame" | "orbit" | "type" | "stack";
+
+type PosterPalette = {
+  background: string;
+  accent: string;
+  secondary: string;
+  title: string;
+  eyebrow: string;
+  details: string;
+  overlay: string;
+};
 
 export type PosterEventData = {
   title?: string;
@@ -54,11 +65,20 @@ const TEMPLATE_STYLES: Record<PosterTemplate, { background: string; accent: stri
   },
 };
 
-const CANVAS_STYLES: Record<PosterTemplate, { background: string; accent: string; title: string; eyebrow: string; details: string; overlay: string }> = {
-  nightlife: { background: "#070711", accent: "#d946ef", title: "#ffffff", eyebrow: "#bae6fd", details: "#ffffff", overlay: "rgba(0, 0, 0, 0.48)" },
-  festival: { background: "#ff5538", accent: "#facc15", title: "#20101a", eyebrow: "#fef9c3", details: "#20101a", overlay: "rgba(255, 237, 213, 0.28)" },
-  minimal: { background: "#ede9df", accent: "#57534e", title: "#0c0a09", eyebrow: "#57534e", details: "#292524", overlay: "rgba(255, 255, 255, 0.38)" },
+const CANVAS_STYLES: Record<PosterTemplate, PosterPalette> = {
+  nightlife: { background: "#070711", accent: "#d946ef", secondary: "#38bdf8", title: "#ffffff", eyebrow: "#bae6fd", details: "#ffffff", overlay: "rgba(0, 0, 0, 0.48)" },
+  festival: { background: "#ff5538", accent: "#facc15", secondary: "#c026d3", title: "#20101a", eyebrow: "#fef9c3", details: "#20101a", overlay: "rgba(255, 237, 213, 0.28)" },
+  minimal: { background: "#ede9df", accent: "#57534e", secondary: "#a8a29e", title: "#0c0a09", eyebrow: "#57534e", details: "#292524", overlay: "rgba(255, 255, 255, 0.38)" },
 };
+
+const LAYOUTS: PosterLayout[] = ["editorial", "split", "frame", "orbit", "type", "stack"];
+
+function layoutFor(data: PosterEventData, template: PosterTemplate, format: PosterFormat): PosterLayout {
+  const source = `${data.title ?? ""}|${data.venue ?? ""}|${data.startsAt ?? ""}|${template}|${format}`;
+  let hash = 0;
+  for (let index = 0; index < source.length; index += 1) hash = (hash * 31 + source.charCodeAt(index)) >>> 0;
+  return LAYOUTS[hash % LAYOUTS.length];
+}
 
 function formatPosterDate(startsAt?: string) {
   if (!startsAt) return "";
@@ -107,7 +127,8 @@ async function renderPosterPng(data: PosterEventData, template: PosterTemplate, 
   const { StaticCanvas, Rect, Circle, FabricText, Textbox, FabricImage } = await import("fabric");
   const { width, height } = posterDimensions(format);
   const theme = CANVAS_STYLES[template];
-  const padding = 82;
+  const layout = layoutFor(data, template, format);
+  const padding = layout === "type" ? 104 : 82;
   const canvasElement = document.createElement("canvas");
   const canvas = new StaticCanvas(canvasElement, { width, height, backgroundColor: theme.background, renderOnAddRemove: false });
 
@@ -135,13 +156,24 @@ async function renderPosterPng(data: PosterEventData, template: PosterTemplate, 
     }
 
     canvas.add(
-      new Circle({ left: width - 340, top: 130, radius: 260, fill: `${theme.accent}55`, selectable: false, evented: false }),
-      new Circle({ left: -190, top: height - 500, radius: 280, fill: `${theme.accent}30`, selectable: false, evented: false }),
+      new Circle({ left: width - (layout === "orbit" ? 210 : 340), top: layout === "orbit" ? height * 0.24 : 130, radius: layout === "orbit" ? 360 : 260, fill: `${theme.accent}55`, selectable: false, evented: false }),
+      new Circle({ left: layout === "split" ? width * 0.48 : -190, top: height - (layout === "orbit" ? 700 : 500), radius: layout === "orbit" ? 420 : 280, fill: `${theme.secondary}30`, selectable: false, evented: false }),
     );
+    if (layout === "frame" || layout === "split") {
+      canvas.add(new Rect({ left: layout === "split" ? width * 0.55 : 46, top: 46, width: layout === "split" ? width * 0.45 - 46 : width - 92, height: height - 92, fill: "transparent", stroke: `${theme.eyebrow}88`, strokeWidth: 3, rx: layout === "frame" ? 24 : 0, ry: layout === "frame" ? 24 : 0, selectable: false, evented: false }));
+    }
+    if (layout === "type") {
+      for (let index = 0; index < 5; index += 1) {
+        canvas.add(new Rect({ left: padding, top: 210 + index * 72, width: width - padding * 2, height: 2, fill: `${theme.eyebrow}55`, selectable: false, evented: false }));
+      }
+    }
 
-    const brand = new FabricText("NEYA", { left: padding, top: padding, fontFamily: "Arial", fontSize: 30, fontWeight: "bold", charSpacing: 280, fill: theme.eyebrow, selectable: false, evented: false });
+    const brand = new FabricText("NEYA", { left: padding, top: padding, fontFamily: "Arial", fontSize: layout === "type" ? 38 : 30, fontWeight: "bold", charSpacing: layout === "stack" ? 420 : 280, fill: theme.eyebrow, selectable: false, evented: false });
     const dimensions = new FabricText(format === "post" ? "1080 × 1080" : "1080 × 1920", { left: width - padding, top: padding, originX: "right", fontFamily: "Arial", fontSize: 24, fontWeight: "bold", charSpacing: 120, fill: theme.eyebrow, selectable: false, evented: false });
     canvas.add(brand, dimensions);
+    if (layout === "stack") {
+      canvas.add(new FabricText("LIVE / LOCAL / TONIGHT", { left: padding, top: padding + 58, fontFamily: "Arial", fontSize: 18, fontWeight: "bold", charSpacing: 90, fill: theme.secondary, selectable: false, evented: false }));
+    }
 
     const detailValues = [formatPosterDate(data.startsAt), formatPosterTime(data.startsAt), data.venue, data.location, data.ticketInfo].filter((value): value is string => Boolean(value));
     const maxDetailTextWidth = width - padding * 2 - 42;
@@ -154,13 +186,13 @@ async function renderPosterPng(data: PosterEventData, template: PosterTemplate, 
       }
       return label;
     });
-    const pillHeight = 54;
+    const pillHeight = layout === "type" ? 48 : 54;
     const pillGap = 14;
     let pillLeft = padding;
     let pillTop = height - padding - pillHeight;
     const pillRows: Array<{ label: InstanceType<typeof FabricText>; left: number; top: number; width: number }> = [];
     for (const label of detailObjects) {
-      const pillWidth = Math.min(width - padding * 2, Math.ceil(label.width + 42));
+      const pillWidth = Math.min(width - padding * 2, Math.ceil(label.width + (layout === "stack" ? 34 : 42)));
       if (pillLeft + pillWidth > width - padding) {
         pillLeft = padding;
         pillTop -= pillHeight + pillGap;
@@ -177,8 +209,8 @@ async function renderPosterPng(data: PosterEventData, template: PosterTemplate, 
     }
 
     if (data.title) {
-      const maxTitleHeight = Math.max(180, pillTop - 270 - 76);
-      let titleFontSize = format === "post" ? 114 : 128;
+      const maxTitleHeight = Math.max(180, pillTop - (layout === "type" ? 300 : 270) - 76);
+      let titleFontSize = layout === "type" ? (format === "post" ? 132 : 148) : layout === "stack" ? 96 : format === "post" ? 114 : 128;
       let titleText = data.title.toUpperCase();
       const createTitle = (text: string, fontSize: number) => new Textbox(text, {
         left: padding, top: 0, width: width - padding * 2, fontFamily: "Arial", fontSize,
@@ -193,8 +225,8 @@ async function renderPosterPng(data: PosterEventData, template: PosterTemplate, 
         titleText = `${titleText.slice(0, -2).trimEnd()}…`;
         title = createTitle(titleText, titleFontSize);
       }
-      const availableTop = Math.max(270, pillTop - title.height - 76);
-      title.set({ top: availableTop });
+      const availableTop = Math.max(layout === "type" ? 340 : 270, pillTop - title.height - 76);
+      title.set({ top: availableTop, left: layout === "split" ? width * 0.08 : padding, width: layout === "split" ? width * 0.82 : width - padding * 2 });
       canvas.add(title);
     }
 
@@ -389,8 +421,14 @@ export function EventPosterGenerator({
       setSaveError("Save the event first, then reopen the generator to save its poster.");
       return;
     }
-    const image = await regeneratePoster();
-    if (!image) return;
+    // Save exactly the currently displayed/generated poster. Regenerating here
+    // could race with selection state and persist a different poster than the
+    // one the admin chose before clicking Save.
+    const image = generatedPoster;
+    if (!image) {
+      setSaveError("Generate a poster before saving it.");
+      return;
+    }
 
     setIsSaving(true);
     setSaveError(null);

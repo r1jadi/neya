@@ -851,14 +851,13 @@ function EventForm({
   const startsLocal = event?.starts_at ? utcIsoToDatetimeLocal(event.starts_at) : "";
   const endsLocal = event?.ends_at ? utcIsoToDatetimeLocal(event.ends_at) : "";
   const initialImageUrl = event?.image_url ?? "";
-  const [generatedPosterUrl, setGeneratedPosterUrl] = useState<string | null>(null);
-  const [manualImageUrl, setManualImageUrl] = useState(initialImageUrl);
+  const [selectedPosterUrl, setSelectedPosterUrl] = useState(initialImageUrl);
   const [selectedVenueId, setSelectedVenueId] = useState(event?.venue_id ?? "");
   const hasVenue = Boolean(selectedVenueId);
   const selectedVenue = venues.find((v) => v.id === selectedVenueId);
-  // A generated poster becomes the event's poster unless the admin manually
-  // picked a different image in the Poster / cover field.
-  const useGeneratedPoster = Boolean(generatedPosterUrl && manualImageUrl === initialImageUrl);
+  // The form's image URL is the single source of truth for the poster saved
+  // with the event. Generated posters update this same value immediately.
+  const selectedPosterIsGenerated = selectedPosterUrl !== initialImageUrl && selectedPosterUrl !== "";
 
   async function handleEventSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -897,9 +896,10 @@ function EventForm({
     // When inheriting the venue's capacity, the DB stores NULL (venue default).
     // Venue-less events have nothing to inherit, so the typed value is kept.
     if (hasVenue && capacitySource === "venue") fd.set("capacity", "");
-    if (useGeneratedPoster && generatedPosterUrl) {
-      fd.set("image_url", generatedPosterUrl);
-    }
+    // Always submit the current poster selection, including a generated poster.
+    // Do not infer selection from the initial value: that made a generated URL
+    // vulnerable to stale state and fallback logic during form submission.
+    fd.set("image_url", selectedPosterUrl);
     // Venue-less events need a custom location: without one, users would see
     // an event with no place. The backend also rejects this.
     if (!hasVenue && !String(fd.get("venue_name") ?? "").trim()) {
@@ -1193,13 +1193,13 @@ function EventForm({
             label="Poster / cover"
             defaultUrl={initialImageUrl}
             folder="events"
-            onUrlChange={setManualImageUrl}
+            onUrlChange={setSelectedPosterUrl}
           />
         </div>
-        {useGeneratedPoster ? (
+        {selectedPosterIsGenerated ? (
           <div className="flex items-center gap-3 rounded-xl border border-emerald-500/25 bg-emerald-950/20 px-3 py-2 sm:col-span-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={generatedPosterUrl ?? ""} alt="Generated poster" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+            <img src={selectedPosterUrl} alt="Generated poster" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
             <p className="text-xs leading-5 text-emerald-100/90">
               Generated poster will be saved as the event poster. Upload a different image in &ldquo;Poster / cover&rdquo; to override it.
             </p>
@@ -1244,7 +1244,7 @@ function EventForm({
           eventId={event?.id}
           posterUrl={event?.poster_url}
           getEventData={getPosterEventData}
-          onPosterGenerated={(url) => setGeneratedPosterUrl(url)}
+          onPosterGenerated={setSelectedPosterUrl}
         />
       </div>
     </form>
