@@ -140,11 +140,17 @@ export function AdminDashboard({
   const [saveStamp, setSaveStamp] = useState(initialSaveStamp);
   useEffect(() => {
     if (initialSaveStamp !== saveStamp) {
-      setSaveStamp(initialSaveStamp);
-      setEditingVenue(null);
-      setEditingEvent(null);
-      setEditingArtist(null);
-      setEditingHighlight(null);
+      // Server-action navigation should close any open editor after a save.
+      // Defer the state transition to avoid cascading updates during effect
+      // execution while preserving the existing soft-navigation behavior.
+      const timer = window.setTimeout(() => {
+        setSaveStamp(initialSaveStamp);
+        setEditingVenue(null);
+        setEditingEvent(null);
+        setEditingArtist(null);
+        setEditingHighlight(null);
+      }, 0);
+      return () => window.clearTimeout(timer);
     }
   }, [initialSaveStamp, saveStamp]);
   // A fresh key per "Create" click so a second create never reuses the
