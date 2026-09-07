@@ -6,6 +6,15 @@ export const dynamic = "force-dynamic";
 
 const MAX_QUERY = 60;
 
+/**
+ * Escapes LIKE wildcards and PostgREST logic characters so user input cannot
+ * corrupt the .or() filter (commas/parens change the parsed logic, % and _
+ * broaden the match, backslashes escape out of the pattern).
+ */
+function escapeIlike(value: string): string {
+  return value.replace(/[\\%()*,]/g, "\\$&");
+}
+
 export type SearchGroup = "events" | "venues" | "guides";
 
 export interface SearchResultItem {
@@ -41,10 +50,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ query: raw, groups: {}, total: 0 } satisfies SearchResponse);
   }
 
+  const like = escapeIlike(query);
+
   const [events, venues, guides] = await Promise.all([
-    searchEvents(supabase, query),
-    searchVenues(supabase, query),
-    searchGuides(supabase, query),
+    searchEvents(supabase, like),
+    searchVenues(supabase, like),
+    searchGuides(supabase, like),
   ]);
 
   const groups = { events, venues, guides };
@@ -55,7 +66,7 @@ export async function GET(req: Request) {
 
 async function searchEvents(
   supabase: NonNullable<ReturnType<typeof getPublicSupabase>>,
-  query: string,
+  like: string,
 ): Promise<SearchResultItem[]> {
   try {
     const { data } = await supabase
@@ -67,7 +78,7 @@ async function searchEvents(
       .eq("is_listed_public", true)
       .in("submission_status", ["approved", "published"])
       .gte("starts_at", new Date().toISOString())
-      .or(`title.ilike.%${query}%,genre.ilike.%${query}%,venues.name.ilike.%${query}%`)
+      .or(`title.ilike.%${like}%,genre.ilike.%${like}%,venues.name.ilike.%${like}%`)
       .order("starts_at", { ascending: true })
       .limit(6);
 
@@ -92,7 +103,7 @@ async function searchEvents(
 
 async function searchVenues(
   supabase: NonNullable<ReturnType<typeof getPublicSupabase>>,
-  query: string,
+  like: string,
 ): Promise<SearchResultItem[]> {
   try {
     const { data } = await supabase
@@ -100,7 +111,7 @@ async function searchVenues(
       .select("id, slug, name, category, address, image_url, price_level, city_slug")
       .eq("approved", true)
       .eq("rejected", false)
-      .or(`name.ilike.%${query}%,category.ilike.%${query}%,address.ilike.%${query}%`)
+      .or(`name.ilike.%${like}%,category.ilike.%${like}%,address.ilike.%${like}%`)
       .order("is_trending", { ascending: false })
       .limit(4);
 
@@ -121,14 +132,14 @@ async function searchVenues(
 
 async function searchGuides(
   supabase: NonNullable<ReturnType<typeof getPublicSupabase>>,
-  query: string,
+  like: string,
 ): Promise<SearchResultItem[]> {
   try {
     const { data } = await supabase
       .from("guides")
       .select("id, slug, title, description, cover_image, categories, duration_days, price")
       .eq("published", true)
-      .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+      .or(`title.ilike.%${like}%,description.ilike.%${like}%`)
       .order("featured", { ascending: false })
       .limit(4);
 

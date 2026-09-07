@@ -14,8 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Root-level QA probes and generated audit output are operational tooling,
     // not application source. Keep them out of the production lint target.
-    ".tmp-*/**",
-    ".probe-cookie.mjs",
+    ".tmp-*",
+    ".probe-*",
   ]),
 ]);
 

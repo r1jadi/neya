@@ -20,7 +20,7 @@ test("recommendations exclude events outside budget and category", () => {
   const result = rankTonightRecommendations([
     event({ id: "cheap", ticket_from_eur: 10, category: "nightlife" }),
     event({ id: "expensive", ticket_from_eur: 60, category: "concert" }),
-  ], [], { budget: "under €20", categories: ["nightlife"] });
+  ], [], { budget: "under €20", categories: ["nightlife"], currentTime: "2026-08-27T20:00:00Z" });
   assert.deepEqual(result.map((item) => item.id), ["cheap"]);
 });
 
@@ -28,7 +28,7 @@ test("matching events rank ahead of generic venues and explain why", () => {
   const result = rankTonightRecommendations([
     event({ id: "techno", title: "Techno Night", ticket_from_eur: 25 }),
     event({ id: "other", title: "Dinner", genre: "jazz", category: "food_drink", ticket_from_eur: 25 }),
-  ], [venue({ id: "roof", name: "Rooftop Bar" })], { vibe: "techno", budget: "€20–50" });
+  ], [venue({ id: "roof", name: "Rooftop Bar" })], { vibe: "techno", budget: "€20–50", currentTime: "2026-08-27T20:00:00Z" });
   assert.equal(result[0]?.id, "techno");
   assert.match(result[0]?.reasons[0] ?? "", /techno/i);
 });
@@ -38,6 +38,6 @@ test("time range excludes prior and future events", () => {
     event({ id: "before", starts_at: "2026-08-27T18:00:00Z" }),
     event({ id: "inside", starts_at: "2026-08-27T21:00:00Z" }),
     event({ id: "after", starts_at: "2026-08-28T01:00:00Z" }),
-  ], [], { from: "2026-08-27T20:00:00Z", to: "2026-08-27T23:00:00Z" });
+  ], [], { from: "2026-08-27T20:00:00Z", to: "2026-08-27T23:00:00Z", currentTime: "2026-08-27T20:00:00Z" });
   assert.deepEqual(result.map((item) => item.id), ["inside"]);
 });
