@@ -23,7 +23,7 @@ import { str, type Notification } from "@/lib/raiaccept/webhook";
  */
 export async function processReservationNotification(
   admin: ReturnType<typeof import("@/lib/supabase/admin").createAdminClient>,
-  eventId: string,
+  eventId: string | null,
   n: Notification,
 ): Promise<string> {
   const { data: reservation, error } = await admin
@@ -102,6 +102,17 @@ export async function processReservationNotification(
       return mark(admin, eventId, "paid", "reservation already paid");
     }
 
+    // Late payment after a terminal failure/cancellation: a real customer payment
+    // must never be silently discarded, but a failed reservation must never be
+    // re-confirmed either. Record the contradiction for the ops/refund task.
+    if (reservation.payment_status === "failed") {
+      await admin
+        .from("reservation_payment_attempts")
+        .update({ ...fieldsFrom(n, status), status: "paid" })
+        .eq("id", attempt.id);
+      return mark(admin, eventId, "late_payment_after_cancel", `verified PAID but reservation is ${reservation.payment_status}`);
+    }
+
     await admin
       .from("reservations")
       .update({ status: "confirmed", payment_status: "paid", updated_at: new Date().toISOString() })
@@ -161,10 +172,11 @@ function fieldsFrom(n: Notification, orderStatus: string) {
 
 async function mark(
   admin: ReturnType<typeof import("@/lib/supabase/admin").createAdminClient>,
-  eventId: string,
+  eventId: string | null,
   result: string,
   detail?: string,
 ) {
+  if (!eventId) return result;
   await admin
     .from("reservation_payment_webhook_events")
     .update({

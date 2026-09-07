@@ -17,6 +17,7 @@ import {
   updateAttempt,
   type Notification,
 } from "@/lib/raiaccept/webhook";
+import { processReservationNotification } from "@/lib/raiaccept/reservation-webhook";
 
 /**
  * Reconciliation sweep for unresolved RaiAccept ticket payments.
@@ -47,6 +48,8 @@ const DEFAULT_MAX_ORDERS = 50;
 export type ReconciliationReport = {
   eventsProcessed: number;
   ordersProcessed: number;
+  reservationEventsProcessed: number;
+  reservationsProcessed: number;
   unresolvedNoProviderId: number;
   outcomes: Record<string, number>;
   errors: number;
@@ -61,6 +64,8 @@ export async function reconcileRaiAcceptTicketPayments(
   const report: ReconciliationReport = {
     eventsProcessed: 0,
     ordersProcessed: 0,
+    reservationEventsProcessed: 0,
+    reservationsProcessed: 0,
     unresolvedNoProviderId: 0,
     outcomes: {},
     errors: 0,
@@ -71,8 +76,180 @@ export async function reconcileRaiAcceptTicketPayments(
 
   await reconcileUnprocessedEvents(admin, report, tally, limits?.maxEvents ?? DEFAULT_MAX_EVENTS);
   await reconcileStuckOrders(admin, report, tally, limits?.maxOrders ?? DEFAULT_MAX_ORDERS);
+  await reconcileUnprocessedReservationEvents(admin, report, tally, limits?.maxEvents ?? DEFAULT_MAX_EVENTS);
+  await reconcileStuckReservations(admin, report, tally, limits?.maxOrders ?? DEFAULT_MAX_ORDERS);
 
   return report;
+}
+
+/**
+ * C. Retry reservation webhook events that were received but never processed —
+ *    the same verified processor the live reservation webhook uses.
+ */
+async function reconcileUnprocessedReservationEvents(
+  admin: ReturnType<typeof createAdminClient>,
+  report: ReconciliationReport,
+  tally: (outcome: string) => void,
+  maxEvents: number,
+) {
+  const cutoff = new Date(Date.now() - EVENT_GRACE_MS).toISOString();
+  const { data: events, error } = await admin
+    .from("reservation_payment_webhook_events")
+    .select("id, payload")
+    .is("processed_at", null)
+    .lt("created_at", cutoff)
+    .order("created_at", { ascending: true })
+    .limit(maxEvents);
+
+  if (error) {
+    console.error("[neya] RaiAccept reconciliation: could not load unprocessed reservation events", error.message);
+    report.errors += 1;
+    return;
+  }
+
+  for (const event of events ?? []) {
+    report.reservationEventsProcessed += 1;
+    try {
+      const notification = notificationFromPayload(event.payload);
+      if (!notification) {
+        await markReservationEvent(admin, event.id, "invalid_payload", "stored payload is not a valid notification");
+        tally("invalid_payload");
+        continue;
+      }
+      const outcome = await processReservationNotification(admin, event.id, notification);
+      tally(outcome);
+    } catch (err) {
+      report.errors += 1;
+      console.error("[neya] RaiAccept reconciliation: reservation event processing failed", {
+        eventId: event.id,
+        error: err instanceof Error ? err.message : "unknown",
+      });
+    }
+  }
+}
+
+/**
+ * D. Examine reservation deposits stuck in pending. The provider order
+ *    is always fetched and verified first; environment-crossing or lookup
+ *    failures leave the reservation untouched for the next sweep.
+ */
+async function reconcileStuckReservations(
+  admin: ReturnType<typeof createAdminClient>,
+  report: ReconciliationReport,
+  tally: (outcome: string) => void,
+  maxOrders: number,
+) {
+  const cutoff = new Date(Date.now() - ORDER_AGE_MS).toISOString();
+  const { data: reservations, error } = await admin
+    .from("reservations")
+    .select("id, deposit_cents, payment_status, payment_provider, merchant_order_reference, created_at")
+    .eq("payment_provider", "raiaccept")
+    .eq("payment_status", "pending")
+    .lt("created_at", cutoff)
+    .order("created_at", { ascending: true })
+    .limit(maxOrders);
+
+  if (error) {
+    console.error("[neya] RaiAccept reconciliation: could not load stuck reservations", error.message);
+    report.errors += 1;
+    return;
+  }
+
+  for (const reservation of reservations ?? []) {
+    report.reservationsProcessed += 1;
+    try {
+      const outcome = await reconcileOneReservation(admin, reservation);
+      tally(outcome);
+    } catch (err) {
+      report.errors += 1;
+      console.error("[neya] RaiAccept reconciliation: reservation processing failed", {
+        reservationId: reservation.id,
+        merchantOrderReference: reservation.merchant_order_reference,
+        error: err instanceof Error ? err.message : "unknown",
+      });
+    }
+  }
+}
+
+type StuckReservation = {
+  id: string;
+  deposit_cents: number | null;
+  payment_status: string;
+  payment_provider: string | null;
+  merchant_order_reference: string | null;
+  created_at: string;
+};
+
+async function reconcileOneReservation(
+  admin: ReturnType<typeof createAdminClient>,
+  reservation: StuckReservation,
+): Promise<string> {
+  const { data: attempt } = await admin
+    .from("reservation_payment_attempts")
+    .select("id, provider_order_id")
+    .eq("reservation_id", reservation.id)
+    .eq("provider", "raiaccept")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!attempt?.provider_order_id) {
+    // No provider order id was ever persisted — cannot verify at the provider;
+    // leave the reservation visible for operations rather than guessing.
+    return "reservation_no_provider_id";
+  }
+
+  let raiOrder;
+  try {
+    raiOrder = await getRaiAcceptClient().getOrder(attempt.provider_order_id);
+  } catch (err) {
+    const httpStatus = err instanceof RaiAcceptError ? err.httpStatus : null;
+    console.error("[neya] RaiAccept reconciliation: reservation provider lookup failed", {
+      reservationId: reservation.id,
+      merchantOrderReference: reservation.merchant_order_reference,
+      orderIdentification: attempt.provider_order_id,
+      httpStatus,
+    });
+    return "reservation_provider_lookup_unresolved";
+  }
+
+  if (typeof raiOrder.isProduction === "boolean" && raiOrder.isProduction !== isProductionEnvironment()) {
+    return "reservation_environment_mismatch";
+  }
+
+  // Reuse the exact verified settlement path: it validates PURCHASE/SUCCESS/0000,
+  // amount/currency/reference, and never re-confirms paid or failed reservations.
+  // The processor itself decides PAID vs terminal vs in-progress from the order.
+  const notification: Notification = {
+    transactionId: "",
+    transactionType: "PURCHASE",
+    transactionStatus: "SUCCESS",
+    transactionStatusCode: "0000",
+    transactionStatusMessage: null,
+    transactionAmountCents: null,
+    transactionCurrency: null,
+    orderIdentification: attempt.provider_order_id,
+    merchantOrderReference: reservation.merchant_order_reference ?? "",
+  };
+  return processReservationNotification(admin, null, notification);
+}
+
+/** Mark helper for reservation webhook events (event row may be absent). */
+async function markReservationEvent(
+  admin: ReturnType<typeof createAdminClient>,
+  eventId: string | null,
+  result: string,
+  detail?: string,
+) {
+  if (!eventId) return;
+  await admin
+    .from("reservation_payment_webhook_events")
+    .update({
+      processed_at: new Date().toISOString(),
+      processing_result: result,
+      processing_error: detail ?? null,
+    })
+    .eq("id", eventId);
 }
 
 /**
