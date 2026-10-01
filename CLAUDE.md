@@ -55,3 +55,21 @@ See `.env.example`. `NEXT_PUBLIC_SITE_URL` should be production URL for metadata
 ## Middleware note
 
 Next 16 may log deprecation of `middleware` in favor of `proxy`. Session refresh remains in `middleware.ts` via Supabase SSR pattern until migrated.
+
+## Launch video (/brag + HyperFrames)
+
+Agent skills for launch-video generation live in `.agents/skills/` — `brag` plus the five HyperFrames core skills — and are pinned in `skills-lock.json`. Run `/brag` to turn the site into a 15–25s video.
+
+There is **no system-wide FFmpeg** on this machine, so `npx hyperframes ...` fails its environment check. Run HyperFrames through the wrapper instead; it puts the project-local portable build on PATH:
+
+```bash
+bash scripts/hyperframes.sh doctor   # verify environment
+bash scripts/hyperframes.sh check    # required gate before render
+bash scripts/hyperframes.sh render
+```
+
+FFmpeg 9.0.2 (GPL, libx264 + AAC) lives in `.tools/ffmpeg/` — gitignored, never committed. A freshly cloned checkout has no `.tools/`, so the wrapper is a no-op there and rendering needs FFmpeg installed by other means.
+
+Optional extras that are **not** installed (only needed for non-default flows): `whisper-cpp` (transcription), Kokoro TTS (`--voice` narration), MusicGen (local music fallback). Docker is installed but not running — only `render --docker` needs it.
+
+Renders write to `brag-output/` (gitignored).

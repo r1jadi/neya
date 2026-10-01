@@ -44,3 +44,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tooling (portable binaries downloaded into the workspace)
+/.tools/
+
+# /brag video renders (derived media, regenerable)
+/brag-output/
+/brag-output-*/
