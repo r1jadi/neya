@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>NEYA — What's happening tonight?</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="audio-data.js"></script>
+    <style>
+      :root {
+        --bg: #030306;
+        --fg: #f4f4f8;
+        --sky: #38bdf8;
+        --fuchsia: #f472b6;
+        --emerald: #34d399;
+        --dim: rgba(244, 244, 248, 0.72);
+        --dimmer: rgba(244, 244, 248, 0.62);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      #bg {
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+      }
+
+      .display {
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+      }
+
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      /* ---------- ambient glow layer (always animating) ---------- */
+
+      #ambient {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      #glow-core {
+        position: absolute;
+        left: 360px;
+        top: 40px;
+        width: 1200px;
+        height: 1000px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(124, 58, 237, 0.55) 0%,
+          rgba(124, 58, 237, 0.18) 45%,
+          rgba(124, 58, 237, 0) 72%
+        );
+        filter: blur(80px);
+        opacity: 0.5;
+      }
+
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+      }
+
+      #orb-a {
+        left: 60px;
+        top: 40px;
+        width: 520px;
+        height: 520px;
+        background: rgba(217, 70, 239, 0.32);
+        filter: blur(130px);
+      }
+
+      #orb-b {
+        left: 1340px;
+        top: 120px;
+        width: 500px;
+        height: 500px;
+        background: rgba(14, 165, 233, 0.3);
+        filter: blur(130px);
+      }
+
+      #orb-c {
+        left: 700px;
+        top: 560px;
+        width: 460px;
+        height: 460px;
+        background: rgba(124, 58, 237, 0.34);
+        filter: blur(140px);
+      }
+
+      /* ---------- shared chrome ---------- */
+
+      .scene {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 140px;
+      }
+
+      .eyebrow {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      /* ---------- scene 1 : hook ---------- */
+
+      #live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 26px;
+        border: 1px solid rgba(52, 211, 153, 0.35);
+        border-radius: 999px;
+        background: rgba(52, 211, 153, 0.1);
+        width: max-content;
+      }
+
+      #live-dot {
+        position: relative;
+        display: block;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--emerald);
+        flex: none;
+      }
+
+      #live-ping {
+        position: absolute;
+        left: -5px;
+        top: -5px;
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(52, 211, 153, 0.55);
+      }
+
+      #badge-label {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--emerald);
+      }
+
+      #hook-headline {
+        margin: 46px 0 0 0;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 104px;
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+        color: var(--fg);
+        max-width: 1600px;
+      }
+
+      #hook-headline span {
+        display: inline-block;
+        /* pre keeps the space characters alive inside inline-block spans,
+           which would otherwise collapse and render "What'shappeningto". */
+        white-space: pre;
+        opacity: 0;
+      }
+
+      #hook-rule {
+        display: block;
+        margin-top: 38px;
+        width: 420px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--sky), var(--fuchsia));
+        transform-origin: left center;
+      }
+
+      /* ---------- scene 2 : the pulse ---------- */
+
+      #pulse-top {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--dimmer);
+      }
+
+      #stat-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 120px;
+        margin-top: 34px;
+        padding-top: 54px;
+        border-top: 1px solid rgba(244, 244, 248, 0.14);
+      }
+
+      .stat {
+        min-width: 340px;
+      }
+
+      .stat-label {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--dimmer);
+      }
+
+      .stat-value {
+        margin-top: 16px;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 104px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--fg);
+      }
+
+      #stat-vibe .stat-value {
+        color: var(--sky);
+      }
+
+      /* ---------- scene 3 : the ask ---------- */
+
+      #ask-panel {
+        position: relative;
+        border-radius: 34px;
+        padding: 3px;
+        background: linear-gradient(120deg, rgba(56, 189, 248, 0.55), rgba(244, 114, 182, 0.5));
+        width: 100%;
+        max-width: 1640px;
+      }
+
+      #ask-inner {
+        border-radius: 32px;
+        background: linear-gradient(155deg, #071018 0%, #05050b 55%, #140417 100%);
+        padding: 66px 72px 72px 72px;
+      }
+
+      #ask-eyebrow {
+        color: var(--sky);
+      }
+
+      #ask-headline {
+        margin: 20px 0 0 0;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 72px;
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+        color: var(--fg);
+      }
+
+      #ask-subline {
+        margin: 20px 0 0 0;
+        font-size: 30px;
+        line-height: 1.45;
+        color: var(--dim);
+        max-width: 1180px;
+      }
+
+      #chip-row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 18px;
+        margin-top: 52px;
+      }
+
+      .vibe-chip {
+        display: block;
+        padding: 20px 30px;
+        border: 1px solid rgba(244, 244, 248, 0.18);
+        border-radius: 999px;
+        font-size: 27px;
+        font-weight: 600;
+        color: var(--dim);
+        white-space: nowrap;
+      }
+
+      #chip-rooftop {
+        border-color: rgba(56, 189, 248, 0.5);
+      }
+
+      #ask-cta-row {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        margin-top: 56px;
+      }
+
+      #ask-cta {
+        position: relative;
+        display: block;
+        padding: 24px 46px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #38bdf8, #67e8f9, #f472b6);
+        color: #09090b;
+        font-size: 27px;
+        font-weight: 700;
+        width: max-content;
+        box-shadow: 0 0 40px rgba(56, 189, 248, 0.45);
+      }
+
+      #ask-cta-note {
+        font-size: 24px;
+        color: var(--dimmer);
+      }
+
+      #cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: 40px;
+        height: 48px;
+        opacity: 0;
+        z-index: 5;
+      }
+
+      /* ---------- scene 4 : sorted ---------- */
+
+      #sorted-head {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #sorted-eyebrow {
+        color: var(--fuchsia);
+      }
+
+      #sorted-headline {
+        margin: 18px 0 0 0;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 78px;
+        line-height: 1.04;
+        letter-spacing: -0.025em;
+        color: var(--fg);
+      }
+
+      #card-row {
+        display: flex;
+        gap: 34px;
+        margin-top: 54px;
+      }
+
+      .event-card {
+        display: flex;
+        flex-direction: column;
+        width: 508px;
+        border: 1px solid rgba(244, 244, 248, 0.1);
+        border-radius: 24px;
+        background: rgba(9, 9, 11, 0.72);
+        overflow: hidden;
+      }
+
+      .card-thumb {
+        position: relative;
+        display: block;
+        height: 168px;
+        width: 100%;
+      }
+
+      #thumb-a {
+        background: linear-gradient(140deg, #4a1d6e 0%, #0b1020 70%);
+      }
+
+      #thumb-b {
+        background: linear-gradient(140deg, #062a3d 0%, #0b0b14 70%);
+      }
+
+      #thumb-c {
+        background: linear-gradient(140deg, #4b1030 0%, #10060f 70%);
+      }
+
+      .card-body {
+        padding: 26px 28px 30px 28px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-venue {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dimmer);
+      }
+
+      .card-title {
+        margin-top: 12px;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 1.15;
+        color: var(--fg);
+      }
+
+      .card-meta {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 20px;
+      }
+
+      .card-vibe {
+        font-size: 23px;
+        font-weight: 700;
+        color: var(--sky);
+      }
+
+      .card-price {
+        font-size: 23px;
+        font-weight: 600;
+        color: var(--dim);
+      }
+
+      #live-chip {
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 18px;
+        border-radius: 999px;
+        background: rgba(52, 211, 153, 0.16);
+        border: 1px solid rgba(52, 211, 153, 0.35);
+      }
+
+      #live-chip-dot {
+        display: block;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--emerald);
+      }
+
+      #live-chip-text {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--emerald);
+      }
+
+      #crowd-chip {
+        position: absolute;
+        right: 18px;
+        top: 18px;
+        padding: 9px 18px;
+        border-radius: 999px;
+        background: rgba(52, 211, 153, 0.14);
+        font-size: 20px;
+        font-weight: 700;
+        color: #a7f3d0;
+      }
+
+      #sorted-cta-row {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        margin-top: 46px;
+      }
+
+      #sorted-cta {
+        display: block;
+        padding: 22px 42px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #38bdf8, #67e8f9, #f472b6);
+        color: #09090b;
+        font-size: 26px;
+        font-weight: 700;
+        width: max-content;
+        box-shadow: 0 0 36px rgba(244, 114, 182, 0.4);
+      }
+
+      #sorted-cta-note {
+        font-size: 23px;
+        color: var(--dimmer);
+      }
+
+      /* ---------- scene 5 : outro ---------- */
+
+      #outro-copy {
+        margin: 0;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 62px;
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+        color: var(--fg);
+        max-width: 1500px;
+      }
+
+      #stop-row {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 52px;
+      }
+
+      .stop {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 24px 30px;
+        border: 1px solid rgba(244, 244, 248, 0.12);
+        border-radius: 22px;
+        background: rgba(9, 9, 11, 0.7);
+        width: max-content;
+      }
+
+      .stop-index {
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 40px;
+        line-height: 1;
+        color: var(--sky);
+      }
+
+      .stop-name {
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 1.1;
+        color: var(--fg);
+      }
+
+      .travel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: 180px;
+      }
+
+      .travel-line {
+        display: block;
+        width: 180px;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.75), rgba(244, 114, 182, 0.75));
+        transform-origin: left center;
+      }
+
+      .travel-text {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dimmer);
+        white-space: nowrap;
+      }
+
+      #brand-block {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        z-index: 6;
+      }
+
+      /* The shipped asset (public/neyalogo.png) is the wordmark baked onto an
+         opaque black square with no alpha channel, so it renders as a visible
+         black tile on the glow. The project's own footer sets its wordmark as
+         Outfit 900 text (`site-footer.tsx`), so the composition does the same:
+         faithful to the brand, and it composites cleanly on any backdrop. */
+      #brand-wordmark {
+        position: relative;
+        display: block;
+        font-family: "Outfit", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 168px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--fg);
+      }
+
+      #brand-glow {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        display: block;
+        width: 760px;
+        height: 420px;
+        margin-left: -380px;
+        margin-top: -210px;
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          rgba(244, 114, 182, 0.34) 0%,
+          rgba(56, 189, 248, 0.22) 45%,
+          rgba(124, 58, 237, 0) 74%
+        );
+        filter: blur(48px);
+        pointer-events: none;
+      }
+
+      #brand-tagline {
+        margin-top: 26px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--sky);
+      }
+
+      #outro-copy-block {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-jfbf" id="root" data-composition-id="neya-brag" data-start="0" data-width="1920" data-height="1080" data-duration="22.5">
+      <div data-hf-id="hf-2xc0" id="bg"></div>
+
+      <div data-hf-id="hf-wcc4" id="ambient" class="clip" data-start="0" data-duration="22.5" data-track-index="0">
+        <div data-hf-id="hf-4aiy" id="glow-core"></div>
+        <div data-hf-id="hf-o6ji" id="orb-a" class="orb"></div>
+        <div data-hf-id="hf-k8fh" id="orb-b" class="orb"></div>
+        <div data-hf-id="hf-jgro" id="orb-c" class="orb"></div>
+      </div>
+
+      <!-- ============ scene 1 : hook (0 - 3.0) ============ -->
+      <section data-hf-id="hf-us72" id="scene-hook" class="clip scene" data-start="0" data-duration="3" data-track-index="1">
+        <div data-hf-id="hf-t92h" id="live-badge">
+          <span data-hf-id="hf-hara" id="live-dot"><span data-hf-id="hf-lqjl" id="live-ping"></span></span>
+          <span data-hf-id="hf-ci2l" id="badge-label">Live · Prishtina</span>
+        </div>
+        <h1 data-hf-id="hf-u9tb" id="hook-headline">What's happening tonight?</h1>
+        <span data-hf-id="hf-4px6" id="hook-rule"></span>
+      </section>
+
+      <!-- ============ scene 2 : the pulse (3.0 - 6.5) ============ -->
+      <section data-hf-id="hf-me3x" id="scene-pulse" class="clip scene" data-start="3" data-duration="3.5" data-track-index="2">
+        <p data-hf-id="hf-aul9" id="pulse-top">The city right now</p>
+        <div data-hf-id="hf-5p64" id="stat-row">
+          <div data-hf-id="hf-xa0m" class="stat">
+            <p data-hf-id="hf-38zy" class="stat-label">Here now</p>
+            <p data-hf-id="hf-tj83" class="stat-value" id="value-here">0</p>
+          </div>
+          <div data-hf-id="hf-tx7e" class="stat">
+            <p data-hf-id="hf-qtrl" class="stat-label">Tonight</p>
+            <p data-hf-id="hf-8dui" class="stat-value" id="value-tonight">0</p>
+          </div>
+          <div data-hf-id="hf-zsn3" class="stat" id="stat-vibe">
+            <p data-hf-id="hf-5p80" class="stat-label">Vibe</p>
+            <p data-hf-id="hf-cxd3" class="stat-value" id="value-vibe">0.0</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ scene 3 : the ask (6.5 - 12.0) ============ -->
+      <section data-hf-id="hf-y8qq" id="scene-ask" class="clip scene" data-start="6.5" data-duration="5.5" data-track-index="3">
+        <div data-hf-id="hf-d0xx" id="ask-panel">
+          <div data-hf-id="hf-tolv" id="ask-inner">
+            <p data-hf-id="hf-3wu0" class="eyebrow" id="ask-eyebrow">Find your move</p>
+            <h2 data-hf-id="hf-cowr" id="ask-headline">What should I do tonight?</h2>
+            <p data-hf-id="hf-m62w" id="ask-subline">A few quick answers, then we'll line up the best options in the city.</p>
+
+            <div data-hf-id="hf-y4nw" id="chip-row">
+              <span data-hf-id="hf-tqv1" class="vibe-chip" id="chip-chill">chill</span>
+              <span data-hf-id="hf-5l19" class="vibe-chip" id="chip-party">party</span>
+              <span data-hf-id="hf-q5qi" class="vibe-chip" id="chip-live">live music</span>
+              <span data-hf-id="hf-i2bx" class="vibe-chip" id="chip-date">date</span>
+              <span data-hf-id="hf-0zi3" class="vibe-chip" id="chip-techno">techno</span>
+              <span data-hf-id="hf-4dl5" class="vibe-chip" id="chip-rooftop">rooftop</span>
+            </div>
+
+            <div data-hf-id="hf-cziy" id="ask-cta-row">
+              <span data-hf-id="hf-cc1v" id="ask-cta">Show my night</span>
+              <span data-hf-id="hf-3dqm" id="ask-cta-note">3 taps · 0 scrolling</span>
+            </div>
+          </div>
+        </div>
+
+        <svg data-hf-id="hf-tgng" id="cursor" viewBox="0 0 40 48" aria-hidden="true">
+          <path data-hf-id="hf-qvdj" d="M4 2 L4 38 L14 28 L21 44 L28 41 L21 25 L34 25 Z" fill="#f4f4f8" stroke="#09090b" stroke-width="2.5" stroke-linejoin="round" />
+        </svg>
+      </section>
+
+      <!-- ============ scene 4 : sorted (12.0 - 17.0) ============ -->
+      <section data-hf-id="hf-7fgu" id="scene-sorted" class="clip scene" data-start="12" data-duration="5" data-track-index="4">
+        <div data-hf-id="hf-1obh" id="sorted-head">
+          <p data-hf-id="hf-hdfs" class="eyebrow" id="sorted-eyebrow">Tonight for you</p>
+          <h2 data-hf-id="hf-go46" id="sorted-headline">Your night, sorted.</h2>
+        </div>
+
+        <div data-hf-id="hf-qosw" id="card-row">
+          <article data-hf-id="hf-6oxk" class="event-card" id="card-1">
+            <span data-hf-id="hf-jonk" class="card-thumb" id="thumb-a">
+              <span data-hf-id="hf-0j4f" class="card-price" style="position: absolute; left: 18px; top: 18px; color: #f4f4f8">€12</span>
+            </span>
+            <div data-hf-id="hf-h0w3" class="card-body">
+              <p data-hf-id="hf-6uxh" class="card-venue">Rooftop 21</p>
+              <p data-hf-id="hf-gwsk" class="card-title">Sunset Rooftop Sets</p>
+              <div data-hf-id="hf-ylbo" class="card-meta">
+                <span data-hf-id="hf-24sb" class="card-vibe">Vibe 8.7</span>
+                <span data-hf-id="hf-0wht" class="card-price">Event</span>
+              </div>
+            </div>
+          </article>
+
+          <article data-hf-id="hf-fctf" class="event-card" id="card-2">
+            <span data-hf-id="hf-uk57" class="card-thumb" id="thumb-b">
+              <span data-hf-id="hf-xzwf" id="live-chip">
+                <span data-hf-id="hf-870t" id="live-chip-dot"></span>
+                <span data-hf-id="hf-ty4v" id="live-chip-text">Live</span>
+              </span>
+              <span data-hf-id="hf-1x1t" id="crowd-chip">128 here</span>
+            </span>
+            <div data-hf-id="hf-3l1f" class="card-body">
+              <p data-hf-id="hf-aprf" class="card-venue">Plateau 42</p>
+              <p data-hf-id="hf-yk4s" class="card-title">Techno Basement</p>
+              <div data-hf-id="hf-6i6k" class="card-meta">
+                <span data-hf-id="hf-pwa6" class="card-vibe">Vibe 9.1</span>
+                <span data-hf-id="hf-nfei" class="card-price">Event · €15</span>
+              </div>
+            </div>
+          </article>
+
+          <article data-hf-id="hf-bepe" class="event-card" id="card-3">
+            <span data-hf-id="hf-oefe" class="card-thumb" id="thumb-c">
+              <span data-hf-id="hf-37fa" class="card-price" style="position: absolute; left: 18px; top: 18px; color: #f4f4f8">Free</span>
+            </span>
+            <div data-hf-id="hf-36qe" class="card-body">
+              <p data-hf-id="hf-24wb" class="card-venue">Kino Lab</p>
+              <p data-hf-id="hf-v0kv" class="card-title">Jazz &amp; Raki Nights</p>
+              <div data-hf-id="hf-5b9h" class="card-meta">
+                <span data-hf-id="hf-1qha" class="card-vibe">Vibe 8.4</span>
+                <span data-hf-id="hf-jzpx" class="card-price">Event</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div data-hf-id="hf-ot0s" id="sorted-cta-row">
+          <span data-hf-id="hf-rkik" id="sorted-cta">Build My Night</span>
+          <span data-hf-id="hf-6vu0" id="sorted-cta-note">up to 3 stops · share with friends</span>
+        </div>
+      </section>
+
+      <!-- ============ scene 5 : outro (17.0 - 21.5) ============ -->
+      <section data-hf-id="hf-q88y" id="scene-outro" class="clip scene" data-start="17" data-duration="5.5" data-track-index="5">
+        <div data-hf-id="hf-1g4s" id="outro-copy-block">
+          <p data-hf-id="hf-p13p" id="outro-copy">Plan the night, not just the event.</p>
+
+          <div data-hf-id="hf-5xye" id="stop-row">
+            <div data-hf-id="hf-c1rw" class="stop" id="stop-1">
+              <span data-hf-id="hf-n8mh" class="stop-index">01</span>
+              <span data-hf-id="hf-e7fp" class="stop-name">Rooftop 21</span>
+            </div>
+
+            <div data-hf-id="hf-a9xo" class="travel" id="travel-1">
+              <span data-hf-id="hf-rkhn" class="travel-line" id="travel-line-1"></span>
+              <span data-hf-id="hf-asq9" class="travel-text">6 min cab</span>
+            </div>
+
+            <div data-hf-id="hf-mx9j" class="stop" id="stop-2">
+              <span data-hf-id="hf-ofjk" class="stop-index">02</span>
+              <span data-hf-id="hf-k2gr" class="stop-name">Plateau 42</span>
+            </div>
+
+            <div data-hf-id="hf-l5fb" class="travel" id="travel-2">
+              <span data-hf-id="hf-gp00" class="travel-line" id="travel-line-2"></span>
+              <span data-hf-id="hf-lbci" class="travel-text">8 min walk</span>
+            </div>
+
+            <div data-hf-id="hf-iz5i" class="stop" id="stop-3">
+              <span data-hf-id="hf-o18j" class="stop-index">03</span>
+              <span data-hf-id="hf-qaez" class="stop-name">Kino Lab</span>
+            </div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-nb2g" id="brand-block">
+          <span id="brand-glow"></span>
+          <span id="brand-wordmark">NEYA</span>
+          <p data-hf-id="hf-16u0" id="brand-tagline">What's happening tonight?</p>
+        </div>
+      </section>
+
+      <!-- ============ audio: music bed ============ -->
+      <audio data-hf-id="hf-mez5" id="music" src="assets/music/neya-bed.mp3" data-start="0" data-duration="22.5" data-track-index="10" data-volume="0.34"></audio>
+
+      <!-- ============ audio: sfx ============ -->
+      <audio data-hf-id="hf-zad3" id="sfx-badge" src="assets/sfx/impact/impactSoft_medium_004.ogg" data-start="0.15" data-track-index="11" data-volume="0.55"></audio>
+      <audio data-hf-id="hf-gsbw" id="sfx-key-1" src="assets/sfx/keyboard/keypress-009.wav" data-start="0.5" data-track-index="12" data-volume="0.4"></audio>
+      <audio data-hf-id="hf-uce7" id="sfx-key-2" src="assets/sfx/keyboard/keypress-021.wav" data-start="0.8" data-track-index="13" data-volume="0.4"></audio>
+      <audio data-hf-id="hf-ecmo" id="sfx-key-3" src="assets/sfx/keyboard/keypress-004.wav" data-start="1.1" data-track-index="14" data-volume="0.4"></audio>
+      <audio data-hf-id="hf-5qdw" id="sfx-key-4" src="assets/sfx/keyboard/keypress-027.wav" data-start="1.4" data-track-index="15" data-volume="0.4"></audio>
+      <audio data-hf-id="hf-44hi" id="sfx-key-5" src="assets/sfx/keyboard/keypress-013.wav" data-start="1.7" data-track-index="16" data-volume="0.4"></audio>
+      <audio data-hf-id="hf-13gz" id="sfx-key-6" src="assets/sfx/keyboard/keypress-030.wav" data-start="2.0" data-track-index="17" data-volume="0.4"></audio>
+      <audio data-hf-id="hf-pa10" id="sfx-stat-a" src="assets/sfx/ui/rollover2.ogg" data-start="3.02" data-track-index="18" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-unwo" id="sfx-stat-c" src="assets/sfx/ui/rollover2.ogg" data-start="5.03" data-track-index="19" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-p6dt" id="sfx-chip-first" src="assets/sfx/ui/click2.ogg" data-start="7.7" data-track-index="20" data-volume="0.58"></audio>
+      <audio data-hf-id="hf-rc24" id="sfx-chip-press" src="assets/sfx/interface/click_003.ogg" data-start="9.9" data-track-index="21" data-volume="0.72"></audio>
+      <audio data-hf-id="hf-d06c" id="sfx-cta" src="assets/sfx/interface/click_003.ogg" data-start="11.25" data-track-index="22" data-volume="0.72"></audio>
+      <audio data-hf-id="hf-vg9n" id="sfx-card-1" src="assets/sfx/casino/card-slide-1.ogg" data-start="13.51" data-track-index="23" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-hp43" id="sfx-card-3" src="assets/sfx/casino/card-slide-1.ogg" data-start="15.52" data-track-index="24" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-7seq" id="sfx-build" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="16.02" data-track-index="25" data-volume="0.72"></audio>
+      <audio data-hf-id="hf-0mwl" id="sfx-stop-1" src="assets/sfx/ui/rollover2.ogg" data-start="17.52" data-track-index="26" data-volume="0.55"></audio>
+      <audio data-hf-id="hf-4ucn" id="sfx-stop-3" src="assets/sfx/ui/rollover2.ogg" data-start="19.02" data-track-index="27" data-volume="0.55"></audio>
+      <audio data-hf-id="hf-k708" id="sfx-logo" src="assets/sfx/impact/impactBell_heavy_000.ogg" data-start="20.02" data-track-index="28" data-volume="0.75"></audio>
+    </div>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+
+        // ------------------------------------------------------------------
+        // Audio-reactive layer (hyperframes-creative contract)
+        // Per-frame sampling of pre-extracted band data. Bass swells the
+        // ambient warmth; overall amplitude drives its presence.
+        // ------------------------------------------------------------------
+        var glow = document.getElementById("glow-core");
+
+        if (typeof AUDIO_DATA !== "undefined" && AUDIO_DATA && AUDIO_DATA.frames) {
+          var frames = AUDIO_DATA.frames;
+          var fps = AUDIO_DATA.fps;
+
+          // Persistent drift so the ambient layer never freezes (finite repeats
+          // only - determinism rule bans repeat: -1).
+          // 7.5s x 3 = 22.5s, exactly the root duration, so the ambient layer
+          // never freezes (and stays finite - repeat: -1 is banned).
+          tl.to("#orb-a", { x: 70, y: 46, duration: 7.5, repeat: 2, ease: "sine.inOut" }, 0);
+          tl.to("#orb-b", { x: -58, y: 62, duration: 7.5, repeat: 2, ease: "sine.inOut" }, 0);
+          tl.to("#orb-c", { x: 46, y: -54, duration: 7.5, repeat: 2, ease: "sine.inOut" }, 0);
+
+          function sample(frame) {
+            return function () {
+              var bass = frame.bands && frame.bands.length ? frame.bands[0] : 0.4;
+              var rms = typeof frame.rms === "number" ? frame.rms : 0.4;
+              glow.style.opacity = (0.34 + bass * 0.42).toFixed(4);
+              glow.style.transform =
+                "scale(" + (1 + bass * 0.08).toFixed(4) + "," + (1 + rms * 0.05).toFixed(4) + ")";
+            };
+          }
+
+          for (var f = 0; f < frames.length; f++) {
+            tl.call(sample(frames[f]), [], f / fps);
+          }
+        } else {
+          tl.to(glow, { opacity: 0.45, duration: 10, repeat: 2, yoyo: true, ease: "sine.inOut" }, 0);
+        }
+
+        // ------------------------------------------------------------------
+        // Scene 1 - hook (0 - 3.0)
+        // ------------------------------------------------------------------
+        tl.fromTo("#live-badge", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.15);
+        tl.fromTo("#live-ping", { opacity: 0.55, scale: 0.6 }, { opacity: 0, scale: 1.5, duration: 1.15, repeat: 4, ease: "power2.out" }, 0.3);
+
+        // Headline types on, character by character.
+        var hook = document.getElementById("hook-headline");
+        var hookChars = [];
+        if (hook && hook.textContent) {
+          var text = hook.textContent;
+          hook.textContent = "";
+          for (var i = 0; i < text.length; i++) {
+            var span = document.createElement("span");
+            span.textContent = text.charAt(i);
+            hook.appendChild(span);
+            hookChars.push(span);
+          }
+        }
+
+        if (hookChars.length) {
+          tl.to(hookChars, { opacity: 1, duration: 0.02, stagger: 0.062, ease: "none" }, 0.45);
+        }
+        // beat-locked: 2.12s (sky rule lands on a beat point)
+        tl.fromTo("#hook-rule", { scaleX: 0, opacity: 0.2 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.out" }, 2.05);
+
+        // ------------------------------------------------------------------
+        // Scene 2 - the pulse (3.0 - 6.5)
+        // beat-grid: stat 1 at 3.02s, stat 2 at 4.02s, stat 3 at 5.03s
+        // ------------------------------------------------------------------
+        tl.fromTo("#pulse-top", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 3.02);
+
+        var counters = [
+          { el: "value-here", to: 184, decimals: 0, at: 3.02 },
+          { el: "value-tonight", to: 27, decimals: 0, at: 4.02 },
+          { el: "value-vibe", to: 8.4, decimals: 1, at: 5.03 }
+        ];
+
+        counters.forEach(function (c) {
+          var node = document.getElementById(c.el);
+          var state = { v: 0 };
+          tl.fromTo(
+            state,
+            { v: 0 },
+            {
+              v: c.to,
+              duration: 0.62,
+              ease: "power2.out",
+              onUpdate: function () {
+                node.textContent = c.decimals ? state.v.toFixed(c.decimals) : String(Math.round(state.v));
+              }
+            },
+            c.at
+          );
+        });
+
+        // ------------------------------------------------------------------
+        // Scene 3 - the ask (6.5 - 12.0)
+        // ------------------------------------------------------------------
+        tl.fromTo("#ask-panel", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 6.75);
+        tl.fromTo("#ask-eyebrow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 7.0);
+        tl.fromTo("#ask-headline", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 7.05);
+        tl.fromTo("#ask-subline", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 7.35);
+
+        var chipIds = ["#chip-chill", "#chip-party", "#chip-live", "#chip-date", "#chip-techno", "#chip-rooftop"];
+        tl.fromTo(
+          chipIds,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.32, stagger: 0.25, ease: "power2.out" },
+          7.7
+        );
+
+        // Simulated cursor travels to `rooftop` and presses it.
+        tl.fromTo("#cursor", { opacity: 0, x: 300, y: 300 }, { opacity: 1, duration: 0.25 }, 9.3);
+        tl.to("#cursor", { x: 1150, y: 555, duration: 0.55, ease: "power2.inOut" }, 9.35);
+        // beat-locked: 9.90s - the press
+        tl.to("#chip-rooftop", { backgroundColor: "rgba(244,114,182,0.22)", borderColor: "#f472b6", color: "#f4f4f8", duration: 0.18 }, 9.9);
+        tl.to("#chip-rooftop", { scale: 0.94, duration: 0.1, yoyo: true, repeat: 1, ease: "power2.inOut" }, 9.9);
+
+        tl.fromTo("#ask-cta-row", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 10.6);
+        tl.to("#ask-cta", { boxShadow: "0 0 62px rgba(244,114,182,0.75)", duration: 0.42, yoyo: true, repeat: 1, ease: "sine.inOut" }, 10.8);
+        tl.to("#ask-cta", { scale: 0.97, duration: 0.11, yoyo: true, repeat: 1, ease: "power2.inOut" }, 11.25);
+
+        // ------------------------------------------------------------------
+        // Scene 4 - sorted (12.0 - 17.0)
+        // ------------------------------------------------------------------
+        tl.fromTo("#sorted-eyebrow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 12.28);
+        // beat-locked: 12.52s (strong-beat window)
+        tl.fromTo("#sorted-headline", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 12.5);
+
+        // beat-grid: card 1 at 13.51s, card 2 at 14.52s, card 3 at 15.52s
+        var cardIds = ["#card-1", "#card-2", "#card-3"];
+        cardIds.forEach(function (id, index) {
+          tl.fromTo(
+            id,
+            { opacity: 0, y: 44 },
+            { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
+            13.51 + index * 1.01
+          );
+        });
+        tl.fromTo("#live-chip", { opacity: 0.2 }, { opacity: 1, duration: 0.9, repeat: 2, yoyo: true, ease: "sine.inOut" }, 14.9);
+
+        tl.fromTo("#sorted-cta-row", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 16.0);
+        // beat-locked: 16.02s (strong cue - Build My Night)
+        tl.to("#sorted-cta", { scale: 0.97, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.inOut" }, 16.02);
+        tl.to("#sorted-cta", { boxShadow: "0 0 58px rgba(56,189,248,0.8)", duration: 0.4, yoyo: true, repeat: 1, ease: "sine.inOut" }, 16.05);
+
+        // ------------------------------------------------------------------
+        // Scene 5 - outro (17.0 - 21.5)
+        // ------------------------------------------------------------------
+        tl.fromTo("#outro-copy", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 17.2);
+
+        // beat-grid: stop 1 at 17.52s, stop 2 at 18.52s, stop 3 at 19.02s
+        tl.fromTo("#stop-1", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 17.52);
+        tl.fromTo("#travel-1", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 18.1);
+        tl.fromTo("#travel-line-1", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power2.out" }, 18.1);
+        tl.fromTo("#stop-2", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 18.52);
+        tl.fromTo("#travel-2", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 19.02);
+        tl.fromTo("#travel-line-2", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power2.out" }, 19.02);
+        tl.fromTo("#stop-3", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 19.52);
+
+        // Brand payoff on the strongest cue.
+        // beat-locked: 21.01s (strong cue - logo)
+        // Clear the stage: the copy and plan exit upward so the wordmark owns
+        // an empty frame (and no text box sits under it).
+        tl.to("#outro-copy-block", { opacity: 0, y: -320, duration: 0.6, ease: "power2.inOut" }, 20.25);
+        tl.fromTo(
+          "#brand-block",
+          { opacity: 0, y: 34, scale: 0.94 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.62, ease: "power3.out" },
+          21.01
+        );
+        tl.fromTo("#brand-tagline", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 21.4);
+
+        window.__timelines["neya-brag"] = tl;
+      })();
+    </script>
+  </body>
+</html>
